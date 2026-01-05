@@ -1,0 +1,8 @@
+name: Plug-Get
+version: '1.0'
+main: me.pinkcandy.plugGet.PlugGet
+api-version: '1.21'
+commands:
+  plugget:
+    usage: /plugget
+    aliases: [pg, plug-get]

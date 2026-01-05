@@ -1,0 +1,10 @@
+me/pinkcandy/plugGet/LoaderSet.class
+me/pinkcandy/plugGet/BuildProject.class
+me/pinkcandy/plugGet/PlugGet.class
+me/pinkcandy/plugGet/VersionRange.class
+me/pinkcandy/plugGet/SearchProjects.class
+me/pinkcandy/plugGet/ServerInfo.class
+me/pinkcandy/plugGet/DescriptionWrapper.class
+me/pinkcandy/plugGet/CommandsHandler.class
+me/pinkcandy/plugGet/VersionFetcher.class
+me/pinkcandy/plugGet/VersionSelector.class
