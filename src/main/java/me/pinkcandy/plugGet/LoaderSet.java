@@ -10,7 +10,7 @@ public class LoaderSet {
 
     private static final Set<String> VALID_LOADERS = new LinkedHashSet<>(Arrays.asList("paper", "spigot", "bukkit", "folia"));
 
-    public static Set<String> fromCategories(JSONArray categories) {
+    public static Set<String> FromJsonArray(JSONArray categories) {
         Set<String> set = new LinkedHashSet<>();
         if (categories == null) return set;
         for (int i = 0; i < categories.length(); i++) {
@@ -23,7 +23,7 @@ public class LoaderSet {
     }
 
     public static String joinLoaders(Set<String> loaders) {
-        return loaders == null || loaders.isEmpty() ? "unknown" : String.join(",", loaders);
+        return loaders == null || loaders.isEmpty() ? "unknown" : String.join(", ", loaders);
     }
 }
 

@@ -6,6 +6,8 @@ import org.bukkit.command.CommandSender;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class CommandsHandler implements CommandExecutor {
 
     @Override
@@ -28,14 +30,22 @@ public class CommandsHandler implements CommandExecutor {
 
             sender.sendMessage("Results for: " + slug.toString());
             new SearchProjects().searchRaw(slug.toString(), result -> {
-                ServerInfo serverInfo = new ServerInfo();
                 JSONObject root = new JSONObject(result);
                 JSONArray hits = root.getJSONArray("hits");
 
-                BuildProject formatter = new BuildProject();
+                CatchProjectInfo parser = new CatchProjectInfo();
+
+                VersionFetcher fetcher = new VersionFetcher();
+                VersionSelector selector = new VersionSelector();
+                ProjectInfoSender sendInfo = new ProjectInfoSender();
+
                 for (int i = hits.length() - 1; i >= 0; i--) {
                     JSONObject obj = hits.getJSONObject(i);
-                    formatter.sendFormatted(obj, serverInfo, sender);
+                    List<Object> projectData = parser.parseToList(obj);
+                    String projectId = (String) projectData.get(1);
+                    JSONArray versionsList = fetcher.fetchVersions(projectId);
+                    String[] versionInfo = selector.selectVersion(versionsList);
+                    sendInfo.sendProjectInfo(sender, projectData, versionInfo);
                 }
             });
         }

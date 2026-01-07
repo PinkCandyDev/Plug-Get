@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ServerInfo {
 
-    public String[] loaders; // zmieniono na tablicę
+    public String[] loaders;
     public String version;
 
     public ServerInfo() {
