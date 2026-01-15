@@ -10,7 +10,7 @@ import java.util.List;
 
 public class VersionSelector2 {
 
-    public List<Object> selectVersion(JSONArray versions) {
+    public List<String[]> selectVersion(JSONArray versions) {
         ServerInfo serverInfo = new ServerInfo();
         List<JSONObject> release = new ArrayList<>();
         List<JSONObject> beta = new ArrayList<>();
@@ -53,7 +53,7 @@ public class VersionSelector2 {
 
             }
 
-            List<Object> result = new ArrayList<>(3);
+            List<String[]> result = new ArrayList<>(3);
             result.add(!release.isEmpty() ? buildBranchData(release) : null);
             result.add(!beta.isEmpty() ? buildBranchData(beta) : null);
             result.add(!alpha.isEmpty() ? buildBranchData(alpha) : null);

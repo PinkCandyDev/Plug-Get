@@ -4,14 +4,16 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
+import org.apache.http.util.VersionInfo;
 import org.bukkit.command.CommandSender;
 import org.json.JSONArray;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ProjectInfoSender {
 
-    public void sendProjectInfo(CommandSender sender,List<Object> projectData, String[] versionInfo) {
+    public void sendProjectInfo(CommandSender sender,List<Object> projectData, List<String[]> versionInfo) {
 
         ComponentBuilder builder = new ComponentBuilder();
 
@@ -22,20 +24,17 @@ public class ProjectInfoSender {
         String loaders = (String) projectData.get(5);
         String versionRange = (String) projectData.get(7);
 
-        String[] release = (String[]) projectData.get(0);
-        String[] beta = (String[]) projectData.get(1);
-        String[] alpha = (String[]) projectData.get(2);
 
-        projectData.forEach(branch -> {
-
+        versionInfo.forEach(branch -> {
+            if (branch == null) return;
+            branch[3] = LoaderSet.FromJsonArray(new JSONArray(branch[3])).toString();
+            JSONArray versionVersionsArray = new JSONArray(branch[2]);
+            branch[2] = versionVersionsArray != null ? VersionRange.buildRange(versionVersionsArray) : "?";
         });
 
+        boolean foundVersions = versionInfo != null && versionInfo.stream().anyMatch(Objects::nonNull);
 
-        String versionLoaders = LoaderSet.FromJsonArray(new JSONArray(versionInfo[2])).toString();
-        JSONArray VersionVersionsArray = new JSONArray(versionInfo[3]);
-        String VersionVersionsRange = VersionVersionsArray != null ? VersionRange.buildRange(VersionVersionsArray) : "?";
-
-                builder.append("§2modrinth/")
+                builder.append("§2modrinth§8/")
                 .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                         new ComponentBuilder("§9Downloads: §f" + downloads + "\n" +
                                 "§fClick to open project page").create()))
@@ -50,12 +49,47 @@ public class ProjectInfoSender {
                 .event(new ClickEvent(
                         ClickEvent.Action.RUN_COMMAND,
                         "/plugget -S " + slug))
-                .append("   §e");
+                        .append("       ").event((HoverEvent) null);
+
+        if (!foundVersions) {
+            builder.append("§cUnknown");
+        } else {
+            builder.append("§8< ");
+
+            boolean first = true;
+
+            for (int i = 0; i <= 2; i++) {
+                if (versionInfo.size() > i &&
+                        versionInfo.get(i) != null &&
+                        versionInfo.get(i)[0] != null) {
+
+                    if (!first) {
+                        builder.append(" §7| ").event((HoverEvent) null);
+                    }
+
+                    String color;
+                    switch (i) {
+                        case 0 -> color = "§a";
+                        case 1 -> color = "§e";
+                        case 2 -> color = "§c";
+                        default -> color = "§f";
+                    }
+
+                    builder.append(color + versionInfo.get(i)[0])
+                            .event(versionHover(versionInfo.get(i)));
+
+                    first = false;
+                }
+            }
+
+            builder.append(" §8>").event((HoverEvent) null);
+        }
+
 
 
         List<String> wrapped = DescriptionWrapper.wrap(description, 60);
         for (String line : wrapped) {
-            builder.append("\n  §7" + line);
+            builder.append("\n  §7" + line).event((HoverEvent) null);
         }
 
         BaseComponent[] comp = builder.create();

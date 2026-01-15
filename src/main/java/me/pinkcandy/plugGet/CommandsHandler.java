@@ -44,8 +44,7 @@ public class CommandsHandler implements CommandExecutor {
                     List<Object> projectData = parser.parseToList(obj);
                     String projectId = (String) projectData.get(1);
                     JSONArray versionsList = fetcher.fetchVersions(projectId);
-                    List<Object> versionBranches = selector.selectVersion(versionsList);
-                    sendInfo.sendProjectInfo(sender, projectData, versionInfo);
+                    sendInfo.sendProjectInfo(sender, projectData, selector.selectVersion(versionsList));
                 }
             });
         }
