@@ -75,9 +75,14 @@ public class VersionSelector2 {
                 OffsetDateTime.parse(newest.getString("date_published")).format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) : "§cUnknown";
         String gameVersionsJson = newest.optJSONArray("game_versions") != null ? newest.getJSONArray("game_versions").toString() : "[]";
         String loadersJson = newest.optJSONArray("loaders") != null ? newest.getJSONArray("loaders").toString() : "[]";
-        String formattedSize = newest.has("size")
-                ? String.format("%.1f MiB", newest.getLong("size") / 1024.0 / 1024.0)
-                : "§cUnknown";
+        String formattedSize = "§cUnknown";
+        JSONArray files = newest.optJSONArray("files");
+        if (files != null && files.length() > 0) {
+            JSONObject firstFile = files.getJSONObject(0);
+            if (firstFile.has("size")) {
+                formattedSize = String.format("%.1f MiB", firstFile.getLong("size") / 1024.0 / 1024.0);
+            }
+        }
 
         return new String[]{versionNumber, formattedDate, gameVersionsJson, loadersJson, formattedSize};
     }

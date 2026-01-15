@@ -27,14 +27,14 @@ public class ProjectInfoSender {
 
         versionInfo.forEach(branch -> {
             if (branch == null) return;
-            branch[3] = LoaderSet.FromJsonArray(new JSONArray(branch[3])).toString();
+            branch[3] = LoaderSet.joinLoaders(LoaderSet.FromJsonArray(new JSONArray(branch[3])));
             JSONArray versionVersionsArray = new JSONArray(branch[2]);
             branch[2] = versionVersionsArray != null ? VersionRange.buildRange(versionVersionsArray) : "?";
         });
 
         boolean foundVersions = versionInfo != null && versionInfo.stream().anyMatch(Objects::nonNull);
 
-                builder.append("§2modrinth§8/")
+                builder.append("§2modrinth/")
                 .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                         new ComponentBuilder("§9Downloads: §f" + downloads + "\n" +
                                 "§fClick to open project page").create()))
@@ -45,7 +45,7 @@ public class ProjectInfoSender {
                 .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                         new ComponentBuilder("§9Made by: §f" + author + "\n" +
                                 "§9Loaders: §f" + loaders + "\n" +
-                                "§9Game versions: §f" + versionRange + "\n" + "Click to install").create()))
+                                "§9Game versions: §f" + versionRange + "\n" + "Click to install prefered version").create()))
                 .event(new ClickEvent(
                         ClickEvent.Action.RUN_COMMAND,
                         "/plugget -S " + slug))
@@ -64,7 +64,7 @@ public class ProjectInfoSender {
                         versionInfo.get(i)[0] != null) {
 
                     if (!first) {
-                        builder.append(" §7| ").event((HoverEvent) null);
+                        builder.append(" §8| ").event((HoverEvent) null);
                     }
 
                     String color;
@@ -76,7 +76,7 @@ public class ProjectInfoSender {
                     }
 
                     builder.append(color + versionInfo.get(i)[0])
-                            .event(versionHover(versionInfo.get(i)));
+                            .event(versionHover(versionInfo.get(i), i));
 
                     first = false;
                 }
@@ -96,13 +96,15 @@ public class ProjectInfoSender {
         sender.spigot().sendMessage(comp);
     }
 
-    public HoverEvent versionHover(String[] versionInfo)
+    public HoverEvent versionHover(String[] versionInfo, int branch)
     {
         HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                new ComponentBuilder("§9Date: §f" + versionInfo[1] + "\n" +
+                new ComponentBuilder("§9Channel : §f" + (branch == 0 ? "Release" : branch == 1 ? "Beta" : "Alpha") + "\n" +
+                        "§9Date: §f" + versionInfo[1] + "\n" +
                         "§9Game versions: §f" + versionInfo[2] + "\n" +
                         "§9Loaders: §f" + versionInfo[3] + "\n" +
-                        "§9Size: §f" + versionInfo[4]).create());
+                        "§9Size: §f" + versionInfo[4] + "\n" +
+                        "§fClick to install this version").create());
         return hover;
     }
 }
