@@ -36,7 +36,7 @@ public class CommandsHandler implements CommandExecutor {
                 CatchProjectInfo parser = new CatchProjectInfo();
 
                 VersionFetcher fetcher = new VersionFetcher();
-                VersionSelector selector = new VersionSelector();
+                VersionSelector2 selector = new VersionSelector2();
                 ProjectInfoSender sendInfo = new ProjectInfoSender();
 
                 for (int i = hits.length() - 1; i >= 0; i--) {
@@ -44,7 +44,7 @@ public class CommandsHandler implements CommandExecutor {
                     List<Object> projectData = parser.parseToList(obj);
                     String projectId = (String) projectData.get(1);
                     JSONArray versionsList = fetcher.fetchVersions(projectId);
-                    String[] versionInfo = selector.selectVersion(versionsList);
+                    List<Object> versionBranches = selector.selectVersion(versionsList);
                     sendInfo.sendProjectInfo(sender, projectData, versionInfo);
                 }
             });

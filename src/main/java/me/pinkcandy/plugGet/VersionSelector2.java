@@ -3,6 +3,8 @@ package me.pinkcandy.plugGet;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,11 +12,10 @@ public class VersionSelector2 {
 
     public List<Object> selectVersion(JSONArray versions) {
         ServerInfo serverInfo = new ServerInfo();
-        try{
-            List<JSONObject> release = new ArrayList<>();
-            List<JSONObject> beta = new ArrayList<>();
-            List<JSONObject> alpha = new ArrayList<>();
-
+        List<JSONObject> release = new ArrayList<>();
+        List<JSONObject> beta = new ArrayList<>();
+        List<JSONObject> alpha = new ArrayList<>();
+        try {
             for (int i = 0; i < versions.length(); i++) {
                 JSONObject v = versions.getJSONObject(i);
 
@@ -46,22 +47,38 @@ public class VersionSelector2 {
                 }
                 if (!versionCompatible) continue;
 
-                if (branch.equals("release"))
-                {
-                    release.add(v);
-                }
-                if (branch.equals("beta"))
-                {
-                    beta.add(v);
-                }
-                if (branch.equals("alpha"))
-                {
-                    alpha.add(v);
-                }
-
+                if ("release".equals(branch)) release.add(v);
+                else if ("beta".equals(branch)) beta.add(v);
+                else if ("alpha".equals(branch)) alpha.add(v);
 
             }
+
+            List<Object> result = new ArrayList<>(3);
+            result.add(!release.isEmpty() ? buildBranchData(release) : null);
+            result.add(!beta.isEmpty() ? buildBranchData(beta) : null);
+            result.add(!alpha.isEmpty() ? buildBranchData(alpha) : null);
+            return result;
+
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String[] buildBranchData(List<JSONObject> versionList) {
+        versionList.sort((a, b) -> b.optString("date_published", "").compareTo(a.optString("date_published", "")));
+
+        JSONObject newest = versionList.get(0);
+
+        String versionNumber = newest.optString("version_number", "§cUnknown");
+        String formattedDate = newest.has("date_published") ?
+                OffsetDateTime.parse(newest.getString("date_published")).format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) : "§cUnknown";
+        String gameVersionsJson = newest.optJSONArray("game_versions") != null ? newest.getJSONArray("game_versions").toString() : "[]";
+        String loadersJson = newest.optJSONArray("loaders") != null ? newest.getJSONArray("loaders").toString() : "[]";
+        String formattedSize = newest.has("size")
+                ? String.format("%.1f MiB", newest.getLong("size") / 1024.0 / 1024.0)
+                : "§cUnknown";
+
+        return new String[]{versionNumber, formattedDate, gameVersionsJson, loadersJson, formattedSize};
     }
 }
