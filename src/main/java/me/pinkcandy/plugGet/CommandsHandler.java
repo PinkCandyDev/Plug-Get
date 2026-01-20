@@ -49,11 +49,50 @@ public class CommandsHandler implements CommandExecutor {
             });
         }
 
-        if (subCommand.equals("-S")|| subCommand.equals("install")) {
+        if (subCommand.equals("-s")|| subCommand.equals("install")) {
+            for (int i = 1; i < args.length; i++) {
+                String slug = args[i];
 
+                if (slug.startsWith("--")) {
+                    sender.sendMessage("Wrong argument: " + slug);
+                    return true;
+                }
+
+                String modifier = null;
+                String version = null;
+
+                if (i + 1 < args.length) {
+                    String next = args[i + 1].toLowerCase();
+
+                    if (next.equals("--beta")) {
+                        modifier = "beta";
+                        i++;
+                    } else if (next.equals("--alpha")) {
+                        modifier = "alpha";
+                        i++;
+                    } else if (next.equals("--v")) {
+                        if (i + 2 >= args.length) {
+                            sender.sendMessage("No version provided after --v " + slug);
+                            return true;
+                        }
+                        modifier = "version";
+                        version = args[i + 2];
+                        i += 2;
+                    }
+                }
+
+                if (modifier == null) {
+                    sender.sendMessage(slug);
+                } else if (modifier.equals("beta")) {
+                    sender.sendMessage(slug + " with beta modifier");
+                } else if (modifier.equals("alpha")) {
+                    sender.sendMessage(slug + " with alpha modifier");
+                } else if (modifier.equals("version")) {
+                    sender.sendMessage(slug + " with version modifier: " + version);
+                }
+            }
             return true;
         }
-
         return true;
     }
 }
