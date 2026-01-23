@@ -78,7 +78,7 @@ public class ProjectInfoSender {
                     builder.append(color + versionInfo.get(i)[0])
                             .event(versionHover(versionInfo.get(i), i))
                             .event(new  ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                                            "/plugget -S " + slug + " --v " + versionInfo.get(i)[0]));
+                                            "/plugget -S " + slug + " --vl " + versionInfo.get(i)[0]));
 
 
                     first = false;
