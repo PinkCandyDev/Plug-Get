@@ -1,4 +1,6 @@
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/CatchProjectInfo.java
+/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/Commands/InstallCommand.java
+/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/Commands/SearchCommand.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/CommandsHandler.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/DescriptionWrapper.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/LoaderSet.java
