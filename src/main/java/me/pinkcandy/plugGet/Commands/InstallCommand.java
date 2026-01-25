@@ -1,11 +1,7 @@
 package me.pinkcandy.plugGet.Commands;
 
-import me.pinkcandy.plugGet.SearchProjects;
-import me.pinkcandy.plugGet.VersionFetcher;
-import me.pinkcandy.plugGet.VersionSelector2;
+import me.pinkcandy.plugGet.Install.InstallHelper;
 import org.bukkit.command.CommandSender;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +9,6 @@ import java.util.List;
 public class InstallCommand {
 
     public boolean execute(CommandSender sender, String[] args) {
-        SearchProjects searchProjects = new SearchProjects();
-        VersionFetcher versionFetcher = new VersionFetcher();
-        VersionSelector2 selector = new VersionSelector2();
         List<String[]> plugins = new ArrayList<>();
         for (int i = 1; i < args.length; i++) {
             String slug = args[i];
@@ -58,40 +51,12 @@ public class InstallCommand {
                 }
 
             }
-
             plugins.add (new String[] {slug, modifier, version});
-
         }
 
-        for (int i = 0; i < plugins.size(); i++) {
-
-            if (searchProjects.fetchProject(plugins.get(i)[0]) == null) {
-                sender.sendMessage("Plugin " + plugins.get(i)[0] + " not found.");
-                return true;
-            }
-
-            JSONArray versionsList = versionFetcher.fetchAll(plugins.get(i)[0]);
-            List<String[]> branches = selector.selectVersion(versionsList);
+        List<String[]> versionsToInstall = new InstallHelper().BranchSelector(sender, plugins);
 
 
-            if (plugins.get(i)[1] == null) {
-
-            } else if (plugins.get(i)[1].equals("beta")) {
-
-            } else if (plugins.get(i)[1].equals("alpha")) {
-
-            } else if (plugins.get(i)[1].equals("version")) {
-
-                JSONObject versionInfo = versionFetcher.fetchSpecific(plugins.get(i)[0], plugins.get(i)[2]);
-                if (versionInfo == null) {
-                    sender.sendMessage("Version " + plugins.get(i)[2] + " not found for plugin " + plugins.get(i)[0]);
-                } else {
-
-                }
-            } else if (plugins.get(i)[1].equals("version-latest")) {
-
-            }
-        }
         return true;
     }
 }

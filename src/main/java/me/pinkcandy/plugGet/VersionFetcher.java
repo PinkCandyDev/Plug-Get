@@ -34,7 +34,7 @@ public class VersionFetcher {
         }
     }
 
-    public JSONObject fetchSpecific(String slug, String version) {
+    public JSONObject FetchExact(String slug, String version) {
         try {
             String url = "https://api.modrinth.com/v2/project/" + slug + "/version/" + version;
 

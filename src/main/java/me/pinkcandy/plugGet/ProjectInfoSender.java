@@ -4,7 +4,6 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
-import org.apache.http.util.VersionInfo;
 import org.bukkit.command.CommandSender;
 import org.json.JSONArray;
 

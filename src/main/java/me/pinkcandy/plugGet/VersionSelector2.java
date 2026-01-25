@@ -10,6 +10,20 @@ import java.util.List;
 
 public class VersionSelector2 {
 
+/*
+    List<release, beta, alpha>
+        <String[]>
+            [0] = version number
+            [1] = date published
+            [2] = game versions (json array string)
+            [3] = loaders (json array string)
+            [4] = file size (formatted string)
+            [5] = download URL
+            [6] = file name
+            [7] = sha512 hash
+*/
+
+
     public List<String[]> selectVersion(JSONArray versions) {
         ServerInfo serverInfo = new ServerInfo();
         List<JSONObject> release = new ArrayList<>();
@@ -76,14 +90,33 @@ public class VersionSelector2 {
         String gameVersionsJson = newest.optJSONArray("game_versions") != null ? newest.getJSONArray("game_versions").toString() : "[]";
         String loadersJson = newest.optJSONArray("loaders") != null ? newest.getJSONArray("loaders").toString() : "[]";
         String formattedSize = "§cUnknown";
+        String downloadURL = null;
+        String fileName = null;
+        String sha512 = null;
+
         JSONArray files = newest.optJSONArray("files");
         if (files != null && files.length() > 0) {
             JSONObject firstFile = files.getJSONObject(0);
             if (firstFile.has("size")) {
-                formattedSize = String.format("%.1f MiB", firstFile.getLong("size") / 1024.0 / 1024.0);
+                formattedSize = String.format(
+                        "%.1f MiB",
+                        firstFile.getLong("size") / 1024.0 / 1024.0
+                );
+            }
+            if (firstFile.has("url")) {
+                downloadURL = firstFile.getString("url");
+            }
+            if (firstFile.has("filename")) {
+                fileName = firstFile.getString("filename");
+            }
+            if (firstFile.has("hashes")) {
+                JSONObject hashes = firstFile.getJSONObject("hashes");
+                if (hashes.has("sha512")) {
+                    sha512 = hashes.getString("sha512");
+                }
             }
         }
 
-        return new String[]{versionNumber, formattedDate, gameVersionsJson, loadersJson, formattedSize};
+        return new String[]{versionNumber, formattedDate, gameVersionsJson, loadersJson, formattedSize, downloadURL,fileName,sha512};
     }
 }

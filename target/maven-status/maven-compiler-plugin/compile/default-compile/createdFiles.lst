@@ -1,3 +1,4 @@
+me/pinkcandy/plugGet/Install/SendInstallInfo.class
 me/pinkcandy/plugGet/PlugGet.class
 me/pinkcandy/plugGet/VersionRange.class
 me/pinkcandy/plugGet/SearchProjects.class
@@ -5,6 +6,7 @@ me/pinkcandy/plugGet/ServerInfo.class
 me/pinkcandy/plugGet/DescriptionWrapper.class
 me/pinkcandy/plugGet/CommandsHandler.class
 me/pinkcandy/plugGet/Commands/SearchCommand.class
+me/pinkcandy/plugGet/Install/InstallHelper.class
 me/pinkcandy/plugGet/VersionFetcher.class
 me/pinkcandy/plugGet/LoaderSet.class
 me/pinkcandy/plugGet/Commands/InstallCommand.class
