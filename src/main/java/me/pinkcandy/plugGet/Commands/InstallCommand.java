@@ -14,11 +14,11 @@ public class InstallCommand {
             String slug = args[i];
 
             boolean invalidArg = false;
-            String modifier = null;
+            String modifier = "";
             String version = null;
 
             if (slug.startsWith("--")) {
-                sender.sendMessage("Wrong argument: " + slug);
+                sender.sendMessage("§4Wrong argument: " + slug);
                 invalidArg = true;
                 return true;
             }
@@ -34,7 +34,7 @@ public class InstallCommand {
                     i++;
                 } else if (next.equals("--v")) {
                     if (i + 2 >= args.length) {
-                        sender.sendMessage("No version provided after --v " + slug);
+                        sender.sendMessage("§4No version provided after --v " + slug);
                         return true;
                     }
                     modifier = "version";
@@ -42,7 +42,7 @@ public class InstallCommand {
                     i += 2;
                 } else if (next.equals("--vl")) {
                     if (i + 2 >= args.length) {
-                        sender.sendMessage("No version provided after --v " + slug);
+                        sender.sendMessage("§4No version provided after --vl " + slug);
                         return true;
                     }
                     modifier = "version-latest";

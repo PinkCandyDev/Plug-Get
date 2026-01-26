@@ -80,7 +80,9 @@ public class VersionSelector2 {
     }
 
     public String[] buildBranchData(List<JSONObject> versionList) {
-        versionList.sort((a, b) -> b.optString("date_published", "").compareTo(a.optString("date_published", "")));
+        versionList = new ArrayList<>(versionList);
+        versionList.sort((a, b) -> b.optString("date_published", "")
+                .compareTo(a.optString("date_published", "")));
 
         JSONObject newest = versionList.get(0);
 

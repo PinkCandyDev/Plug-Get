@@ -21,10 +21,11 @@ public class InstallHelper {
         List<String[]> versionsInfo = new ArrayList<>();
         boolean continueInstall = true;
 
+        sender.sendMessage("§3Fetching plugins and versions...");
         for (int i = 0; i < plugins.size(); i++) {
 
             if (searchProjects.fetchProject(plugins.get(i)[0]) == null) {
-                sender.sendMessage("Plugin " + plugins.get(i)[0] + " not found.");
+                sender.sendMessage("§cPlugin " + plugins.get(i)[0] + " not found.");
                 continueInstall = false;
             }
 
@@ -36,9 +37,13 @@ public class InstallHelper {
                 if (versionObj != null) {
                     versionsInfo.add(selector.buildBranchData(List.of(versionObj)));
                 }
+                else {
+                    sender.sendMessage("§cVersion " + plugins.get(i)[2] + " not found for " + plugins.get(i)[0]);
+                    continueInstall = false;
+                }
             }
 
-            if (plugins.get(i)[1] == null) {
+            if (plugins.get(i)[1].equals("")) {
                 if (branches.get(0) != null) {
                     versionsInfo.add(branches.get(0));
                 }
@@ -49,7 +54,7 @@ public class InstallHelper {
                     versionsInfo.add(branches.get(2));
                 }
                 else {
-                    sender.sendMessage("No versions found for " + plugins.get(i)[0]);
+                    sender.sendMessage("§cNo versions found for " + plugins.get(i)[0]);
                     continueInstall = false;
                 }
             } else if (plugins.get(i)[1].equals("beta")) {
@@ -58,26 +63,22 @@ public class InstallHelper {
                 }
                 else
                 {
-                    sender.sendMessage("No beta version found for " + plugins.get(i)[0]);
+                    sender.sendMessage("§cNo beta version found for " + plugins.get(i)[0]);
                     continueInstall = false;
                 }
             } else if (plugins.get(i)[1].equals("alpha")) {
                 if (branches.get(2) != null) {
                     versionsInfo.add(branches.get(2));
                 } else {
-                    sender.sendMessage("No alpha version found for " + plugins.get(i)[0]);
+                    sender.sendMessage("§cNo alpha version found for " + plugins.get(i)[0]);
                     continueInstall = false;
                 }
-            } else if (plugins.get(i)[1].equals("version") || plugins.get(i)[1].equals("version-latest")) {
-                JSONObject versionObj = fetcher.FetchExact(plugins.get(i)[0], plugins.get(i)[2]);
-                if (versionObj != null) {
-                    versionsInfo.add(selector.buildBranchData(List.of(versionObj)));
-                }
             }
+
         }
 
         if (continueInstall==false) {
-            sender.sendMessage("Installation aborted due to errors.");
+            sender.sendMessage("§4Installation aborted due to errors.");
             return null;
         }
         else {
