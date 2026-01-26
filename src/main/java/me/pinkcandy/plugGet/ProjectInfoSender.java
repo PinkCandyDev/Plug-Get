@@ -89,7 +89,7 @@ public class ProjectInfoSender {
 
 
 
-        List<String> wrapped = DescriptionWrapper.wrap(description, 60);
+        List<String> wrapped = TextTools.wrapText(description, 60);
         for (String line : wrapped) {
             builder.append("\n  §7" + line).event((HoverEvent) null);
         }
