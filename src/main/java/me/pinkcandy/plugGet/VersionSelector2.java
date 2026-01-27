@@ -10,20 +10,6 @@ import java.util.List;
 
 public class VersionSelector2 {
 
-/*
-    List<release, beta, alpha>
-        <String[]>
-            [0] = version number
-            [1] = date published
-            [2] = game versions (json array string)
-            [3] = loaders (json array string)
-            [4] = file size (formatted string)
-            [5] = download URL
-            [6] = file name
-            [7] = sha512 hash
-*/
-
-
     public List<String[]> selectVersion(JSONArray versions) {
         ServerInfo serverInfo = new ServerInfo();
         List<JSONObject> release = new ArrayList<>();
@@ -54,7 +40,8 @@ public class VersionSelector2 {
                 if (gameVersions == null) continue;
                 boolean versionCompatible = false;
                 for (int g = 0; g < gameVersions.length(); g++) {
-                    if (gameVersions.getString(g).equals(serverInfo.version)) {
+                    if (normalizeVersion(gameVersions.getString(g))
+                            .equals(normalizeVersion(serverInfo.version))) {
                         versionCompatible = true;
                         break;
                     }
@@ -95,6 +82,7 @@ public class VersionSelector2 {
         String downloadURL = null;
         String fileName = null;
         String sha512 = null;
+        String branch = newest.optString("version_type", "unknown");
 
         JSONArray files = newest.optJSONArray("files");
         if (files != null && files.length() > 0) {
@@ -118,7 +106,11 @@ public class VersionSelector2 {
                 }
             }
         }
+        return new String[]{versionNumber, formattedDate, gameVersionsJson, loadersJson, formattedSize, downloadURL, fileName, sha512, branch};
+    }
 
-        return new String[]{versionNumber, formattedDate, gameVersionsJson, loadersJson, formattedSize, downloadURL,fileName,sha512};
+    private String normalizeVersion(String v) {
+        if (v == null) return "";
+        return v.replaceAll("[^0-9.]", "");
     }
 }
