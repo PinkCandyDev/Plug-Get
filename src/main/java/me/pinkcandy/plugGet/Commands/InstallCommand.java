@@ -1,6 +1,7 @@
 package me.pinkcandy.plugGet.Commands;
 
 import me.pinkcandy.plugGet.Install.InstallHelper;
+import me.pinkcandy.plugGet.Install.SendInstallInfo;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
@@ -55,7 +56,8 @@ public class InstallCommand {
         }
 
         List<String[]> versionsToInstall = new InstallHelper().BranchSelector(sender, plugins);
-
+        SendInstallInfo sendInstallInfo = new SendInstallInfo();
+        sendInstallInfo.sendInstallInfo(sender, plugins,versionsToInstall);
 
         return true;
     }

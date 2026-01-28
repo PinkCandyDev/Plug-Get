@@ -29,28 +29,16 @@ public class TextTools {
         return result;
     }
 
-    public static int countLetters(List<String[]> texts, int ix){
-        List<Integer> letters = new ArrayList<Integer>();
-        for (String[] text : texts) {
-            int count = 0;
-            for (int i = 0; i < text[ix].length(); i++) {
-                if (Character.isLetter(text[ix].charAt(i)))
-                    count++;
-            }
-            letters.add(count);
+    public static int countLetters(String text){
+        int count = 0;
+        for (int i = 0; i < text.length(); i++) {
+            if (Character.isLetter(text.charAt(i)))
+                count++;
         }
-
-        int maxValue = 0;
-
-        for (Integer integer : letters) {
-            if (integer > maxValue)
-                maxValue = integer;
-        }
-
-        return maxValue;
+        return count;
     }
 
-    public static String makeSpaces(int count){
+    public static String generateSpaces(int count){
         StringBuilder spaces = new StringBuilder();
         for (int i = 0; i < count; i++) {
             spaces.append(" ");

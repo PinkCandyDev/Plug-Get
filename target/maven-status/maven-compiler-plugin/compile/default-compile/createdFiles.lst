@@ -3,13 +3,13 @@ me/pinkcandy/plugGet/PlugGet.class
 me/pinkcandy/plugGet/VersionRange.class
 me/pinkcandy/plugGet/SearchProjects.class
 me/pinkcandy/plugGet/ServerInfo.class
-me/pinkcandy/plugGet/DescriptionWrapper.class
 me/pinkcandy/plugGet/CommandsHandler.class
 me/pinkcandy/plugGet/Commands/SearchCommand.class
 me/pinkcandy/plugGet/Install/InstallHelper.class
 me/pinkcandy/plugGet/VersionFetcher.class
 me/pinkcandy/plugGet/LoaderSet.class
 me/pinkcandy/plugGet/Commands/InstallCommand.class
+me/pinkcandy/plugGet/TextTools.class
 me/pinkcandy/plugGet/CatchProjectInfo.class
 me/pinkcandy/plugGet/ProjectInfoSender.class
 me/pinkcandy/plugGet/VersionSelector2.class
