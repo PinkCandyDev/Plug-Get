@@ -1,9 +1,11 @@
 package me.pinkcandy.plugGet.Install;
 
+import me.pinkcandy.plugGet.ActionLock;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.command.CommandSender;
 import me.pinkcandy.plugGet.TextTools;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,5 +47,20 @@ public class SendInstallInfo {
             lineBuilder.append(line);
             sender.spigot().sendMessage(lineBuilder.create());
         }
+
+        sender.sendMessage("");
+        ComponentBuilder footer = new ComponentBuilder();
+        footer.append("§8:: §7Continue installation? §8[");
+        footer.append("§8Y").event(new net.md_5.bungee.api.chat.ClickEvent(
+                net.md_5.bungee.api.chat.ClickEvent.Action.RUN_COMMAND,
+                "/plugget y"
+        ));
+        footer.append("§8/").append("§8N").event(new net.md_5.bungee.api.chat.ClickEvent(
+                net.md_5.bungee.api.chat.ClickEvent.Action.RUN_COMMAND,
+                "/plugget n"
+        ));
+        footer.append("§8]");
+        ActionLock.isConfirming = true;
+        sender.spigot().sendMessage(footer.create());
     }
 }

@@ -10,6 +10,20 @@ import java.util.List;
 
 public class VersionSelector2 {
 
+/*
+    List<release, beta, alpha>
+        <String[]>
+            [0] = version number
+            [1] = date published
+            [2] = game versions (json array string)
+            [3] = loaders (json array string)
+            [4] = file size (formatted string)
+            [5] = download URL
+            [6] = file name
+            [7] = sha512 hash
+            [8] = branch
+*/
+
     public List<String[]> selectVersion(JSONArray versions) {
         ServerInfo serverInfo = new ServerInfo();
         List<JSONObject> release = new ArrayList<>();

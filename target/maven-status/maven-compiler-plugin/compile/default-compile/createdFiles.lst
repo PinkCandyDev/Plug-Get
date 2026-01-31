@@ -8,8 +8,10 @@ me/pinkcandy/plugGet/Commands/SearchCommand.class
 me/pinkcandy/plugGet/Install/InstallHelper.class
 me/pinkcandy/plugGet/VersionFetcher.class
 me/pinkcandy/plugGet/LoaderSet.class
+me/pinkcandy/plugGet/ActionLock.class
 me/pinkcandy/plugGet/Commands/InstallCommand.class
 me/pinkcandy/plugGet/TextTools.class
 me/pinkcandy/plugGet/CatchProjectInfo.class
 me/pinkcandy/plugGet/ProjectInfoSender.class
+me/pinkcandy/plugGet/Download/FileDownloader.class
 me/pinkcandy/plugGet/VersionSelector2.class

@@ -1,9 +1,12 @@
 package me.pinkcandy.plugGet.Commands;
 
+import me.pinkcandy.plugGet.ActionLock;
+import me.pinkcandy.plugGet.Download.FileDownloader;
 import me.pinkcandy.plugGet.Install.InstallHelper;
 import me.pinkcandy.plugGet.Install.SendInstallInfo;
 import org.bukkit.command.CommandSender;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +61,30 @@ public class InstallCommand {
         List<String[]> versionsToInstall = new InstallHelper().BranchSelector(sender, plugins);
         SendInstallInfo sendInstallInfo = new SendInstallInfo();
         sendInstallInfo.sendInstallInfo(sender, plugins,versionsToInstall);
+
+        ActionLock.confirm = () -> {
+            boolean continueInstall = true;
+            sender.sendMessage("§8:: §7Downloading files...");
+            for (int i = 0; i < plugins.size(); i++) {
+                sender.sendMessage("Downloading " + versionsToInstall.get(i)[6]);
+                boolean success = FileDownloader.downloadFile(versionsToInstall.get(i)[5], versionsToInstall.get(i)[6]);
+                if (!success) {
+                    sender.sendMessage("§cFailed to download " + versionsToInstall.get(i)[6] + "for " + plugins.get(i)[0]);
+                    continueInstall = false;
+                }
+            }
+            if (continueInstall){
+                ActionLock.release();
+            }
+            else {
+                sender.sendMessage("§4Installation aborted due to errors.");
+                ActionLock.release();
+            }
+        };
+        ActionLock.deny = () -> {
+
+        };
+
 
         return true;
     }

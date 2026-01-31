@@ -23,13 +23,37 @@ public class CommandsHandler implements CommandExecutor {
 
         String subCommand = args[0].toLowerCase();
 
+        if (subCommand.equals("y")) {
+            if (ActionLock.isConfirming && ActionLock.lockedBy == sender) {
+                ActionLock.confirm.run();
+            } else {
+                sender.sendMessage("§cNo action to confirm.");
+            }
+        }
+
+        if (subCommand.equals("n")) {
+            if (ActionLock.isConfirming && ActionLock.lockedBy == sender) {
+                ActionLock.deny.run();
+            } else {
+                sender.sendMessage("§cNo action to deny.");
+            }
+        }
+
+
         if (subCommand.equals("-ss") || subCommand.equals("search")) {
             new SearchCommand().execute(sender, args);
         }
 
-        if (subCommand.equals("-s")|| subCommand.equals("install")) {
+
+        if ((subCommand.equals("-s") || subCommand.equals("install")) &&
+                 ( !ActionLock.isLocked && ActionLock.lockedBy == null)){
+            ActionLock.lock(sender);
             new InstallCommand().execute(sender, args);
             return true;
+        }
+        else if (ActionLock.isLocked)
+        {
+            sender.sendMessage("§cAnother action is currently in progress. Please wait until it is finished.");
         }
         return true;
     }
