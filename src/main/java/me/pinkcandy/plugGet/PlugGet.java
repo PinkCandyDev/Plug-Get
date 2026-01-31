@@ -9,6 +9,7 @@ public final class PlugGet extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        new ServerInfo();
         this.getCommand("plugget").setExecutor(new CommandsHandler());
     }
 

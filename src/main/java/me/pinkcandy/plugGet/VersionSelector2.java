@@ -1,5 +1,6 @@
 package me.pinkcandy.plugGet;
 
+import com.google.gson.JsonObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -25,7 +26,6 @@ public class VersionSelector2 {
 */
 
     public List<String[]> selectVersion(JSONArray versions) {
-        ServerInfo serverInfo = new ServerInfo();
         List<JSONObject> release = new ArrayList<>();
         List<JSONObject> beta = new ArrayList<>();
         List<JSONObject> alpha = new ArrayList<>();
@@ -40,7 +40,7 @@ public class VersionSelector2 {
                 boolean loaderCompatible = false;
                 for (int l = 0; l < loadersArray.length(); l++) {
                     String loader = loadersArray.getString(l).toLowerCase();
-                    for (String sLoader : serverInfo.loaders) {
+                    for (String sLoader : ServerInfo.loaders) {
                         if (loader.equals(sLoader.toLowerCase())) {
                             loaderCompatible = true;
                             break;
@@ -55,7 +55,7 @@ public class VersionSelector2 {
                 boolean versionCompatible = false;
                 for (int g = 0; g < gameVersions.length(); g++) {
                     if (normalizeVersion(gameVersions.getString(g))
-                            .equals(normalizeVersion(serverInfo.version))) {
+                            .equals(normalizeVersion(ServerInfo.version))) {
                         versionCompatible = true;
                         break;
                     }
@@ -73,6 +73,58 @@ public class VersionSelector2 {
             result.add(!beta.isEmpty() ? buildBranchData(beta) : null);
             result.add(!alpha.isEmpty() ? buildBranchData(alpha) : null);
             return result;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String[] selectSpecific(JSONArray versions, String targetVersion) {
+        List<JSONObject> matchedVersions = new ArrayList<>();
+        try {
+            for (int i = 0; i < versions.length(); i++) {
+                JSONObject v = versions.getJSONObject(i);
+
+                JSONArray loadersArray = v.optJSONArray("loaders");
+                if (loadersArray == null) continue;
+                boolean loaderCompatible = false;
+                for (int l = 0; l < loadersArray.length(); l++) {
+                    String loader = loadersArray.getString(l).toLowerCase();
+                    for (String sLoader : ServerInfo.loaders) {
+                        if (loader.equals(sLoader.toLowerCase())) {
+                            loaderCompatible = true;
+                            break;
+                        }
+                    }
+                    if (loaderCompatible) break;
+                }
+                if (!loaderCompatible) continue;
+
+                JSONArray gameVersions = v.optJSONArray("game_versions");
+                if (gameVersions == null) continue;
+                boolean versionCompatible = false;
+                for (int g = 0; g < gameVersions.length(); g++) {
+                    if (normalizeVersion(gameVersions.getString(g))
+                            .equals(normalizeVersion(ServerInfo.version))) {
+                        versionCompatible = true;
+                        break;
+                    }
+                }
+                if (!versionCompatible) continue;
+
+                if (v.optString("version_number", "").equals(targetVersion)) {
+                    matchedVersions.add(v);
+                }
+            }
+
+            if (!matchedVersions.isEmpty()) {
+                return buildBranchData(matchedVersions);
+            }
+            else
+            {
+                return null;
+            }
 
         } catch (Exception e) {
             e.printStackTrace();

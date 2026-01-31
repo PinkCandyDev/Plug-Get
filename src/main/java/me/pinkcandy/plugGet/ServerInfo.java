@@ -6,10 +6,10 @@ import java.util.List;
 
 public class ServerInfo {
 
-    public String[] loaders;
-    public String version;
+    public static String[] loaders;
+    public static String version;
 
-    public ServerInfo() {
+    public  ServerInfo() {
 
         String fullVersion = Bukkit.getBukkitVersion();
         this.version = fullVersion.split("-")[0];

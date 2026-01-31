@@ -33,9 +33,9 @@ public class InstallHelper {
             List<String[]> branches = selector.selectVersion(versionsList);
 
             if (plugins.get(i)[1].equals("version") || plugins.get(i)[1].equals("version-latest")) {
-                JSONObject versionObj = fetcher.FetchExact(plugins.get(i)[0], plugins.get(i)[2]);
-                if (versionObj != null) {
-                    versionsInfo.add(selector.buildBranchData(List.of(versionObj)));
+                String[] versionInfo = selector.selectSpecific(versionsList, plugins.get(i)[2]);
+                if (versionInfo != null) {
+                    versionsInfo.add(versionInfo);
                 }
                 else {
                     sender.sendMessage("§cVersion " + plugins.get(i)[2] + " not found for " + plugins.get(i)[0]);
@@ -74,7 +74,6 @@ public class InstallHelper {
                     continueInstall = false;
                 }
             }
-
         }
 
         if (continueInstall==false) {
