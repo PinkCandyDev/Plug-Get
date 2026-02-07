@@ -117,7 +117,8 @@ public class InstallCommand {
                 }
             }
             if (continueInstall) {
-                sender.sendMessage("§8:: §7Copying files...");
+                sender.sendMessage("§8:: §7Copying Files...");
+                sender.sendMessage("§8:: §7Registering in db...");
                 sender.sendMessage("§8:: §7Cleaning up...");
                 sender.sendMessage("§a All plugins installed successfully!");
             }
