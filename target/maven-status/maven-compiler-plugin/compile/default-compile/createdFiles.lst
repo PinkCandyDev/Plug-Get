@@ -1,6 +1,7 @@
 me/pinkcandy/plugGet/Install/SendInstallInfo.class
 me/pinkcandy/plugGet/PlugGet.class
 me/pinkcandy/plugGet/VersionRange.class
+me/pinkcandy/plugGet/DB/JsonConverter.class
 me/pinkcandy/plugGet/SearchProjects.class
 me/pinkcandy/plugGet/ServerInfo.class
 me/pinkcandy/plugGet/CommandsHandler.class

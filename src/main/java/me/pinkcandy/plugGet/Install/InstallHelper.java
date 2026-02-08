@@ -77,7 +77,6 @@ public class InstallHelper {
         }
 
         if (continueInstall==false) {
-            sender.sendMessage("§4Installation aborted due to errors.");
             return null;
         }
         else {

@@ -1,11 +1,13 @@
 package me.pinkcandy.plugGet.Commands;
 
 import me.pinkcandy.plugGet.ActionLock;
+import me.pinkcandy.plugGet.DB.JsonConverter;
 import me.pinkcandy.plugGet.Download.FileDownloader;
 import me.pinkcandy.plugGet.Install.InstallHelper;
 import me.pinkcandy.plugGet.Install.SendInstallInfo;
 import me.pinkcandy.plugGet.PlugGet;
 import org.bukkit.command.CommandSender;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +17,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
+import static me.pinkcandy.plugGet.DB.DBManager.*;
 import static me.pinkcandy.plugGet.PlugGet.tmpFolder;
 
 public class InstallCommand {
@@ -66,7 +69,14 @@ public class InstallCommand {
         }
 
         List<String[]> versionsToInstall = new InstallHelper().BranchSelector(sender, plugins);
+        if (versionsToInstall == null)
+        {
+            sender.sendMessage("§4Installation aborted due to errors.");
+            ActionLock.release();
+            return true;
+        }
         SendInstallInfo sendInstallInfo = new SendInstallInfo();
+        JsonConverter dbConverter = new JsonConverter();
         sendInstallInfo.sendInstallInfo(sender, plugins,versionsToInstall);
 
         ActionLock.confirm = () -> {
@@ -95,6 +105,7 @@ public class InstallCommand {
                 }
             }
             if (continueInstall) {
+                sender.sendMessage("§8:: §7Copying Files...");
                 for (int i = 0; i < plugins.size(); i++) {
                     Path cache = PlugGet.instance.getDataFolder().toPath().resolve("cache/plugins/" + plugins.get(i)[0] + "/" + versionsToInstall.get(i)[0] + "/" + versionsToInstall.get(i)[6]);
                     try {
@@ -117,10 +128,44 @@ public class InstallCommand {
                 }
             }
             if (continueInstall) {
-                sender.sendMessage("§8:: §7Copying Files...");
                 sender.sendMessage("§8:: §7Registering in db...");
-                sender.sendMessage("§8:: §7Cleaning up...");
+                loadDB();
+                for (int i = 0; i < plugins.size(); i++) {
+                    try {
+                        JSONObject jP =  dbConverter.pluginToJson(plugins.get(i), versionsToInstall.get(i));
+                        AddPlugin(jP);
+                    }
+                    catch (Exception e) {
+                        sender.sendMessage("§cFailed to register plugin " + plugins.get(i)[0] + " in database.");
+                        e.printStackTrace();
+                        continueInstall = false;
+                    }
+                }
+                try {
+                    saveDB();
+                    loadDB();
+                }
+                catch (Exception e) {
+                    sender.sendMessage("§cFailed to save database.");
+                    e.printStackTrace();
+                    continueInstall = false;
+                }
+            }
+            sender.sendMessage("§8:: §7Cleaning up...");
+            try {
+                Files.walk(tmpFolder)
+                        .filter(Files::isRegularFile)
+                        .forEach(path -> {
+                            try { Files.delete(path); }
+                            catch (Exception e) { e.printStackTrace(); }
+                        });
+            } catch (IOException e) {
+                sender.sendMessage("§cFailed to clean up temporary files.");
+                e.printStackTrace();
+            }
+            if (continueInstall) {
                 sender.sendMessage("§a All plugins installed successfully!");
+                ActionLock.release();
             }
             else {
                 sender.sendMessage("§4Installation aborted due to errors.");
@@ -131,8 +176,6 @@ public class InstallCommand {
         ActionLock.deny = () -> {
 
         };
-
-
         return true;
     }
 }

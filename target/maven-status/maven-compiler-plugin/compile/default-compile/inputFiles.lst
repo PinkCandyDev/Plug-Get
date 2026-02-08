@@ -4,6 +4,7 @@
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/Commands/SearchCommand.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/CommandsHandler.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/DB/DBManager.java
+/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/DB/JsonConverter.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/Download/FileDownloader.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/Install/InstallHelper.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/Install/SendInstallInfo.java

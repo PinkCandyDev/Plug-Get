@@ -11,7 +11,7 @@ public final class PlugGet extends JavaPlugin {
 
     public static PlugGet instance;
     public static Path dbFolder;
-    public static Path mainDb;
+    public static Path dbFile;
     public static Path tmpFolder;
     public static Path cacheFolder;
 
@@ -19,15 +19,15 @@ public final class PlugGet extends JavaPlugin {
     public void onEnable() {
         instance = this;
         dbFolder = PlugGet.instance.getDataFolder().toPath().resolve("db/");
-        mainDb = dbFolder.resolve("plugins.json");
+        dbFile = dbFolder.resolve("plugins.json");
         try {
             Files.createDirectories(dbFolder);
 
-            if (!Files.exists(mainDb)) {
+            if (!Files.exists(dbFile)) {
                 JSONObject dbJson = new JSONObject();
                 dbJson.put("plugins", new JSONObject());
 
-                Files.writeString(mainDb, dbJson.toString(4), StandardOpenOption.CREATE);
+                Files.writeString(dbFile, dbJson.toString(4), StandardOpenOption.CREATE);
             }
         } catch (Exception e) {
             e.printStackTrace();
