@@ -40,7 +40,7 @@ public class CommandsHandler implements CommandExecutor {
         }
 
 
-        if (subCommand.equals("-ss") || subCommand.equals("search")) {
+        if (subCommand.equals("-ss") || subCommand.equals("search") && ActionLock.lockedBy != sender) {
             new SearchCommand().execute(sender, args);
         }
 

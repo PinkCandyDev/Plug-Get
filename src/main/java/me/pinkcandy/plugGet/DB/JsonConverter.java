@@ -4,7 +4,7 @@ import org.json.JSONObject;
 
 public class JsonConverter {
 
-    public JSONObject pluginToJson(String[] pluginInfo, String[] versionInfo) {
+    public static JSONObject pluginToJson(String[] pluginInfo, String[] versionInfo) {
         JSONObject object = new JSONObject();
         JSONObject plugin = new JSONObject();
         JSONObject version = new JSONObject();

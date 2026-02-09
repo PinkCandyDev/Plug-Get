@@ -48,7 +48,7 @@ public class ProjectInfoSender {
                 .event(new ClickEvent(
                         ClickEvent.Action.RUN_COMMAND,
                         "/plugget -S " + slug))
-                        .append("       ").event((HoverEvent) null);
+                        .append("    ").event((HoverEvent) null);
 
         if (!foundVersions) {
             builder.append("§cUnknown");

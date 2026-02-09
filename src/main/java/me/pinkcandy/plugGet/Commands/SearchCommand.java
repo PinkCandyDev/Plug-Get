@@ -1,7 +1,7 @@
 package me.pinkcandy.plugGet.Commands;
 
 import me.pinkcandy.plugGet.*;
-import org.bukkit.command.Command;
+import me.pinkcandy.plugGet.VersionControll.VersionSelector;
 import org.bukkit.command.CommandSender;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,7 +25,7 @@ public class SearchCommand {
             CatchProjectInfo parser = new CatchProjectInfo();
 
             VersionFetcher fetcher = new VersionFetcher();
-            VersionSelector2 selector = new VersionSelector2();
+            VersionSelector selector = new VersionSelector();
             ProjectInfoSender sendInfo = new ProjectInfoSender();
 
             for (int i = hits.length() - 1; i >= 0; i--) {

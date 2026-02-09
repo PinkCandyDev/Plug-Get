@@ -1,6 +1,6 @@
-package me.pinkcandy.plugGet;
+package me.pinkcandy.plugGet.VersionControll;
 
-import com.google.gson.JsonObject;
+import me.pinkcandy.plugGet.ServerInfo;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VersionSelector2 {
+public class VersionSelector {
 
 /*
     List<release, beta, alpha>

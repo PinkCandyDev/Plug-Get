@@ -1,86 +1,91 @@
 package me.pinkcandy.plugGet.Install;
 
-import me.pinkcandy.plugGet.SearchProjects;
-import me.pinkcandy.plugGet.VersionFetcher;
-import me.pinkcandy.plugGet.VersionSelector2;
+import me.pinkcandy.plugGet.Download.FileDownloader;
+import me.pinkcandy.plugGet.PlugGet;
 import org.bukkit.command.CommandSender;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+
+import static me.pinkcandy.plugGet.DB.DBManager.*;
+import static me.pinkcandy.plugGet.DB.JsonConverter.pluginToJson;
+import static me.pinkcandy.plugGet.PlugGet.tmpFolder;
 
 public class InstallHelper {
 
-    public List<String[]> BranchSelector(CommandSender sender, List<String[]> plugins){
-
-        SearchProjects searchProjects = new SearchProjects();
-        VersionFetcher fetcher = new VersionFetcher();
-        VersionSelector2 selector = new VersionSelector2();
-
-        List<String[]> versionsInfo = new ArrayList<>();
-        boolean continueInstall = true;
-
-        sender.sendMessage("§3Fetching plugins and versions...");
-        for (int i = 0; i < plugins.size(); i++) {
-
-            if (searchProjects.fetchProject(plugins.get(i)[0]) == null) {
-                sender.sendMessage("§cPlugin " + plugins.get(i)[0] + " not found.");
-                continueInstall = false;
-            }
-
-            JSONArray versionsList = fetcher.fetchAll(plugins.get(i)[0]);
-            List<String[]> branches = selector.selectVersion(versionsList);
-
-            if (plugins.get(i)[1].equals("version") || plugins.get(i)[1].equals("version-latest")) {
-                String[] versionInfo = selector.selectSpecific(versionsList, plugins.get(i)[2]);
-                if (versionInfo != null) {
-                    versionsInfo.add(versionInfo);
-                }
-                else {
-                    sender.sendMessage("§cVersion " + plugins.get(i)[2] + " not found for " + plugins.get(i)[0]);
-                    continueInstall = false;
+        public boolean manageDownload(List<String[]> plugins, List<String[]>versionsToInstall, CommandSender sender) {
+            for (int i = 0; i < plugins.size(); i++) {
+                sender.sendMessage("§8:: §7Downloading: " + versionsToInstall.get(i)[6] + " §8(" + (1 + i) + "/" + plugins.size() + ")");
+                boolean success = FileDownloader.downloadFile(versionsToInstall.get(i)[5], versionsToInstall.get(i)[6]);
+                if (!success) {
+                    sender.sendMessage("§cFailed to download " + versionsToInstall.get(i)[6] + " for " + plugins.get(i)[0]);
+                    return true;
                 }
             }
+            return true;
+        }
 
-            if (plugins.get(i)[1].equals("")) {
-                if (branches.get(0) != null) {
-                    versionsInfo.add(branches.get(0));
-                }
-                else if (branches.get(1) != null) {
-                    versionsInfo.add(branches.get(1));
-                }
-                else if (branches.get(2) != null) {
-                    versionsInfo.add(branches.get(2));
-                }
-                else {
-                    sender.sendMessage("§cNo versions found for " + plugins.get(i)[0]);
-                    continueInstall = false;
-                }
-            } else if (plugins.get(i)[1].equals("beta")) {
-                if (branches.get(1) != null) {
-                    versionsInfo.add(branches.get(1));
-                }
-                else
-                {
-                    sender.sendMessage("§cNo beta version found for " + plugins.get(i)[0]);
-                    continueInstall = false;
-                }
-            } else if (plugins.get(i)[1].equals("alpha")) {
-                if (branches.get(2) != null) {
-                    versionsInfo.add(branches.get(2));
-                } else {
-                    sender.sendMessage("§cNo alpha version found for " + plugins.get(i)[0]);
-                    continueInstall = false;
+        public boolean manageVerification (List<String[]> plugins, List<String[]> versionsToInstall, CommandSender sender) {
+            for (int i = 0; i < plugins.size(); i++) {
+                sender.sendMessage("§8:: §7Verifying: " + versionsToInstall.get(i)[6] + " §8(" + (i+1) + "/" + plugins.size() + ")");
+                boolean verified = FileDownloader.verifyFile(versionsToInstall.get(i)[6], versionsToInstall.get(i)[7]);
+                if (!verified) {
+                    sender.sendMessage("§cFailed verification of file: " + versionsToInstall.get(i)[6] + "for " + plugins.get(i)[0]);
+                    return false;
                 }
             }
+            return true;
         }
 
-        if (continueInstall==false) {
-            return null;
+        public boolean manageCopy(List<String[]> plugins, List<String[]> versionsToInstall, CommandSender sender) {
+            for (int i = 0; i < plugins.size(); i++) {
+                Path cache = PlugGet.instance.getDataFolder().toPath().resolve("cache/plugins/" + plugins.get(i)[0] + "/" + versionsToInstall.get(i)[0] + "/" + versionsToInstall.get(i)[6]);
+                try {
+                    Files.createDirectories(cache.getParent());
+                    Files.copy(tmpFolder.resolve(versionsToInstall.get(i)[6]), cache, StandardCopyOption.REPLACE_EXISTING);
+                    Files.copy(
+                            cache,
+                            PlugGet.instance.getDataFolder().getParentFile()
+                                    .toPath()
+                                    .resolve(versionsToInstall.get(i)[6]),
+                            StandardCopyOption.REPLACE_EXISTING
+                    );
+
+                } catch (IOException e) {
+                    sender.sendMessage("§cFailed to move file to cache.");
+                    e.printStackTrace();
+                    return  false;
+                }
+            }
+            return true;
         }
-        else {
-            return versionsInfo;
+
+        public boolean manageRegisteringDB(List<String[]> plugins, List<String[]> versionsToInstall, CommandSender sender) {
+            loadDB();
+            for (int i = 0; i < plugins.size(); i++) {
+                try {
+                    JSONObject jP =  pluginToJson(plugins.get(i), versionsToInstall.get(i));
+                    AddPlugin(jP);
+                }
+                catch (Exception e) {
+                    sender.sendMessage("§cFailed to register plugin " + plugins.get(i)[0] + " in database.");
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+            try {
+                saveDB();
+                loadDB();
+            }
+            catch (Exception e) {
+                sender.sendMessage("§cFailed to save database.");
+                e.printStackTrace();
+                return false;
+            }
+            return true;
         }
-    }
 }

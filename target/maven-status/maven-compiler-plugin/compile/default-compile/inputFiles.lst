@@ -6,7 +6,9 @@
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/DB/DBManager.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/DB/JsonConverter.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/Download/FileDownloader.java
+/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/Install/CleanUp.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/Install/InstallHelper.java
+/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/Install/InstallManager.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/Install/SendInstallInfo.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/LoaderSet.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/PlugGet.java
@@ -14,6 +16,7 @@
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/SearchProjects.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/ServerInfo.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/TextTools.java
+/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/VersionControll/BranchSelector.java
+/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/VersionControll/VersionSelector.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/VersionFetcher.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/VersionRange.java
-/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/VersionSelector2.java
