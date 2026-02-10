@@ -66,6 +66,7 @@ public class InstallHelper {
 
         public boolean manageRegisteringDB(List<String[]> plugins, List<String[]> versionsToInstall, CommandSender sender) {
             loadDB();
+            loadDBToBackoupDB();
             for (int i = 0; i < plugins.size(); i++) {
                 try {
                     JSONObject jP =  pluginToJson(plugins.get(i), versionsToInstall.get(i));
@@ -79,6 +80,7 @@ public class InstallHelper {
             }
             try {
                 saveDB();
+                saveBackupDB();
                 loadDB();
             }
             catch (Exception e) {

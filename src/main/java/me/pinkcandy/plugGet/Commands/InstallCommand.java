@@ -1,6 +1,7 @@
 package me.pinkcandy.plugGet.Commands;
 
 import me.pinkcandy.plugGet.ActionLock;
+import me.pinkcandy.plugGet.Install.CleanUp;
 import me.pinkcandy.plugGet.Install.InstallManager;
 import me.pinkcandy.plugGet.VersionControll.BranchSelector;
 import me.pinkcandy.plugGet.Install.SendInstallInfo;
@@ -66,17 +67,20 @@ public class InstallCommand {
         }
         SendInstallInfo sendInstallInfo = new SendInstallInfo();
         sendInstallInfo.sendInstallInfo(sender, plugins,versionsToInstall);
-
         InstallManager installManager = new InstallManager();
+        CleanUp cleanUp = new CleanUp();
+        boolean[] reinstall = {false};
 
         ActionLock.confirm = () -> {
             boolean continueInstall = installManager.installPlugins(plugins, versionsToInstall, sender);
             if (continueInstall) {
                 sender.sendMessage("§8:: §7Cleaning up...");
+                cleanUp.succesClean(versionsToInstall.stream().map(a -> a[6]).toArray(String[]::new));
                 sender.sendMessage("§a All plugins installed successfully!");
                 ActionLock.release();
             } else {
                 sender.sendMessage("§8:: §7Cleaning up...");
+                cleanUp.failureInstallCleanUp(plugins, versionsToInstall, reinstall);
                 sender.sendMessage("§4Installation aborted due to errors.");
                 ActionLock.release();
             }

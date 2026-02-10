@@ -1,11 +1,63 @@
 package me.pinkcandy.plugGet.Install;
 
+import me.pinkcandy.plugGet.PlugGet;
+
+import java.nio.channels.ScatteringByteChannel;
+import java.nio.file.Files;
+import java.util.List;
+
+import static me.pinkcandy.plugGet.DB.DBManager.*;
+import static me.pinkcandy.plugGet.PlugGet.cacheFolder;
+import static me.pinkcandy.plugGet.PlugGet.tmpFolder;
+
 public class CleanUp {
 
-        public static void succes() {
-
+        public void succesClean(String[] FilesToDelete) {
+                try {
+                        for (String fileName : FilesToDelete) {
+                                Files.delete(tmpFolder.resolve(fileName));
+                        }
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
         }
-        public static void failure() {
+
+        public void failureInstallCleanUp(List<String[]> plugins, List<String[]> versionsToInstall, boolean[] reinstall) {
+                try {
+                        for (int i = 0; i < plugins.size(); i++) {
+                                Files.delete(tmpFolder.resolve(versionsToInstall.get(i)[6]));
+                        }
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
+
+                for (int i = 0; i < plugins.size(); i++) {
+                        try {
+                                Files.delete(PlugGet.instance.getDataFolder().toPath().resolve("cache/plugins/" + plugins.get(i)[0] + "/" + versionsToInstall.get(i)[0] + "/" + versionsToInstall.get(i)[6]));
+                        } catch (Exception e) {
+                                e.printStackTrace();
+                        }
+                }
+
+                for (int i = 0; i < plugins.size(); i++) {
+                        if (!reinstall[i]) {
+                                try {
+                                        Files.delete(PlugGet.instance.getDataFolder().getParentFile()
+                                                .toPath()
+                                                .resolve(versionsToInstall.get(i)[6]));
+                                } catch (Exception e) {
+                                        e.printStackTrace();
+                                }
+                        }
+                }
+
+                try{
+                        loadBackupDB();
+                        db = backupDB;
+                        saveDB();
+                } catch (Exception e) {
+                        e.printStackTrace();
+                }
 
         }
 }

@@ -12,6 +12,7 @@ public final class PlugGet extends JavaPlugin {
     public static PlugGet instance;
     public static Path dbFolder;
     public static Path dbFile;
+    public static Path dbBackupFile;
     public static Path tmpFolder;
     public static Path cacheFolder;
 
@@ -20,6 +21,7 @@ public final class PlugGet extends JavaPlugin {
         instance = this;
         dbFolder = PlugGet.instance.getDataFolder().toPath().resolve("db/");
         dbFile = dbFolder.resolve("plugins.json");
+        dbBackupFile = dbFolder.resolve("plugins_backup.json");
         try {
             Files.createDirectories(dbFolder);
 
@@ -29,6 +31,13 @@ public final class PlugGet extends JavaPlugin {
 
                 Files.writeString(dbFile, dbJson.toString(4), StandardOpenOption.CREATE);
             }
+            if (!Files.exists(dbBackupFile)) {
+                JSONObject dbJson = new JSONObject();
+                dbJson.put("plugins", new JSONObject());
+
+                Files.writeString(dbBackupFile, dbJson.toString(4), StandardOpenOption.CREATE);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
