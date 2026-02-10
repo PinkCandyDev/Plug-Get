@@ -20,10 +20,10 @@ public class InstallHelper {
         public boolean manageDownload(List<String[]> plugins, List<String[]>versionsToInstall, CommandSender sender) {
             for (int i = 0; i < plugins.size(); i++) {
                 sender.sendMessage("§8:: §7Downloading: " + versionsToInstall.get(i)[6] + " §8(" + (1 + i) + "/" + plugins.size() + ")");
-                boolean success = FileDownloader.downloadFile(versionsToInstall.get(i)[5], versionsToInstall.get(i)[6]);
+                boolean success = FileDownloader.downloadFile(versionsToInstall.get(i)[5], versionsToInstall.get(i)[6], sender);
                 if (!success) {
                     sender.sendMessage("§cFailed to download " + versionsToInstall.get(i)[6] + " for " + plugins.get(i)[0]);
-                    return true;
+                    return false;
                 }
             }
             return true;

@@ -1,20 +1,24 @@
 package me.pinkcandy.plugGet.Download;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import me.pinkcandy.plugGet.PlugGet;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.command.CommandSender;
 
 import static me.pinkcandy.plugGet.PlugGet.tmpFolder;
 import static org.apache.commons.codec.digest.DigestUtils.sha512Hex;
 
 public class FileDownloader {
 
-    public static boolean downloadFile(String urlString, String fileName) {
+    public static boolean downloadFile(String urlString, String fileName, CommandSender sender) {
         Path targetFile = tmpFolder.resolve(fileName);
+
         try {
             Files.createDirectories(tmpFolder);
 
@@ -25,11 +29,30 @@ public class FileDownloader {
             Files.copy(new URL(urlString).openStream(), targetFile);
 
             return true;
+
+        } catch (UnknownHostException e) {
+
+            sender.sendMessage("§cNo internet connection or DNS lookup failed.");
+
+        } catch (SocketTimeoutException e) {
+
+            sender.sendMessage("§cConnection timed out. The server did not respond.");
+
+        } catch (MalformedURLException e) {
+
+            sender.sendMessage("§cInvalid download URL.");
+
+        } catch (FileNotFoundException e) {
+
+            sender.sendMessage("§cFile not found (404).");
+
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
+
+        return false;
     }
+
     public static boolean verifyFile(String fileName, String hash) {
         Path targetFile = tmpFolder.resolve(fileName);
 
@@ -42,3 +65,6 @@ public class FileDownloader {
         }
     }
 }
+
+
+
