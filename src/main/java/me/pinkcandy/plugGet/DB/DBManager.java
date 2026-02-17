@@ -20,6 +20,17 @@ public class DBManager {
         }
     }
 
+    public static String pluginExists(String slug) {
+        JSONObject plugins = db.optJSONObject("plugins");
+        if (plugins.has(slug)) {
+            JSONObject branchObj = plugins.getJSONObject(slug);
+            return branchObj.optString("branch", null);
+        }
+        else {
+            return null;
+        }
+    }
+
     public static void saveDB() {
         try {
             String jsonOutput = db.toString(4);

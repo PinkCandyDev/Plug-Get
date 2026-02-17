@@ -7,6 +7,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
+import static me.pinkcandy.plugGet.DB.DBManager.loadDB;
+
 public final class PlugGet extends JavaPlugin {
 
     public static PlugGet instance;
@@ -54,6 +56,7 @@ public final class PlugGet extends JavaPlugin {
             e.printStackTrace();
         }
         new ServerInfo();
+        loadDB();
         this.getCommand("plugget").setExecutor(new CommandsHandler());
     }
 

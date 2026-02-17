@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import java.util.List;
 import java.util.Objects;
 
+import static me.pinkcandy.plugGet.DB.DBManager.pluginExists;
+
 public class ProjectInfoSender {
 
     public void sendProjectInfo(CommandSender sender,List<Object> projectData, List<String[]> versionInfo) {
@@ -51,7 +53,7 @@ public class ProjectInfoSender {
                         .append("    ").event((HoverEvent) null);
 
         if (!foundVersions) {
-            builder.append("§cUnknown");
+            builder.append("§8< §cUnknown §8>");
         } else {
             builder.append("§8< ");
 
@@ -85,6 +87,18 @@ public class ProjectInfoSender {
             }
 
             builder.append(" §8>").event((HoverEvent) null);
+        }
+
+        String pluginInDB = pluginExists(slug);
+        if (pluginInDB != null)
+        {
+            switch (pluginInDB) {
+                case "release" -> pluginInDB = "§a";
+                case "beta" -> pluginInDB = "§e";
+                case "alpha" -> pluginInDB = "§c";
+                default -> pluginInDB = "§f";
+            }
+            builder.append("  §8<" + pluginInDB + "Installed§8>");
         }
 
 
