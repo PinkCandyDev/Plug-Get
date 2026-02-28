@@ -1,7 +1,7 @@
-package me.pinkcandy.plugGet.VersionControll;
+package me.pinkcandy.plugGet.versionControll;
 
-import me.pinkcandy.plugGet.SearchProjects;
-import me.pinkcandy.plugGet.VersionFetcher;
+import me.pinkcandy.plugGet.api.modrinth.fetch.FetchProjects;
+import me.pinkcandy.plugGet.api.modrinth.fetch.VersionFetcher;
 import org.bukkit.command.CommandSender;
 import org.json.JSONArray;
 
@@ -12,17 +12,16 @@ public class BranchSelector {
 
     public List<String[]> selectBranch(CommandSender sender, List<String[]> plugins){
 
-        SearchProjects searchProjects = new SearchProjects();
+        FetchProjects fetchProjects = new FetchProjects();
         VersionFetcher fetcher = new VersionFetcher();
         VersionSelector selector = new VersionSelector();
 
         List<String[]> versionsInfo = new ArrayList<>();
         boolean continueInstall = true;
 
-        sender.sendMessage("§3Fetching plugins and versions...");
         for (int i = 0; i < plugins.size(); i++) {
 
-            if (searchProjects.fetchProject(plugins.get(i)[0]) == null) {
+            if (fetchProjects.fetchProject(plugins.get(i)[0]) == null) {
                 sender.sendMessage("§cPlugin " + plugins.get(i)[0] + " not found.");
                 continueInstall = false;
                 break;

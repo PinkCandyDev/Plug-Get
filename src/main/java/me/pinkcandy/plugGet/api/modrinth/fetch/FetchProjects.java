@@ -1,5 +1,6 @@
-package me.pinkcandy.plugGet;
+package me.pinkcandy.plugGet.api.modrinth.fetch;
 
+import me.pinkcandy.plugGet.ServerInfo;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -11,20 +12,20 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.function.Consumer;
 
-public class SearchProjects {
+public class FetchProjects {
 
     public String[] loaders;
     public String version;
 
     private final ServerInfo serverInfo;
 
-    public SearchProjects() {
+    public FetchProjects() {
         this.serverInfo = new ServerInfo();
         this.loaders = serverInfo.loaders;
         this.version = serverInfo.version;
     }
 
-    public void searchRaw(String slug, Consumer<String> callback) {
+    public void SearchRaw(String slug, Consumer<String> callback) {
         new Thread(() -> {
             try {
                 String query = URLEncoder.encode(slug, StandardCharsets.UTF_8);

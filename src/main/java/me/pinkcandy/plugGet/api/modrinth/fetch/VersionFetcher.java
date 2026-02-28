@@ -1,6 +1,5 @@
-package me.pinkcandy.plugGet;
+package me.pinkcandy.plugGet.api.modrinth.fetch;
 
-import com.google.gson.JsonObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

@@ -1,5 +1,9 @@
 package me.pinkcandy.plugGet;
 
+import me.pinkcandy.plugGet.Tools.LoaderSet;
+import me.pinkcandy.plugGet.Tools.TextTools;
+import me.pinkcandy.plugGet.Tools.VersionRange;
+import me.pinkcandy.plugGet.model.ProjectMeta;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -10,21 +14,13 @@ import org.json.JSONArray;
 import java.util.List;
 import java.util.Objects;
 
-import static me.pinkcandy.plugGet.DB.DBManager.pluginExists;
+import static me.pinkcandy.plugGet.db.DBManager.pluginExists;
 
 public class ProjectInfoSender {
 
-    public void sendProjectInfo(CommandSender sender,List<Object> projectData, List<String[]> versionInfo) {
+    public void sendProjectInfo(CommandSender sender, ProjectMeta projectMeta) {
 
         ComponentBuilder builder = new ComponentBuilder();
-
-        String slug = (String) projectData.get(0);
-        String author = (String) projectData.get(2);
-        int downloads = (int) projectData.get(3);
-        String description = (String) projectData.get(4);
-        String loaders = (String) projectData.get(5);
-        String versionRange = (String) projectData.get(7);
-
 
         versionInfo.forEach(branch -> {
             if (branch == null) return;
@@ -37,19 +33,19 @@ public class ProjectInfoSender {
 
                 builder.append("§2modrinth/")
                 .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                        new ComponentBuilder("§9Downloads: §f" + downloads + "\n" +
+                        new ComponentBuilder("§9Downloads: §f" + projectMeta.getDownloads() + "\n" +
                                 "§fClick to open project page").create()))
                 .event(new ClickEvent(
                         ClickEvent.Action.OPEN_URL,
-                        "https://modrinth.com/mod/" + slug))
-                .append("§a" + slug)
+                        "https://modrinth.com/mod/" + projectMeta.getSlug()))
+                .append("§a" + projectMeta.getSlug())
                 .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                        new ComponentBuilder("§9Made by: §f" + author + "\n" +
-                                "§9Loaders: §f" + loaders + "\n" +
-                                "§9Game versions: §f" + versionRange + "\n" + "Click to install prefered version").create()))
+                        new ComponentBuilder("§9Made by: §f" + projectMeta.getAuthor() + "\n" +
+                                "§9Loaders: §f" + String.join(", ", projectMeta.getLoaders()) + "\n" +
+                                "§9Game versions: §f" + projectMeta.getVersionRange() + "\n" + "Click to install prefered version").create()))
                 .event(new ClickEvent(
                         ClickEvent.Action.RUN_COMMAND,
-                        "/plugget -S " + slug))
+                        "/plugget -S " + projectMeta.getSlug()))
                         .append("    ").event((HoverEvent) null);
 
         if (!foundVersions) {
@@ -79,7 +75,7 @@ public class ProjectInfoSender {
                     builder.append(color + versionInfo.get(i)[0])
                             .event(versionHover(versionInfo.get(i), i))
                             .event(new  ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                                            "/plugget -S " + slug + " --vl " + versionInfo.get(i)[0]));
+                                            "/plugget -S " + projectMeta.getSlug() + " --vl " + versionInfo.get(i)[0]));
 
 
                     first = false;
@@ -89,7 +85,7 @@ public class ProjectInfoSender {
             builder.append(" §8>").event((HoverEvent) null);
         }
 
-        String pluginInDB = pluginExists(slug);
+        String pluginInDB = pluginExists(projectMeta.getSlug());
         if (pluginInDB != null)
         {
             switch (pluginInDB) {
@@ -103,7 +99,7 @@ public class ProjectInfoSender {
 
 
 
-        List<String> wrapped = TextTools.wrapText(description, 60);
+        List<String> wrapped = TextTools.wrapText(projectMeta.getDescription(), 60);
         for (String line : wrapped) {
             builder.append("\n  §7" + line).event((HoverEvent) null);
         }

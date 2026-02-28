@@ -1,4 +1,4 @@
-package me.pinkcandy.plugGet.Download;
+package me.pinkcandy.plugGet.download;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

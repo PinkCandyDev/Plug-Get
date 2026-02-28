@@ -1,11 +1,10 @@
-package me.pinkcandy.plugGet.Install;
+package me.pinkcandy.plugGet.install;
 
 import me.pinkcandy.plugGet.ActionLock;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.command.CommandSender;
-import me.pinkcandy.plugGet.TextTools;
+import me.pinkcandy.plugGet.Tools.TextTools;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 

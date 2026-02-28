@@ -1,4 +1,4 @@
-package me.pinkcandy.plugGet;
+package me.pinkcandy.plugGet.Tools;
 
 import org.json.JSONArray;
 

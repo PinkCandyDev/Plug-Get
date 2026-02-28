@@ -1,10 +1,10 @@
-package me.pinkcandy.plugGet.Commands;
+package me.pinkcandy.plugGet.commands;
 
 import me.pinkcandy.plugGet.ActionLock;
-import me.pinkcandy.plugGet.Install.CleanUp;
-import me.pinkcandy.plugGet.Install.InstallManager;
-import me.pinkcandy.plugGet.VersionControll.BranchSelector;
-import me.pinkcandy.plugGet.Install.SendInstallInfo;
+import me.pinkcandy.plugGet.install.CleanUp;
+import me.pinkcandy.plugGet.install.InstallManager;
+import me.pinkcandy.plugGet.versionControll.BranchSelector;
+import me.pinkcandy.plugGet.install.SendInstallInfo;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
@@ -58,6 +58,7 @@ public class InstallCommand {
             plugins.add (new String[] {slug, modifier, version});
         }
 
+        sender.sendMessage("§8:: §3Fetching plugins and versions...");
         List<String[]> versionsToInstall = new BranchSelector().selectBranch(sender, plugins);
         if (versionsToInstall == null)
         {

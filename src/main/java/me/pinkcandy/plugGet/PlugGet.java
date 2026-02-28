@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-import static me.pinkcandy.plugGet.DB.DBManager.loadDB;
+import static me.pinkcandy.plugGet.db.DBManager.loadDB;
 
 public final class PlugGet extends JavaPlugin {
 

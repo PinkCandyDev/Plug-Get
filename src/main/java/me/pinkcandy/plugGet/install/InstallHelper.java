@@ -1,6 +1,6 @@
-package me.pinkcandy.plugGet.Install;
+package me.pinkcandy.plugGet.install;
 
-import me.pinkcandy.plugGet.Download.FileDownloader;
+import me.pinkcandy.plugGet.download.FileDownloader;
 import me.pinkcandy.plugGet.PlugGet;
 import org.bukkit.command.CommandSender;
 import org.json.JSONObject;
@@ -11,8 +11,8 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
 
-import static me.pinkcandy.plugGet.DB.DBManager.*;
-import static me.pinkcandy.plugGet.DB.JsonConverter.pluginToJson;
+import static me.pinkcandy.plugGet.db.DBManager.*;
+import static me.pinkcandy.plugGet.db.JsonConverter.pluginToJson;
 import static me.pinkcandy.plugGet.PlugGet.tmpFolder;
 
 public class InstallHelper {

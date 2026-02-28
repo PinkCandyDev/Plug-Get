@@ -1,13 +1,10 @@
-package me.pinkcandy.plugGet.Install;
+package me.pinkcandy.plugGet.install;
 
 import me.pinkcandy.plugGet.PlugGet;
 
-import java.nio.channels.ScatteringByteChannel;
 import java.nio.file.Files;
 import java.util.List;
 
-import static me.pinkcandy.plugGet.DB.DBManager.*;
-import static me.pinkcandy.plugGet.PlugGet.cacheFolder;
 import static me.pinkcandy.plugGet.PlugGet.tmpFolder;
 
 public class CleanUp {

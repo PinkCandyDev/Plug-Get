@@ -1,4 +1,4 @@
-package me.pinkcandy.plugGet.VersionControll;
+package me.pinkcandy.plugGet.versionControll;
 
 import me.pinkcandy.plugGet.ServerInfo;
 import org.json.JSONArray;

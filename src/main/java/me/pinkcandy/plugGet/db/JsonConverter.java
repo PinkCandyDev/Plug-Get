@@ -1,4 +1,4 @@
-package me.pinkcandy.plugGet.DB;
+package me.pinkcandy.plugGet.db;
 
 import org.json.JSONObject;
 
@@ -24,9 +24,8 @@ public class JsonConverter {
         return object;
     }
 
-    public String[][] jsonToPlugin(JSONObject object) {
-        String slug = object.keySet().iterator().next();
-        JSONObject plugin = object.getJSONObject(slug);
+    public static String[][] jsonToPlugin(String slug, JSONObject plugin) {
+
         JSONObject version = plugin.getJSONObject("version");
 
         String[] pluginInfo = new String[3];
@@ -34,9 +33,10 @@ public class JsonConverter {
 
         // pluginInfo
         pluginInfo[0] = slug;
-        pluginInfo[1] = "";
-        pluginInfo[2] = plugin.optString("installType", "");
+        pluginInfo[1] = plugin.optString("branch", "");
+        pluginInfo[2] = "";
 
+        // versionInfo
         versionInfo[0] = version.optString("number", "");
         versionInfo[1] = version.optString("releaseDate", "");
         versionInfo[2] = "";

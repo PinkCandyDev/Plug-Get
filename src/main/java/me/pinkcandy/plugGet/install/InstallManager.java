@@ -1,14 +1,8 @@
-package me.pinkcandy.plugGet.Install;
+package me.pinkcandy.plugGet.install;
 
-import me.pinkcandy.plugGet.ActionLock;
-import me.pinkcandy.plugGet.DB.JsonConverter;
 import org.bukkit.command.CommandSender;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
-
-import static me.pinkcandy.plugGet.PlugGet.tmpFolder;
 
 public class InstallManager {
 
