@@ -3,6 +3,8 @@ package me.pinkcandy.plugGet.version;
 import me.pinkcandy.plugGet.ServerInfo;
 import me.pinkcandy.plugGet.model.VersionInfo;
 
+import java.util.List;
+
 public class CompatibilityFilter {
     public static boolean isCompatible(VersionInfo v){
         boolean compatible = false;

@@ -2,12 +2,12 @@ package me.pinkcandy.plugGet.install;
 
 import me.pinkcandy.plugGet.ActionLock;
 import me.pinkcandy.plugGet.Tools.SetColor;
+import me.pinkcandy.plugGet.model.InstallInfo;
 import me.pinkcandy.plugGet.model.ProjectMeta;
 import me.pinkcandy.plugGet.model.VersionInfo;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import org.bukkit.command.CommandSender;
 import me.pinkcandy.plugGet.Tools.TextTools;
 
 import java.util.ArrayList;
@@ -15,11 +15,11 @@ import java.util.List;
 
 public class BuildInstallInfo {
 
-    public List<BaseComponent[]> sendInstallInfo(List<ProjectMeta> projectMetas, List<VersionInfo> versions) {
+    public static List<BaseComponent[]> buildInstallInfo(List<InstallInfo> pluginsToInstall, List<VersionInfo> versions) {
         List<BaseComponent[]> lines = new ArrayList<>();
         List<Integer> pLetters = new ArrayList<>();
-        for (int i = 0; i < projectMetas.size(); i++) {
-            pLetters.add(TextTools.countLetters(projectMetas.get(i).getSlug()));
+        for (int i = 0; i < pluginsToInstall.size(); i++) {
+            pLetters.add(TextTools.countLetters(pluginsToInstall.get(i).getSlug()));
         }
 
         int maxPLetters = pLetters.stream().max(Integer::compareTo).orElse(0);
@@ -27,11 +27,11 @@ public class BuildInstallInfo {
         String pSpace = TextTools.generateSpaces(maxPLetters + 2);
 
         ComponentBuilder header = new ComponentBuilder();
-        header.append("§2Plugins (" + projectMetas.size() + ")" + pSpace + "§8< §2Version §8| §3Size§8 >");
+        header.append("§2Plugins (" + pluginsToInstall.size() + ")" + pSpace + "§8< §2Version §8| §3Size§8 >");
         lines.add(header.create());
         lines.add(new ComponentBuilder("").create());
 
-        for (int i = 0; i < projectMetas.size(); i++) {
+        for (int i = 0; i < pluginsToInstall.size(); i++) {
             ComponentBuilder lineBuilder = new ComponentBuilder();
 
             int spacesNeeded = maxPLetters - pLetters.get(i) + 2;
@@ -39,7 +39,7 @@ public class BuildInstallInfo {
 
             String versionColor = SetColor.setColor(versions.get(i).getBranch());
 
-            String line = "§2modrinth/§a" + projectMetas.get(i).getSlug() + maxPSpace
+            String line = "§2modrinth/§a" + pluginsToInstall.get(i).getSlug() + maxPSpace
                     + "§8< " + versionColor + versions.get(i).getVersionNumber() + " §8| §3" + versions.get(i).getFileSize() + " §8>";
 
             lineBuilder.append(line);
@@ -60,5 +60,6 @@ public class BuildInstallInfo {
         footer.append("§8]");
         ActionLock.isConfirming = true;
         lines.add(footer.create());
+        return  lines;
     }
 }

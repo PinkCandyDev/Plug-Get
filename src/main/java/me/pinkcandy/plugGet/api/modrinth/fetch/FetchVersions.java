@@ -10,7 +10,7 @@ import java.net.http.HttpResponse;
 
 public class FetchVersions {
 
-    public JSONArray fetchAll(String slug) {
+    public static JSONArray fetchAll(String slug) {
         try {
             String url = "https://api.modrinth.com/v2/project/" + slug + "/version";
 

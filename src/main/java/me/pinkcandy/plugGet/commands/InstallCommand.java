@@ -25,10 +25,11 @@ public class InstallCommand {
             if (slug.startsWith("--")) {
                 sender.sendMessage("§4Wrong argument: " + slug);
                 invalidArg = true;
+                ActionLock.release();
                 return true;
             }
 
-            if (i + 1 < args.length && invalidArg==false) {
+            if (i + 1 < args.length && invalidArg == false) {
                 String next = args[i + 1].toLowerCase();
 
                 if (next.equals("--beta")) {
@@ -40,6 +41,7 @@ public class InstallCommand {
                 } else if (next.equals("--v")) {
                     if (i + 2 >= args.length) {
                         sender.sendMessage("§4No version provided after --v " + slug);
+                        ActionLock.release();
                         return true;
                     }
                     modifier = "version";
@@ -48,6 +50,7 @@ public class InstallCommand {
                 } else if (next.equals("--vl")) {
                     if (i + 2 >= args.length) {
                         sender.sendMessage("§4No version provided after --vl " + slug);
+                        ActionLock.release();
                         return true;
                     }
                     modifier = "version-latest";
@@ -59,39 +62,42 @@ public class InstallCommand {
             pluginsToInstall.add(new InstallInfo(slug, modifier, version));
         }
 
+
+
         InstallManager.manageInstall(pluginsToInstall, sender);
-
-        List<String[]> versionsToInstall = new BranchSelector().selectBranch(sender, pluginsToInstall);
-        if (versionsToInstall == null)
-        {
-            sender.sendMessage("§4Installation aborted due to errors.");
-            ActionLock.release();
-            return true;
-        }
-        BuildInstallInfo buildInstallInfo = new BuildInstallInfo();
-        buildInstallInfo.sendInstallInfo(sender, pluginsToInstall,versionsToInstall);
-        InstallManager installManager = new InstallManager();
-        CleanUp cleanUp = new CleanUp();
-        boolean[] reinstall = {false};
-
-        ActionLock.confirm = () -> {
-            boolean continueInstall = installManager.installPlugins(pluginsToInstall, versionsToInstall, sender);
-            if (continueInstall) {
-                sender.sendMessage("§8:: §7Cleaning up...");
-                cleanUp.succesClean(versionsToInstall.stream().map(a -> a[6]).toArray(String[]::new));
-                sender.sendMessage("§a All pluginsToInstall installed successfully!");
-                ActionLock.release();
-            } else {
-                sender.sendMessage("§8:: §7Cleaning up...");
-                cleanUp.failureInstallCleanUp(pluginsToInstall, versionsToInstall, reinstall);
-                sender.sendMessage("§4Installation aborted due to errors.");
-                ActionLock.release();
-            }
-        };
-        ActionLock.deny = () -> {
-            sender.sendMessage("§cInstallation cancelled.");
-            ActionLock.release();
-        };
         return true;
+//        List<String[]> versionsToInstall = new BranchSelector().selectBranch(sender, pluginsToInstall);
+//        if (versionsToInstall == null)
+//        {
+//            sender.sendMessage("§4Installation aborted due to errors.");
+//            ActionLock.release();
+//            return true;
+//        }
+//        BuildInstallInfo buildInstallInfo = new BuildInstallInfo();
+//        buildInstallInfo.buildInstallInfo(sender, pluginsToInstall,versionsToInstall);
+//        InstallManager installManager = new InstallManager();
+//        CleanUp cleanUp = new CleanUp();
+//        boolean[] reinstall = {false};
+//
+//        ActionLock.confirm = () -> {
+//            boolean continueInstall = installManager.installPlugins(pluginsToInstall, versionsToInstall, sender);
+//            if (continueInstall) {
+//                sender.sendMessage("§8:: §7Cleaning up...");
+//                cleanUp.succesClean(versionsToInstall.stream().map(a -> a[6]).toArray(String[]::new));
+//                sender.sendMessage("§a All pluginsToInstall installed successfully!");
+//                ActionLock.release();
+//            } else {
+//                sender.sendMessage("§8:: §7Cleaning up...");
+//                cleanUp.failureInstallCleanUp(pluginsToInstall, versionsToInstall, reinstall);
+//                sender.sendMessage("§4Installation aborted due to errors.");
+//                ActionLock.release();
+//            }
+//        };
+//        ActionLock.deny = () -> {
+//            sender.sendMessage("§cInstallation cancelled.");
+//            ActionLock.release();
+//        };
+//        return true;
+//    }
     }
 }

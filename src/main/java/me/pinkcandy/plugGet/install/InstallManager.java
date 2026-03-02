@@ -1,12 +1,15 @@
 package me.pinkcandy.plugGet.install;
 
+import me.pinkcandy.plugGet.ActionLock;
 import me.pinkcandy.plugGet.api.modrinth.fetch.FetchProjects;
 import me.pinkcandy.plugGet.api.modrinth.map.ProjectMapper;
 import me.pinkcandy.plugGet.model.InstallInfo;
 import me.pinkcandy.plugGet.model.ProjectMeta;
 import me.pinkcandy.plugGet.model.VersionInfo;
 import me.pinkcandy.plugGet.version.GetNewestVersion;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.command.CommandSender;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,15 +17,14 @@ import java.util.List;
 public class InstallManager {
 
     public static void manageInstall(List<InstallInfo> pluginsToInstall, CommandSender sender) {
-        List<ProjectMeta> project = new ArrayList<>();
         for (int i = 0; i < pluginsToInstall.size(); i++)
         {
-            ProjectMeta meta = ProjectMapper.fromJson(FetchProjects.fetchProject(pluginsToInstall.get(i).getSlug()));
-            if (meta == null) {
+            JSONObject obj = FetchProjects.fetchProject(pluginsToInstall.get(i).getSlug());
+            if (obj == null) {
                 sender.sendMessage("§cPlugin " + pluginsToInstall.get(i).getSlug() + " not found. Is the slug correct?");
+                ActionLock.release();
                 return;
             }
-            project.add(meta);
         }
         List<VersionInfo> versionsToInstall = new ArrayList<>();
         for (int i = 0; i < pluginsToInstall.size(); i++) {
@@ -31,13 +33,16 @@ public class InstallManager {
                 if (pluginsToInstall.get(i).getInstallType().equals(""))
                 {
                     sender.sendMessage("§cNo compatible versions found for " + pluginsToInstall.get(i).getSlug());
+                    ActionLock.release();
                 }
                 else if (pluginsToInstall.get(i).getInstallType().equals("version-latest") || pluginsToInstall.get(i).getInstallType().equals("version"))
                 {
                     sender.sendMessage("§cVersion " + pluginsToInstall.get(i).getVersion() + " not found for " + pluginsToInstall.get(i).getSlug());
+                    ActionLock.release();
                 }
                 else {
                     sender.sendMessage("§cNo " + pluginsToInstall.get(i).getInstallType() + " version found for " + pluginsToInstall.get(i).getSlug());
+                    ActionLock.release();
                 }
                 return;
             }
@@ -46,9 +51,13 @@ public class InstallManager {
                 versionsToInstall.add(versionInfo);
             }
         }
-
-
-
+        List<BaseComponent[]> messages = BuildInstallInfo.buildInstallInfo(pluginsToInstall, versionsToInstall);
+        for (int i = 0; i < messages.size(); i++)
+        {
+            sender.spigot().sendMessage(messages.get(i));
+        }
+        ActionLock.release();
+        return;
     }
 
 

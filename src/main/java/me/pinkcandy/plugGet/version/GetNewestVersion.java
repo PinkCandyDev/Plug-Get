@@ -1,18 +1,19 @@
 package me.pinkcandy.plugGet.version;
 
+import com.sun.tools.classfile.FatalError;
 import me.pinkcandy.plugGet.api.modrinth.fetch.FetchVersions;
 import me.pinkcandy.plugGet.api.modrinth.map.VersionMapper;
 import me.pinkcandy.plugGet.model.InstallInfo;
 import me.pinkcandy.plugGet.model.VersionInfo;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GetNewestVersion {
     public static List<VersionInfo> getBranchesFromSlug(String slug){
-        FetchVersions fetcher = new FetchVersions();
-        JSONArray versions = fetcher.fetchAll(slug);
+        JSONArray versions = FetchVersions.fetchAll(slug);
         if (versions == null) {
             return null;
         }
@@ -46,12 +47,26 @@ public class GetNewestVersion {
         VersionInfo versionInfo = null;
 
         if (installInfo.getInstallType().equals("version") || installInfo.getInstallType().equals("version-latest")) {
-
-            versionInfo = VersionMapper.fromJson(FetchVersions.fetchExact(installInfo.getSlug(), installInfo.getVersion()));
-            if (versionInfo != null) {
-                return versionInfo;
+            JSONArray versions = FetchVersions.fetchAll(installInfo.getSlug());
+            if (versions==null){return null;}
+            List<VersionInfo> validVs = new ArrayList<>();
+            for (int i = 0; i < versions.length(); i++) {
+                VersionInfo v = VersionMapper.fromJson(versions.getJSONObject(i));
+                if (VersionValidator.isValid(v) && CompatibilityFilter.isCompatible(v)) {
+                    validVs.add(v);
+                }
+            }
+            if (validVs.isEmpty()) {
+                return null;
             }
             else {
+                for (int i = 0; i < validVs.size(); i++)
+                {
+                    if (validVs.get(i).getVersionNumber().equals(installInfo.getVersion()))
+                    {
+                        return validVs.get(i);
+                    }
+                }
                 return null;
             }
         }
