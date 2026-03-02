@@ -1,5 +1,8 @@
 package me.pinkcandy.plugGet.Tools;
 
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,5 +47,18 @@ public class TextTools {
             spaces.append(" ");
         }
         return spaces.toString();
+    }
+
+    public static String capitalize(String str) {
+        if (str == null || str.isEmpty()) return str;
+
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
+
+    public static String formatDate(String isoDate) {
+        if (isoDate == null) return "";
+
+        LocalDate date = OffsetDateTime.parse(isoDate).toLocalDate();
+        return date.format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 }

@@ -19,6 +19,10 @@ public class VersionMapper {
         String datePublished = json.optString("date_published");
 
         List<String> gameVersions = jsonArrayToList(json.optJSONArray("game_versions"));
+        List<String> normalizedGameVersions = new ArrayList<>();
+        for (int i = 0; i < gameVersions.size(); i++) {
+            normalizedGameVersions.add(normalizeVersion(gameVersions.get(i)));
+        }
         List<String> loaders = jsonArrayToList(json.optJSONArray("loaders"));
 
         String gameVersionRange = gameVersions.isEmpty() ? "?" : VersionRange.buildRange(json.getJSONArray("game_versions"));
@@ -55,7 +59,7 @@ public class VersionMapper {
                 branch,
                 status,
                 datePublished,
-                gameVersions,
+                normalizedGameVersions,
                 gameVersionRange,
                 loaders,
                 fileName,
@@ -74,5 +78,14 @@ public class VersionMapper {
         }
 
         return list;
+    }
+
+    private static String normalizeVersion(String v) {
+        if (v == null) return "";
+        int dash = v.indexOf('-');
+        if (dash > 0) {
+            return v.substring(0, dash);
+        }
+        return v;
     }
 }

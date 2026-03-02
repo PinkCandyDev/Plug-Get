@@ -16,7 +16,7 @@ public final class VersionRange {
 
         for (int i = 0; i < versions.length(); i++) {
             String v = versions.optString(i, null);
-            if (v != null && !v.isBlank()) {
+            if (v != null && !v.trim().isEmpty()) {
                 list.add(v);
             }
         }

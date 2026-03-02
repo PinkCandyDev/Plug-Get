@@ -53,13 +53,13 @@ public class VersionSelector {
                 JSONArray gameVersions = v.optJSONArray("game_versions");
                 if (gameVersions == null) continue;
                 boolean versionCompatible = false;
-                for (int g = 0; g < gameVersions.length(); g++) {
-                    if (normalizeVersion(gameVersions.getString(g))
-                            .equals(normalizeVersion(ServerInfo.version))) {
-                        versionCompatible = true;
-                        break;
-                    }
-                }
+//                for (int g = 0; g < gameVersions.length(); g++) {
+//                    if (normalizeVersion(gameVersions.getString(g))
+//                            .equals(normalizeVersion(ServerInfo.version))) {
+//                        versionCompatible = true;
+//                        break;
+//                    }
+//                }
                 if (!versionCompatible) continue;
 
                 if ("release".equals(branch)) release.add(v);
@@ -104,13 +104,13 @@ public class VersionSelector {
                 JSONArray gameVersions = v.optJSONArray("game_versions");
                 if (gameVersions == null) continue;
                 boolean versionCompatible = false;
-                for (int g = 0; g < gameVersions.length(); g++) {
-                    if (normalizeVersion(gameVersions.getString(g))
-                            .equals(normalizeVersion(ServerInfo.version))) {
-                        versionCompatible = true;
-                        break;
-                    }
-                }
+//                for (int g = 0; g < gameVersions.length(); g++) {
+//                    if (normalizeVersion(gameVersions.getString(g))
+//                            .equals(normalizeVersion(ServerInfo.version))) {
+//                        versionCompatible = true;
+//                        break;
+//                    }
+//                }
                 if (!versionCompatible) continue;
 
                 if (v.optString("version_number", "").equals(targetVersion)) {
@@ -177,6 +177,10 @@ public class VersionSelector {
 
     private String normalizeVersion(String v) {
         if (v == null) return "";
-        return v.replaceAll("[^0-9.]", "");
+        int dash = v.indexOf('-');
+        if (dash > 0) {
+            return v.substring(0, dash);
+        }
+        return v;
     }
 }

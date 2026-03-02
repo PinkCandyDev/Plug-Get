@@ -14,26 +14,20 @@ import java.util.function.Consumer;
 
 public class FetchProjects {
 
-    public String[] loaders;
-    public String version;
-
-    private final ServerInfo serverInfo;
-
-    public FetchProjects() {
-        this.serverInfo = new ServerInfo();
-        this.loaders = serverInfo.loaders;
-        this.version = serverInfo.version;
-    }
-
-    public void SearchRaw(String slug, Consumer<String> callback) {
+    public static void SeatchProjects(String slug, Consumer<String> callback) {
         new Thread(() -> {
             try {
                 String query = URLEncoder.encode(slug, StandardCharsets.UTF_8);
 
-                // facets JSON
                 JSONArray facets = new JSONArray();
-                facets.put(new JSONArray().put("categories:" + serverInfo.loaders[0].toLowerCase())); // np. "paper"
-                facets.put(new JSONArray().put("versions:" + serverInfo.version));
+
+                if (!ServerInfo.loaders.isEmpty()) {
+                    facets.put(new JSONArray().put("categories:" + ServerInfo.loaders.get(0).toLowerCase()));
+                }
+
+                if (!ServerInfo.version.isEmpty()) {
+                    facets.put(new JSONArray().put("versions:" + ServerInfo.version.get(0)));
+                }
 
                 String facetsParam = URLEncoder.encode(facets.toString(), StandardCharsets.UTF_8);
 
@@ -63,7 +57,7 @@ public class FetchProjects {
         }).start();
     }
 
-    public JSONObject fetchProject(String slug) {
+    public static JSONObject fetchProject(String slug) {
         try {
             String url = "https://api.modrinth.com/v2/project/" + slug;
 

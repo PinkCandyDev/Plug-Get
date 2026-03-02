@@ -6,26 +6,24 @@ import java.util.List;
 
 public class ServerInfo {
 
-    public static String[] loaders;
-    public static String version;
+    public static List<String> loaders = new ArrayList<>();
+    public static List<String> version = new ArrayList<>();
 
     public  ServerInfo() {
 
         String fullVersion = Bukkit.getBukkitVersion();
-        this.version = fullVersion.split("-")[0];
-
-        List<String> loaderList = new ArrayList<>();
+        Bukkit.getLogger().info("Detected server version: " + fullVersion);
+        this.version.add(fullVersion.split("-")[0]);
 
         try {
             Class.forName("com.destroystokyo.paper.PaperConfig");
-            loaderList.add("paper");
-            loaderList.add("spigot");
-            loaderList.add("bukkit");
+            loaders.add("paper");
+            loaders.add("spigot");
+            loaders.add("bukkit");
         } catch (ClassNotFoundException ignored) {
-            loaderList.add("spigot");
-            loaderList.add("bukkit");
+            loaders.add("spigot");
+            loaders.add("bukkit");
         }
 
-        this.loaders = loaderList.toArray(new String[0]);
     }
 }

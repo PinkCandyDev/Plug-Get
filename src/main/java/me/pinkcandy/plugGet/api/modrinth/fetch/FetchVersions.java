@@ -8,7 +8,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class VersionFetcher {
+public class FetchVersions {
 
     public JSONArray fetchAll(String slug) {
         try {
@@ -33,7 +33,7 @@ public class VersionFetcher {
         }
     }
 
-    public JSONObject FetchExact(String slug, String version) {
+    public static JSONObject fetchExact(String slug, String version) {
         try {
             String url = "https://api.modrinth.com/v2/project/" + slug + "/version/" + version;
 

@@ -1,7 +1,7 @@
 package me.pinkcandy.plugGet.versionControll;
 
 import me.pinkcandy.plugGet.api.modrinth.fetch.FetchProjects;
-import me.pinkcandy.plugGet.api.modrinth.fetch.VersionFetcher;
+import me.pinkcandy.plugGet.api.modrinth.fetch.FetchVersions;
 import org.bukkit.command.CommandSender;
 import org.json.JSONArray;
 
@@ -13,7 +13,7 @@ public class BranchSelector {
     public List<String[]> selectBranch(CommandSender sender, List<String[]> plugins){
 
         FetchProjects fetchProjects = new FetchProjects();
-        VersionFetcher fetcher = new VersionFetcher();
+        FetchVersions fetcher = new FetchVersions();
         VersionSelector selector = new VersionSelector();
 
         List<String[]> versionsInfo = new ArrayList<>();

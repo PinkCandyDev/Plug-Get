@@ -1,6 +1,6 @@
 package me.pinkcandy.plugGet.api.modrinth.map;
 
-import me.pinkcandy.plugGet.Tools.LoaderSet;
+import me.pinkcandy.plugGet.Tools.LoaderList;
 import me.pinkcandy.plugGet.Tools.VersionRange;
 import me.pinkcandy.plugGet.model.ProjectMeta;
 import org.json.JSONArray;
@@ -20,7 +20,7 @@ public class ProjectMapper {
         String description = obj.optString("description", "No description provided.");
 
         List<String> loaders = jsonArrayToList(obj.optJSONArray("categories"));
-        loaders = LoaderSet.filterLoaders(loaders);
+        loaders = LoaderList.filterLoaders(loaders);
         List<String> versions = jsonArrayToList(obj.optJSONArray("versions"));
         String versionRange = versions.isEmpty() ? "?" : VersionRange.buildRange(obj.getJSONArray("versions"));
 

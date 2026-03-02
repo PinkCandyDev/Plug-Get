@@ -3,8 +3,9 @@ package me.pinkcandy.plugGet.commands;
 import me.pinkcandy.plugGet.ActionLock;
 import me.pinkcandy.plugGet.install.CleanUp;
 import me.pinkcandy.plugGet.install.InstallManager;
+import me.pinkcandy.plugGet.model.InstallInfo;
 import me.pinkcandy.plugGet.versionControll.BranchSelector;
-import me.pinkcandy.plugGet.install.SendInstallInfo;
+import me.pinkcandy.plugGet.install.BuildInstallInfo;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
 public class InstallCommand {
 
     public boolean execute(CommandSender sender, String[] args) {
-        List<String[]> plugins = new ArrayList<>();
+        List<InstallInfo> pluginsToInstall = new ArrayList<>();
         for (int i = 1; i < args.length; i++) {
             String slug = args[i];
 
@@ -55,33 +56,34 @@ public class InstallCommand {
                 }
 
             }
-            plugins.add (new String[] {slug, modifier, version});
+            pluginsToInstall.add(new InstallInfo(slug, modifier, version));
         }
 
-        sender.sendMessage("§8:: §3Fetching plugins and versions...");
-        List<String[]> versionsToInstall = new BranchSelector().selectBranch(sender, plugins);
+        InstallManager.manageInstall(pluginsToInstall, sender);
+
+        List<String[]> versionsToInstall = new BranchSelector().selectBranch(sender, pluginsToInstall);
         if (versionsToInstall == null)
         {
             sender.sendMessage("§4Installation aborted due to errors.");
             ActionLock.release();
             return true;
         }
-        SendInstallInfo sendInstallInfo = new SendInstallInfo();
-        sendInstallInfo.sendInstallInfo(sender, plugins,versionsToInstall);
+        BuildInstallInfo buildInstallInfo = new BuildInstallInfo();
+        buildInstallInfo.sendInstallInfo(sender, pluginsToInstall,versionsToInstall);
         InstallManager installManager = new InstallManager();
         CleanUp cleanUp = new CleanUp();
         boolean[] reinstall = {false};
 
         ActionLock.confirm = () -> {
-            boolean continueInstall = installManager.installPlugins(plugins, versionsToInstall, sender);
+            boolean continueInstall = installManager.installPlugins(pluginsToInstall, versionsToInstall, sender);
             if (continueInstall) {
                 sender.sendMessage("§8:: §7Cleaning up...");
                 cleanUp.succesClean(versionsToInstall.stream().map(a -> a[6]).toArray(String[]::new));
-                sender.sendMessage("§a All plugins installed successfully!");
+                sender.sendMessage("§a All pluginsToInstall installed successfully!");
                 ActionLock.release();
             } else {
                 sender.sendMessage("§8:: §7Cleaning up...");
-                cleanUp.failureInstallCleanUp(plugins, versionsToInstall, reinstall);
+                cleanUp.failureInstallCleanUp(pluginsToInstall, versionsToInstall, reinstall);
                 sender.sendMessage("§4Installation aborted due to errors.");
                 ActionLock.release();
             }
