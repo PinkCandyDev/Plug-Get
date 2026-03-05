@@ -52,18 +52,6 @@ public class FileDownloader {
 
         return false;
     }
-
-    public static boolean verifyFile(String fileName, String hash) {
-        Path targetFile = tmpFolder.resolve(fileName);
-
-        try {
-            String fileHash = sha512Hex(Files.newInputStream(targetFile));
-            return fileHash.equalsIgnoreCase(hash);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 }
 
 

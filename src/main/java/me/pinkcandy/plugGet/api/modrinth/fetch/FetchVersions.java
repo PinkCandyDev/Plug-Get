@@ -10,18 +10,19 @@ import java.net.http.HttpResponse;
 
 public class FetchVersions {
 
+    private static final HttpClient CLIENT = HttpClient.newHttpClient();
+
     public static JSONArray fetchAll(String slug) {
         try {
             String url = "https://api.modrinth.com/v2/project/" + slug + "/version";
 
-            HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .header("User-Agent", "plug-get")
                     .GET()
                     .build();
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() != 200) return null;
 
@@ -37,14 +38,13 @@ public class FetchVersions {
         try {
             String url = "https://api.modrinth.com/v2/project/" + slug + "/version/" + version;
 
-            HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .header("User-Agent", "plug-get")
                     .GET()
                     .build();
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() != 200) return null;
             if (response.statusCode() == 404) return null;

@@ -72,17 +72,20 @@ public class GetNewestVersion {
         }
 
         List<VersionInfo> branches = getBranchesFromSlug(installInfo.getSlug());
-        if (installInfo.getInstallType().equals("")) {
+        if (installInfo.getInstallType().equals("best")) {
             if (branches.get(0) != null) {
                 versionInfo = branches.get(0);
-            }
-            else if (branches.get(1) != null) {
+            } else if (branches.get(1) != null) {
                 versionInfo = branches.get(1);
-            }
-            else if (branches.get(2) != null) {
+            } else if (branches.get(2) != null) {
                 versionInfo = branches.get(2);
+            } else {
+                return null;
             }
-            else {
+        } else if (installInfo.getInstallType().equals("release")) {
+            if (branches.get(0) != null) {
+                versionInfo = branches.get(0);
+            } else {
                 return null;
             }
         } else if (installInfo.getInstallType().equals("beta")) {

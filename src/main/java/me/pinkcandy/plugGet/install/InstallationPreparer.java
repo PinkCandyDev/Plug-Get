@@ -2,9 +2,8 @@ package me.pinkcandy.plugGet.install;
 
 import me.pinkcandy.plugGet.ActionLock;
 import me.pinkcandy.plugGet.api.modrinth.fetch.FetchProjects;
-import me.pinkcandy.plugGet.api.modrinth.map.ProjectMapper;
+import me.pinkcandy.plugGet.messagesBuilders.BuildInstallInfo;
 import me.pinkcandy.plugGet.model.InstallInfo;
-import me.pinkcandy.plugGet.model.ProjectMeta;
 import me.pinkcandy.plugGet.model.VersionInfo;
 import me.pinkcandy.plugGet.version.GetNewestVersion;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -14,9 +13,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InstallManager {
+public class InstallationPreparer {
 
-    public static void manageInstall(List<InstallInfo> pluginsToInstall, CommandSender sender) {
+    public static void prepareInstall(List<InstallInfo> pluginsToInstall, CommandSender sender) {
         for (int i = 0; i < pluginsToInstall.size(); i++)
         {
             JSONObject obj = FetchProjects.fetchProject(pluginsToInstall.get(i).getSlug());
@@ -52,37 +51,19 @@ public class InstallManager {
             }
         }
         List<BaseComponent[]> messages = BuildInstallInfo.buildInstallInfo(pluginsToInstall, versionsToInstall);
+        ActionLock.isConfirming = true;
         for (int i = 0; i < messages.size(); i++)
         {
             sender.spigot().sendMessage(messages.get(i));
         }
-        ActionLock.release();
-        return;
-    }
+        ActionLock.confirm = () -> {
+            boolean complited = InstallPlugins.installPlugins(pluginsToInstall, versionsToInstall, sender);
+            ActionLock.release();
 
-
-
-    public boolean installPlugins(List<String[]> pluginsToInstall, List<String[]> versionsToInstall, CommandSender sender) {
-        InstallHelper installHelper = new InstallHelper();
-
-        boolean continueInstall = true;
-
-        sender.sendMessage("§8:: §7Downloading files...");
-        continueInstall = installHelper.manageDownload(pluginsToInstall, versionsToInstall, sender);
-        if (!continueInstall) {return false;}
-
-        sender.sendMessage("§8:: §7Verifying files...");
-        continueInstall = installHelper.manageVerification(pluginsToInstall, versionsToInstall, sender);
-        if (!continueInstall) {return false;}
-
-        sender.sendMessage("§8:: §7Copying Files...");
-        continueInstall = installHelper.manageCopy(pluginsToInstall, versionsToInstall, sender);
-        if (!continueInstall) {return false;}
-
-        sender.sendMessage("§8:: §7Registering in db...");
-        continueInstall = installHelper.manageRegisteringDB(pluginsToInstall, versionsToInstall, sender);
-        if (!continueInstall) {return false;}
-
-        return continueInstall;
+        };
+        ActionLock.deny = () -> {
+            sender.sendMessage("§cInstallation cancelled.");
+            ActionLock.release();
+        };
     }
 }

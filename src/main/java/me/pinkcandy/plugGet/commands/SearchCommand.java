@@ -1,8 +1,8 @@
 package me.pinkcandy.plugGet.commands;
 
-import me.pinkcandy.plugGet.*;
 import me.pinkcandy.plugGet.api.modrinth.fetch.FetchProjects;
 import me.pinkcandy.plugGet.api.modrinth.map.ProjectMapper;
+import me.pinkcandy.plugGet.messagesBuilders.BuildSearchInfo;
 import me.pinkcandy.plugGet.model.ProjectMeta;
 import me.pinkcandy.plugGet.model.VersionInfo;
 import me.pinkcandy.plugGet.version.GetNewestVersion;

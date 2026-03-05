@@ -15,7 +15,7 @@ public class VersionMapper {
         String versionNumber = json.optString("version_number");
         String versionId = json.optString("id");
         String branch = json.optString("version_type");
-        String status = json.optString("status");
+        String status = json.optString("status", null);
         String datePublished = json.optString("date_published");
 
         List<String> gameVersions = jsonArrayToList(json.optJSONArray("game_versions"));

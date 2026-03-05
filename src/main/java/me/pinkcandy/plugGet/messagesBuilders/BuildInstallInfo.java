@@ -1,9 +1,7 @@
-package me.pinkcandy.plugGet.install;
+package me.pinkcandy.plugGet.messagesBuilders;
 
-import me.pinkcandy.plugGet.ActionLock;
 import me.pinkcandy.plugGet.Tools.SetColor;
 import me.pinkcandy.plugGet.model.InstallInfo;
-import me.pinkcandy.plugGet.model.ProjectMeta;
 import me.pinkcandy.plugGet.model.VersionInfo;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -58,7 +56,6 @@ public class BuildInstallInfo {
                 "/plugget n"
         ));
         footer.append("§8]");
-        ActionLock.isConfirming = true;
         lines.add(footer.create());
         return  lines;
     }

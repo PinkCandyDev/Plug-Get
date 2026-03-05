@@ -10,12 +10,30 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.function.Consumer;
 
 public class FetchProjects {
 
+    // Reużywany executor zapobiega tworzeniu wielu krótkotrwałych wątków przy częstych wyszukiwaniach.
+    private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool(new ThreadFactory() {
+        private final ThreadFactory defaultFactory = Executors.defaultThreadFactory();
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread t = defaultFactory.newThread(r);
+            t.setDaemon(true); // daemonic threads won't block JVM shutdown
+            t.setName("plugget-fetchprojects-" + t.getId());
+            return t;
+        }
+    });
+
+    // Shared HttpClient to reuse resources across requests
+    private static final HttpClient CLIENT = HttpClient.newHttpClient();
+
     public static void SeatchProjects(String slug, Consumer<String> callback) {
-        new Thread(() -> {
+        EXECUTOR.submit(() -> {
             try {
                 String query = URLEncoder.encode(slug, StandardCharsets.UTF_8);
 
@@ -35,14 +53,13 @@ public class FetchProjects {
                         + "&facets=" + facetsParam
                         + "&limit=20";
 
-                HttpClient client = HttpClient.newHttpClient();
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(url))
                         .header("User-Agent", "plug-get")
                         .GET()
                         .build();
 
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
                 if (response.statusCode() == 200) {
                     callback.accept(response.body());
@@ -54,21 +71,20 @@ public class FetchProjects {
                 e.printStackTrace();
                 callback.accept("Unexpected error: " + e.getMessage());
             }
-        }).start();
+        });
     }
 
     public static JSONObject fetchProject(String slug) {
         try {
             String url = "https://api.modrinth.com/v2/project/" + slug;
 
-            HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))
                     .header("User-Agent", "plug-get")
                     .GET()
                     .build();
 
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() != 200) return null;
             if (response.statusCode() == 404) return null;

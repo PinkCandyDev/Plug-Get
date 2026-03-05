@@ -1,5 +1,6 @@
 package me.pinkcandy.plugGet.db;
 
+import me.pinkcandy.plugGet.model.PluginData;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -94,14 +95,13 @@ public class DBManager {
         }
     }
 
-    public static List<String[][]> getInstalledPlugins() {
+    public static List<PluginData> getInstalledPlugins() {
         JSONObject plugins = db.optJSONObject("plugins");
-        List<String[][]> installedPlugins = new ArrayList<>();
+        List<PluginData> installedPlugins = new ArrayList<>();
 
         for (String slug : plugins.keySet()) {
             JSONObject pluginObj = plugins.getJSONObject(slug);
-            String[][] pluginData = JsonConverter.jsonToPlugin(slug, pluginObj);
-            installedPlugins.add(pluginData);
+            installedPlugins.add(DBMapper.jsonToPlugin(pluginObj));
         }
 
         return installedPlugins;

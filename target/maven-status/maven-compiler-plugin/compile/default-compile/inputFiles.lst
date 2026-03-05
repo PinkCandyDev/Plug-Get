@@ -1,5 +1,4 @@
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/ActionLock.java
-/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/BuildSearchInfo.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/CommandsHandler.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/PlugGet.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/ServerInfo.java
@@ -15,12 +14,15 @@
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/commands/SearchCommand.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/commands/UpdateCommand.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/db/DBManager.java
-/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/db/JsonConverter.java
+/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/db/DBMapper.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/download/FileDownloader.java
-/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/install/BuildInstallInfo.java
-/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/install/CleanUp.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/install/InstallHelper.java
-/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/install/InstallManager.java
+/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/install/InstallPlugins.java
+/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/install/InstallationPreparer.java
+/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/messagesBuilders/BuildInstallInfo.java
+/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/messagesBuilders/BuildSearchInfo.java
+/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/messagesBuilders/BuildTools.java
+/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/messagesBuilders/buildUpdateInfo.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/model/InstallInfo.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/model/PluginData.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/model/ProjectMeta.java

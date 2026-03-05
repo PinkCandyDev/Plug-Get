@@ -1,11 +1,9 @@
 package me.pinkcandy.plugGet.commands;
 
 import me.pinkcandy.plugGet.ActionLock;
-import me.pinkcandy.plugGet.install.CleanUp;
-import me.pinkcandy.plugGet.install.InstallManager;
+import me.pinkcandy.plugGet.install.InstallPlugins;
+import me.pinkcandy.plugGet.install.InstallationPreparer;
 import me.pinkcandy.plugGet.model.InstallInfo;
-import me.pinkcandy.plugGet.versionControll.BranchSelector;
-import me.pinkcandy.plugGet.install.BuildInstallInfo;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
@@ -19,7 +17,7 @@ public class InstallCommand {
             String slug = args[i];
 
             boolean invalidArg = false;
-            String modifier = "";
+            String modifier = "best";
             String version = null;
 
             if (slug.startsWith("--")) {
@@ -62,9 +60,7 @@ public class InstallCommand {
             pluginsToInstall.add(new InstallInfo(slug, modifier, version));
         }
 
-
-
-        InstallManager.manageInstall(pluginsToInstall, sender);
+        InstallationPreparer.prepareInstall(pluginsToInstall, sender);
         return true;
 //        List<String[]> versionsToInstall = new BranchSelector().selectBranch(sender, pluginsToInstall);
 //        if (versionsToInstall == null)

@@ -1,4 +1,4 @@
-package me.pinkcandy.plugGet;
+package me.pinkcandy.plugGet.messagesBuilders;
 
 import me.pinkcandy.plugGet.Tools.SetColor;
 import me.pinkcandy.plugGet.Tools.TextTools;
@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static me.pinkcandy.plugGet.Tools.TextTools.*;
+import static me.pinkcandy.plugGet.db.DBManager.pluginExists;
+import static me.pinkcandy.plugGet.messagesBuilders.BuildTools.versionHover;
 
 public class BuildSearchInfo {
 
@@ -63,16 +65,11 @@ public class BuildSearchInfo {
             builder.append(" §8>").event((HoverEvent) null);
         }
 
-//        String pluginInDB = pluginExists(projectMeta.getSlug());
-//        if (pluginInDB != null) {
-//            switch (pluginInDB) {
-//                case "release" -> pluginInDB = "§a";
-//                case "beta" -> pluginInDB = "§e";
-//                case "alpha" -> pluginInDB = "§c";
-//                default -> pluginInDB = "§f";
-//            }
-//            builder.append("  §8<" + pluginInDB + "Installed§8>");
-//        }
+        String pluginInDB = pluginExists(projectMeta.getSlug());
+        if (pluginInDB != null) {
+            pluginInDB = SetColor.setColor(pluginInDB);
+            builder.append("  §8<" + pluginInDB + "Installed§8>");
+        }
 
         List<String> wrapped = TextTools.wrapText(projectMeta.getDescription(), 60);
         for (String line : wrapped) {
@@ -81,16 +78,5 @@ public class BuildSearchInfo {
 
         BaseComponent[] comp = builder.create();
         return comp;
-    }
-
-    public static HoverEvent versionHover(VersionInfo versionInfo){
-        HoverEvent hover = new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                new ComponentBuilder("§9Channel : §f"  + capitalize(versionInfo.getBranch()) + "\n" +
-                        "§9Date: §f" + formatDate(versionInfo.getDatePublished()) + "\n" +
-                        "§9Game versions: §f" + versionInfo.getGameVersions() + "\n" +
-                        "§9Loaders: §f" + String.join(", ", versionInfo.getLoaders()) + "\n" +
-                        "§9Size: §f" + versionInfo.getFileSize() + "\n" +
-                        "§fClick to install this version").create());
-        return hover;
     }
 }

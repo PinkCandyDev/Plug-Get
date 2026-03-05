@@ -1,8 +1,18 @@
 package me.pinkcandy.plugGet.commands;
 
+import me.pinkcandy.plugGet.ActionLock;
+import me.pinkcandy.plugGet.api.modrinth.fetch.FetchProjects;
+import me.pinkcandy.plugGet.api.modrinth.fetch.FetchVersions;
 import me.pinkcandy.plugGet.db.DBManager;
+import me.pinkcandy.plugGet.model.InstallInfo;
+import me.pinkcandy.plugGet.model.PluginData;
+import me.pinkcandy.plugGet.model.VersionInfo;
+import me.pinkcandy.plugGet.version.CompareDate;
+import me.pinkcandy.plugGet.version.GetNewestVersion;
 import me.pinkcandy.plugGet.versionControll.BranchSelector;
 import org.bukkit.command.CommandSender;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,35 +20,30 @@ import java.util.List;
 public class UpdateCommand {
     public boolean execute(CommandSender sender, String[] args) {
         sender.sendMessage("§8:: §7Checking for updates...");
-        sender.sendMessage("§8:: §7Fetching installed plugins from database...");
-        List<String[][]> installedPlugins = DBManager.getInstalledPlugins();
-        List<String[]> plugins = new ArrayList<>();
-        List<String[]> versions = new ArrayList<>();
-        for (int i = 0; i < installedPlugins.size(); i++) {
-            plugins.add(installedPlugins.get(i)[0]);
-            versions.add(installedPlugins.get(i)[1]);
-        }
-
-        BranchSelector bSelector = new BranchSelector();
         sender.sendMessage("§8:: §3Fetching plugins and versions...");
-        for (int i = 0; i < plugins.size(); i++)
-        {
-            List<String[]> newestVersion = bSelector.selectBranch(sender, plugins);
-            if (newestVersion == null) {
-                sender.sendMessage("§cFailed to fetch versions for " + plugins.get(i)[0]);
+        List<PluginData> installedPlugins = DBManager.getInstalledPlugins();
+        List<VersionInfo> newestVersions = new ArrayList<>();
+        for (int i = 0; i < installedPlugins.size(); i++) {
+            InstallInfo installInfo = installedPlugins.get(i).getInstallInfo();
+            VersionInfo currentV = installedPlugins.get(i).getVersionInfo();
+            String slug = installInfo.getSlug();
+            JSONObject obj = FetchProjects.fetchProject(slug);
+            if (obj == null) {
+                sender.sendMessage("§cAlready installed plugin " + slug + " haven't been found on Modrinth. Does it still exist or mabey chainged the name?");
+                ActionLock.release();
                 continue;
-            }
-            else if (newestVersion.get(i)[0].equals(versions.get(i)[0])) {
-                sender.sendMessage("§8:: §7" + plugins.get(i)[0] + " is up to date.");
-                continue;
-            }
-            else {
-                sender.sendMessage("§8:: §7New version found for " + plugins.get(i)[0] + ": " + newestVersion.get(i)[0]);
-                sender.sendMessage("§8:: §7Updating " + plugins.get(i)[0] + "...");
             }
 
+            List<VersionInfo> versions = new ArrayList<>();
+            VersionInfo newestV = GetNewestVersion.getNewestVersionForInstallType(installInfo);
+            if (newestV == null) {newestVersions.add(currentV); continue;}
+            versions.add(newestV);
+            versions.add(currentV);
+            newestV =  CompareDate.compare(versions);
+            newestVersions.add(newestV);
         }
+        return  true;
 
-        return true;
+
     }
 }
