@@ -23,7 +23,7 @@ public class DBManager {
         }
     }
 
-    public static String pluginExists(String slug) {
+    public static String getPluginBranch(String slug) {
         JSONObject plugins = db.optJSONObject("plugins");
         if (plugins.has(slug)) {
             JSONObject branchObj = plugins.getJSONObject(slug);
@@ -32,6 +32,25 @@ public class DBManager {
         else {
             return null;
         }
+    }
+
+    public static PluginData getPluginData(String slug){
+        JSONObject plugins = db.optJSONObject("plugins");
+        if (plugins.has(slug)) {
+            JSONObject pluginObj = plugins.getJSONObject(slug);
+            JSONObject wrapper = new JSONObject();
+            wrapper.put(slug, pluginObj);
+            return DBMapper.jsonToPlugin(wrapper);
+        }
+        return null;
+    }
+
+    public static boolean isPluginInstalled(String slug){
+        JSONObject plugins = db.optJSONObject("plugins");
+        if (plugins.has(slug)) {
+            return true;
+        }
+        return false;
     }
 
     public static void saveDB() {
@@ -101,9 +120,29 @@ public class DBManager {
 
         for (String slug : plugins.keySet()) {
             JSONObject pluginObj = plugins.getJSONObject(slug);
-            installedPlugins.add(DBMapper.jsonToPlugin(pluginObj));
+            JSONObject wrapper = new JSONObject();
+            wrapper.put(slug, pluginObj);
+            installedPlugins.add(DBMapper.jsonToPlugin(wrapper));
         }
 
         return installedPlugins;
+    }
+
+    public static boolean replaceDB()
+    {
+        try {
+            saveDB();
+            saveBackupDB();
+            loadDB();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public static void deletePlugin(String slug){
+        JSONObject plugins = db.optJSONObject("plugins");
+        plugins.remove(slug);
     }
 }

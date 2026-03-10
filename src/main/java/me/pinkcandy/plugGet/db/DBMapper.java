@@ -1,6 +1,5 @@
 package me.pinkcandy.plugGet.db;
 
-import jdk.tools.jlink.plugin.Plugin;
 import me.pinkcandy.plugGet.model.InstallInfo;
 import me.pinkcandy.plugGet.model.PluginData;
 import me.pinkcandy.plugGet.model.VersionInfo;

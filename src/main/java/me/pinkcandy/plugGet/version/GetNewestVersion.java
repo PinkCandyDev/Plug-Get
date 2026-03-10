@@ -1,6 +1,5 @@
 package me.pinkcandy.plugGet.version;
 
-import com.sun.tools.classfile.FatalError;
 import me.pinkcandy.plugGet.api.modrinth.fetch.FetchVersions;
 import me.pinkcandy.plugGet.api.modrinth.map.VersionMapper;
 import me.pinkcandy.plugGet.model.InstallInfo;

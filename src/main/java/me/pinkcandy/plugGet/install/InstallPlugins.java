@@ -1,7 +1,7 @@
 package me.pinkcandy.plugGet.install;
 
+import me.pinkcandy.plugGet.db.DBManager;
 import me.pinkcandy.plugGet.db.DBMapper;
-import me.pinkcandy.plugGet.model.InstallInfo;
 import me.pinkcandy.plugGet.model.PluginData;
 import me.pinkcandy.plugGet.model.VersionInfo;
 import org.bukkit.command.CommandSender;
@@ -13,27 +13,37 @@ import static me.pinkcandy.plugGet.db.DBManager.*;
 
 public class InstallPlugins {
 
-    public static boolean installPlugins(List<InstallInfo> pluginsToInstall, List<VersionInfo> versionsToInstall, CommandSender sender) {
+    public static boolean installPlugins(List<PluginData> pluginsToInstall, CommandSender sender) {
         InstallHelper installHelper = new InstallHelper();
 
         boolean continueInstall = true;
 
         sender.sendMessage("§8:: §7Downloading and verifying files...");
-        int size = versionsToInstall.size();
-        for (int i = 0; i < versionsToInstall.size(); i++)
-        {
-            String slug = pluginsToInstall.get(i).getSlug();
-            continueInstall = installHelper.manageDownload(versionsToInstall.get(i), slug, i, size, sender);
-            if (!continueInstall) {return false;}
-            continueInstall = installHelper.manageVerification(versionsToInstall.get(i), slug, i, size, sender);
-            if (!continueInstall) {return false;}
+        int size = pluginsToInstall.size();
+        for (int i = 0; i < pluginsToInstall.size(); i++) {
+            PluginData pluginData = pluginsToInstall.get(i);
+            String slug = pluginData.getInstallInfo().getSlug();
+
+            VersionInfo versionInfo = pluginData.getVersionInfo();
+
+            continueInstall = installHelper.manageDownload(versionInfo, slug, i, size, sender);
+            if (!continueInstall) { return false; }
+
+            continueInstall = installHelper.manageVerification(versionInfo, slug, i, size, sender);
+            if (!continueInstall) { return false; }
         }
+
         sender.sendMessage("§8:: §7Copying Files...");
-        for (int i = 0; i < versionsToInstall.size(); i++) {
-            String slug = pluginsToInstall.get(i).getSlug();
-            continueInstall = installHelper.manageCopy(versionsToInstall.get(i), slug);
+        for (int i = 0; i < pluginsToInstall.size(); i++) {
+            PluginData pluginData = pluginsToInstall.get(i);
+            String slug = pluginData.getInstallInfo().getSlug();
+
+            VersionInfo versionInfo = pluginData.getVersionInfo();
+
+            continueInstall = installHelper.manageCopy(versionInfo, slug);
+
             if (!continueInstall) {
-                sender.sendMessage("§cFailed to move " + versionsToInstall.get(i).getFileName() + " to cache.");
+                sender.sendMessage("§cFailed to move " + versionInfo.getFileName() + " to cache.");
                 return false;
             }
         }
@@ -41,23 +51,17 @@ public class InstallPlugins {
         sender.sendMessage("§8:: §7Registering in db...");
         loadDB();
         loadDBToBackoupDB();
-        for (int i = 0; i < pluginsToInstall.size(); i ++)
-        {
-            JSONObject plugin = DBMapper.pluginToJson(new PluginData(pluginsToInstall.get(i), versionsToInstall.get(i)));
-            AddPlugin(plugin);
+
+        for (int i = 0; i < pluginsToInstall.size(); i++) {
+            PluginData pluginData = pluginsToInstall.get(i);
+
+            JSONObject pluginJson = DBMapper.pluginToJson(pluginData);
+
+            AddPlugin(pluginJson);
         }
-        try {
-            saveDB();
-            saveBackupDB();
-            loadDB();
-        }
-        catch (Exception e) {
-            sender.sendMessage("§cFailed to save database.");
-            e.printStackTrace();
-            return false;
-        }
+        DBManager.replaceDB();
         if (!continueInstall) {return false;}
-        sender.sendMessage("§aAll plugins installed corectly ");
+        sender.sendMessage("§aAll plugins installed correctly");
         return continueInstall;
     }
 }

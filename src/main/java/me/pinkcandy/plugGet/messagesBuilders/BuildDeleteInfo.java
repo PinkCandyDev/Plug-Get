@@ -1,20 +1,19 @@
 package me.pinkcandy.plugGet.messagesBuilders;
 
 import me.pinkcandy.plugGet.Tools.SetColor;
+import me.pinkcandy.plugGet.Tools.TextTools;
 import me.pinkcandy.plugGet.model.InstallInfo;
 import me.pinkcandy.plugGet.model.PluginData;
 import me.pinkcandy.plugGet.model.VersionInfo;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import me.pinkcandy.plugGet.Tools.TextTools;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BuildInstallInfo {
-
-    public static List<BaseComponent[]> buildInstallInfo(List<PluginData> pluginsToInstall) {
+public class BuildDeleteInfo {
+    public static List<BaseComponent[]> buildDeleteInfo(List<PluginData> pluginsToInstall) {
         List<BaseComponent[]> lines = new ArrayList<>();
         List<Integer> pLetters = new ArrayList<>();
         for (int i = 0; i < pluginsToInstall.size(); i++) {
@@ -54,7 +53,7 @@ public class BuildInstallInfo {
 
         lines.add(new ComponentBuilder("").create());
         ComponentBuilder footer = new ComponentBuilder();
-        footer.append("§8:: §7Continue installation? §8[");
+        footer.append("§8:: §7Continue removal? §8[");
         footer.append("§8Y").event(new ClickEvent(
                 ClickEvent.Action.RUN_COMMAND,
                 "/plugget y"

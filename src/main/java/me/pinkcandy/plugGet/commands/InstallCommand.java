@@ -1,7 +1,5 @@
 package me.pinkcandy.plugGet.commands;
 
-import me.pinkcandy.plugGet.ActionLock;
-import me.pinkcandy.plugGet.install.InstallPlugins;
 import me.pinkcandy.plugGet.install.InstallationPreparer;
 import me.pinkcandy.plugGet.model.InstallInfo;
 import org.bukkit.command.CommandSender;

@@ -1,5 +1,6 @@
 package me.pinkcandy.plugGet;
 
+import me.pinkcandy.plugGet.commands.CommandsHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.JSONObject;
 
@@ -7,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
+import static me.pinkcandy.plugGet.db.DBManager.loadBackupDB;
 import static me.pinkcandy.plugGet.db.DBManager.loadDB;
 
 public final class PlugGet extends JavaPlugin {
@@ -57,6 +59,7 @@ public final class PlugGet extends JavaPlugin {
         }
         new ServerInfo();
         loadDB();
+        loadBackupDB();
         this.getCommand("plugget").setExecutor(new CommandsHandler());
     }
 

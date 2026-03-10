@@ -1,9 +1,10 @@
 package me.pinkcandy.plugGet.install;
 
-import me.pinkcandy.plugGet.ActionLock;
+import me.pinkcandy.plugGet.commands.ActionLock;
 import me.pinkcandy.plugGet.api.modrinth.fetch.FetchProjects;
 import me.pinkcandy.plugGet.messagesBuilders.BuildInstallInfo;
 import me.pinkcandy.plugGet.model.InstallInfo;
+import me.pinkcandy.plugGet.model.PluginData;
 import me.pinkcandy.plugGet.model.VersionInfo;
 import me.pinkcandy.plugGet.version.GetNewestVersion;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -12,6 +13,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static me.pinkcandy.plugGet.install.InstallPlugins.installPlugins;
 
 public class InstallationPreparer {
 
@@ -50,14 +53,20 @@ public class InstallationPreparer {
                 versionsToInstall.add(versionInfo);
             }
         }
-        List<BaseComponent[]> messages = BuildInstallInfo.buildInstallInfo(pluginsToInstall, versionsToInstall);
+
+        List<PluginData> plugins = new ArrayList<>();
+        for (int i = 0; i < pluginsToInstall.size(); i++) {
+            plugins.add(new PluginData(pluginsToInstall.get(i), versionsToInstall.get(i)));
+        }
+
+        List<BaseComponent[]> messages = BuildInstallInfo.buildInstallInfo(plugins);
         ActionLock.isConfirming = true;
         for (int i = 0; i < messages.size(); i++)
         {
             sender.spigot().sendMessage(messages.get(i));
         }
         ActionLock.confirm = () -> {
-            boolean complited = InstallPlugins.installPlugins(pluginsToInstall, versionsToInstall, sender);
+            boolean completed = installPlugins(plugins, sender);
             ActionLock.release();
 
         };

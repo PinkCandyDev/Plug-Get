@@ -5,6 +5,8 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 
 public class TextTools {
 
@@ -60,5 +62,57 @@ public class TextTools {
 
         LocalDate date = OffsetDateTime.parse(isoDate).toLocalDate();
         return date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+    }
+
+    public static String formatSize(long bytes) {
+        long abs = Math.abs(bytes);
+        String sign = bytes < 0 ? "-" : "";
+
+        final long KIB = 1024L;
+        final long MIB = KIB * 1024L;
+
+        if (abs >= MIB) {
+            double v = (double) abs / (double) MIB;
+            return sign + formatOneDecimal(v) + "MiB";
+        } else if (abs >= KIB) {
+            double v = (double) abs / (double) KIB;
+            return sign + formatOneDecimal(v) + "KiB";
+        } else {
+            return sign + abs + "B";
+        }
+    }
+
+    private static String formatOneDecimal(double value) {
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setDecimalSeparator(',');
+        DecimalFormat df = new DecimalFormat("#0.0", symbols);
+        return df.format(value);
+    }
+
+    public static boolean isNonNegativeInteger(String s) {
+        if (s == null || s.isEmpty()) return false;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c < '0' || c > '9') return false;
+        }
+        return true;
+    }
+
+    public static List<Integer> parseIntList(String[] tokens) {
+        List<Integer> out = new ArrayList<>();
+        List<String> bad = new ArrayList<>();
+        for (String t : tokens) {
+            try {
+                int v = Integer.parseInt(t);
+                if (v < 0) {
+                    bad.add(t);
+                } else {
+                    out.add(v);
+                }
+            } catch (NumberFormatException e) {
+                bad.add(t);
+            }
+        }
+        return out;
     }
 }

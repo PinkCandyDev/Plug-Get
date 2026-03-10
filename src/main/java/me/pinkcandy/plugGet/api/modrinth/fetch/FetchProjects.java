@@ -17,19 +17,17 @@ import java.util.function.Consumer;
 
 public class FetchProjects {
 
-    // Reużywany executor zapobiega tworzeniu wielu krótkotrwałych wątków przy częstych wyszukiwaniach.
     private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool(new ThreadFactory() {
         private final ThreadFactory defaultFactory = Executors.defaultThreadFactory();
         @Override
         public Thread newThread(Runnable r) {
             Thread t = defaultFactory.newThread(r);
-            t.setDaemon(true); // daemonic threads won't block JVM shutdown
+            t.setDaemon(true);
             t.setName("plugget-fetchprojects-" + t.getId());
             return t;
         }
     });
 
-    // Shared HttpClient to reuse resources across requests
     private static final HttpClient CLIENT = HttpClient.newHttpClient();
 
     public static void SeatchProjects(String slug, Consumer<String> callback) {

@@ -12,8 +12,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import java.util.List;
 import java.util.Objects;
 
-import static me.pinkcandy.plugGet.Tools.TextTools.*;
-import static me.pinkcandy.plugGet.db.DBManager.pluginExists;
+import static me.pinkcandy.plugGet.db.DBManager.getPluginBranch;
 import static me.pinkcandy.plugGet.messagesBuilders.BuildTools.versionHover;
 
 public class BuildSearchInfo {
@@ -65,7 +64,7 @@ public class BuildSearchInfo {
             builder.append(" §8>").event((HoverEvent) null);
         }
 
-        String pluginInDB = pluginExists(projectMeta.getSlug());
+        String pluginInDB = getPluginBranch(projectMeta.getSlug());
         if (pluginInDB != null) {
             pluginInDB = SetColor.setColor(pluginInDB);
             builder.append("  §8<" + pluginInDB + "Installed§8>");
