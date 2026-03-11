@@ -97,7 +97,7 @@ public class CommandsHandler implements CommandExecutor {
 
             if (!ActionLock.isLocked && ActionLock.lockedBy == null) {
                 ActionLock.lock(sender);
-                new InstallCommand().execute(sender, args);
+                InstallCommand.execute(sender, args);
             }
             else
             {

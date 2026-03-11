@@ -28,12 +28,14 @@ public class DeletePreparer {
             pluginsToDelete.add(pluginData);
         }
 
-        List<BaseComponent[]> messages = BuildDeleteInfo.buildDeleteInfo(pluginsToDelete);
-        ActionLock.isConfirming = true;
-        for (int i = 0; i < messages.size(); i++)
-        {
-            sender.spigot().sendMessage(messages.get(i));
+        if (!pluginsToDelete.isEmpty()) {
+            List<BaseComponent[]> messages = BuildDeleteInfo.buildDeleteInfo(pluginsToDelete);
+            ActionLock.isConfirming = true;
+            for (int i = 0; i < messages.size(); i++) {
+                sender.spigot().sendMessage(messages.get(i));
+            }
         }
+
         ActionLock.confirm = () -> {
             for (int i = 0; i < pluginsToDelete.size(); i++)
             {

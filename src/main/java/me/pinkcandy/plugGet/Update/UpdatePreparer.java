@@ -47,13 +47,16 @@ public class UpdatePreparer {
             pluginsToUpdate.add(new PluginData(pluginsInDB.get(i).getInstallInfo(), newestV));
             installedPlugins.add(new PluginData(pluginsInDB.get(i).getInstallInfo(), currentV));
         }
-
-        List<BaseComponent[]> messages = BuildUpdateInfo.buildUpdateInfo(installedPlugins, pluginsToUpdate);
-        for (int i = 0; i < messages.size(); i++)
-        {
-            sender.spigot().sendMessage(messages.get(i));
+        if (!installedPlugins.isEmpty() && !pluginsToUpdate.isEmpty()) {
+            List<BaseComponent[]> messages = BuildUpdateInfo.buildUpdateInfo(installedPlugins, pluginsToUpdate);
+            ActionLock.isConfirming = true;
+            for (int i = 0; i < messages.size(); i++) {
+                sender.spigot().sendMessage(messages.get(i));
+            }
         }
-        ActionLock.isConfirming = true;
+        else {
+            sender.sendMessage("§8:: §7All plugins are up to date");
+        }
         ActionLock.confirm= () -> {
             List<PluginData> pluginsToDelete = new ArrayList<>();
             List<PluginData> pluginsToInstall = new ArrayList<>();

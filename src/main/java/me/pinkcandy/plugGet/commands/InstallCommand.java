@@ -9,7 +9,7 @@ import java.util.List;
 
 public class InstallCommand {
 
-    public boolean execute(CommandSender sender, String[] args) {
+    public static boolean execute(CommandSender sender, String[] args) {
         List<InstallInfo> pluginsToInstall = new ArrayList<>();
         for (int i = 1; i < args.length; i++) {
             String slug = args[i];
