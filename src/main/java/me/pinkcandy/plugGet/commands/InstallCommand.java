@@ -15,7 +15,7 @@ public class InstallCommand {
             String slug = args[i];
 
             boolean invalidArg = false;
-            String modifier = "best";
+            String modifier = "latest";
             String version = null;
 
             if (slug.startsWith("--")) {
@@ -24,10 +24,15 @@ public class InstallCommand {
                 ActionLock.release();
                 return true;
             }
-
             if (i + 1 < args.length && invalidArg == false) {
                 String next = args[i + 1].toLowerCase();
-
+                if (next.equals("--latest"))
+                {
+                    modifier = "latest";
+                    i++;
+                } else if (next.equals("--rolling")) {
+                    modifier = "rolling";
+                }
                 if (next.equals("--beta")) {
                     modifier = "beta";
                     i++;
@@ -49,10 +54,20 @@ public class InstallCommand {
                         ActionLock.release();
                         return true;
                     }
-                    modifier = "version-latest";
+                    modifier = "latest";
+                    version = args[i + 2];
+                    i += 2;
+                } else if (next.equals("--vr")) {
+                    if (i + 2 >= args.length) {
+                        sender.sendMessage("§4No version provided after --vr " + slug);
+                        ActionLock.release();
+                        return true;
+                    }
+                    modifier = "rolling";
                     version = args[i + 2];
                     i += 2;
                 }
+
 
             }
             pluginsToInstall.add(new InstallInfo(slug, modifier, version));
@@ -60,38 +75,5 @@ public class InstallCommand {
 
         InstallationPreparer.prepareInstall(pluginsToInstall, sender);
         return true;
-//        List<String[]> versionsToInstall = new BranchSelector().selectBranch(sender, pluginsToInstall);
-//        if (versionsToInstall == null)
-//        {
-//            sender.sendMessage("§4Installation aborted due to errors.");
-//            ActionLock.release();
-//            return true;
-//        }
-//        BuildInstallInfo buildInstallInfo = new BuildInstallInfo();
-//        buildInstallInfo.buildInstallInfo(sender, pluginsToInstall,versionsToInstall);
-//        InstallManager installManager = new InstallManager();
-//        CleanUp cleanUp = new CleanUp();
-//        boolean[] reinstall = {false};
-//
-//        ActionLock.confirm = () -> {
-//            boolean continueInstall = installManager.installPlugins(pluginsToInstall, versionsToInstall, sender);
-//            if (continueInstall) {
-//                sender.sendMessage("§8:: §7Cleaning up...");
-//                cleanUp.succesClean(versionsToInstall.stream().map(a -> a[6]).toArray(String[]::new));
-//                sender.sendMessage("§a All pluginsToInstall installed successfully!");
-//                ActionLock.release();
-//            } else {
-//                sender.sendMessage("§8:: §7Cleaning up...");
-//                cleanUp.failureInstallCleanUp(pluginsToInstall, versionsToInstall, reinstall);
-//                sender.sendMessage("§4Installation aborted due to errors.");
-//                ActionLock.release();
-//            }
-//        };
-//        ActionLock.deny = () -> {
-//            sender.sendMessage("§cInstallation cancelled.");
-//            ActionLock.release();
-//        };
-//        return true;
-//    }
     }
 }

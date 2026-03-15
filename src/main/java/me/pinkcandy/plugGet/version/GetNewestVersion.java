@@ -71,7 +71,7 @@ public class GetNewestVersion {
         }
 
         List<VersionInfo> branches = getBranchesFromSlug(installInfo.getSlug());
-        if (installInfo.getInstallType().equals("best")) {
+        if (installInfo.getInstallType().equals("latest")) {
             if (branches.get(0) != null) {
                 versionInfo = branches.get(0);
             } else if (branches.get(1) != null) {
@@ -81,6 +81,8 @@ public class GetNewestVersion {
             } else {
                 return null;
             }
+        } else if (installInfo.getInstallType().equals("rolling")) {
+            versionInfo = CompareDate.compare(branches);
         } else if (installInfo.getInstallType().equals("release")) {
             if (branches.get(0) != null) {
                 versionInfo = branches.get(0);

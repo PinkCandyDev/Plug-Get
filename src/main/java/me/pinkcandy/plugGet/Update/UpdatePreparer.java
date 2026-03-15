@@ -29,7 +29,7 @@ public class UpdatePreparer {
             String slug = installInfo.getSlug();
             JSONObject obj = FetchProjects.fetchProject(slug);
             if (obj == null) {
-                sender.sendMessage("§cAlready installed plugin " + slug + " haven't been found on Modrinth. Does it still exist or mabey chainged the name?");
+                sender.sendMessage("§cInstalled plugin " + slug + " haven't been found on Modrinth. Does it still exist or mabey chainged the name?");
                 ActionLock.release();
                 continue;
             }
@@ -56,6 +56,8 @@ public class UpdatePreparer {
         }
         else {
             sender.sendMessage("§8:: §7All plugins are up to date");
+            ActionLock.release();
+            return true;
         }
         ActionLock.confirm= () -> {
             List<PluginData> pluginsToDelete = new ArrayList<>();

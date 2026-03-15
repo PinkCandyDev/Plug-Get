@@ -35,6 +35,10 @@ public class DeletePreparer {
                 sender.spigot().sendMessage(messages.get(i));
             }
         }
+        else {
+            ActionLock.release();
+            return;
+        }
 
         ActionLock.confirm = () -> {
             for (int i = 0; i < pluginsToDelete.size(); i++)

@@ -141,6 +141,17 @@ public class DBManager {
         return true;
     }
 
+    public static List<String> getAllInstalledSlugs()
+    {
+        JSONObject plugins = db.optJSONObject("plugins");
+        List<String> installedPlugins = new ArrayList<>();
+
+        for (String slug : plugins.keySet()) {
+            installedPlugins.add(slug);
+        }
+        return installedPlugins;
+    }
+
     public static void deletePlugin(String slug){
         JSONObject plugins = db.optJSONObject("plugins");
         plugins.remove(slug);

@@ -1,6 +1,7 @@
 package me.pinkcandy.plugGet;
 
 import me.pinkcandy.plugGet.commands.CommandsHandler;
+import me.pinkcandy.plugGet.commands.Tab;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.JSONObject;
 
@@ -23,6 +24,8 @@ public final class PlugGet extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        saveDefaultConfig();
+        ConfigManager.load(this);
         dbFolder = PlugGet.instance.getDataFolder().toPath().resolve("db/");
         dbFile = dbFolder.resolve("plugins.json");
         dbBackupFile = dbFolder.resolve("plugins_backup.json");
@@ -61,6 +64,7 @@ public final class PlugGet extends JavaPlugin {
         loadDB();
         loadBackupDB();
         this.getCommand("plugget").setExecutor(new CommandsHandler());
+        getCommand("plugget").setTabCompleter(new Tab());
     }
 
     @Override

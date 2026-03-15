@@ -12,12 +12,16 @@ me/pinkcandy/plugGet/api/modrinth/fetch/FetchVersions.class
 me/pinkcandy/plugGet/version/VersionValidator.class
 me/pinkcandy/plugGet/Tools/TextTools.class
 me/pinkcandy/plugGet/api/modrinth/map/ProjectMapper.class
+me/pinkcandy/plugGet/commands/Tab.class
 me/pinkcandy/plugGet/Tools/VersionRange.class
+me/pinkcandy/plugGet/commands/HelpCommand.class
 me/pinkcandy/plugGet/api/modrinth/map/VersionMapper.class
 me/pinkcandy/plugGet/Update/InstallUpdates.class
+me/pinkcandy/plugGet/ConfigManager$TabMode.class
 me/pinkcandy/plugGet/PlugGet.class
 me/pinkcandy/plugGet/commands/CommandsHandler.class
 me/pinkcandy/plugGet/ServerInfo.class
+me/pinkcandy/plugGet/ConfigManager.class
 me/pinkcandy/plugGet/model/ProjectMeta.class
 me/pinkcandy/plugGet/commands/SearchCommand.class
 me/pinkcandy/plugGet/api/modrinth/fetch/FetchProjects.class

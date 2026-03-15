@@ -32,12 +32,12 @@ public class InstallationPreparer {
         for (int i = 0; i < pluginsToInstall.size(); i++) {
             VersionInfo versionInfo = GetNewestVersion.getNewestVersionForInstallType(pluginsToInstall.get(i));
             if (versionInfo == null) {
-                if (pluginsToInstall.get(i).getInstallType().equals(""))
+                if (pluginsToInstall.get(i).getInstallType().equals("latest"))
                 {
                     sender.sendMessage("§cNo compatible versions found for " + pluginsToInstall.get(i).getSlug());
                     ActionLock.release();
                 }
-                else if (pluginsToInstall.get(i).getInstallType().equals("version-latest") || pluginsToInstall.get(i).getInstallType().equals("version"))
+                else if (pluginsToInstall.get(i).getInstallType().equals("version-latest") || pluginsToInstall.get(i).getInstallType().equals("version") || pluginsToInstall.get(i).getInstallType().equals("version-rolling"))
                 {
                     sender.sendMessage("§cVersion " + pluginsToInstall.get(i).getVersion() + " not found for " + pluginsToInstall.get(i).getSlug());
                     ActionLock.release();

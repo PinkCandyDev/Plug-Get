@@ -39,7 +39,7 @@ public class CommandsHandler implements CommandExecutor {
             }
         }
 
-        if (subCommand.equals("y")) {
+        if (subCommand.equals("y") || subCommand.equals("-y")) {
             if (ActionLock.isConfirming && ActionLock.lockedBy == sender) {
                 ActionLock.confirm.run();
                 List<Integer> numbers = new ArrayList<>();
@@ -49,7 +49,7 @@ public class CommandsHandler implements CommandExecutor {
             }
         }
 
-        if (subCommand.equals("n")) {
+        if (subCommand.equals("n") || subCommand.equals("-n")) {
             if (ActionLock.isConfirming && ActionLock.lockedBy == sender) {
                 ActionLock.deny.run();
             } else {
@@ -82,7 +82,7 @@ public class CommandsHandler implements CommandExecutor {
             new SearchCommand().execute(sender, args);
         }
 
-        if ((subCommand.equals("-Sy") || subCommand.equals("update") || subCommand.equals("-Syu") || subCommand.equals("-Su"))){
+        if ((subCommand.equals("update") || subCommand.equals("-Syu"))){
             if (!ActionLock.isLocked && ActionLock.lockedBy == null) {
                 ActionLock.lock(sender);
                 UpdatePreparer.execute(sender);
@@ -92,6 +92,10 @@ public class CommandsHandler implements CommandExecutor {
             }
         }
 
+        if (subCommand.equals("help") || subCommand.equals("-h")) {
+            HelpCommand.execute(sender);
+            return true;
+        }
 
         if ((subCommand.equals("-s") || subCommand.equals("install"))){
 

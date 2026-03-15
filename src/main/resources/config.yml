@@ -1,0 +1,3 @@
+
+
+tab-mode: "apt" #This chainge the tab completion to either "apt" or "pacman" syntax
