@@ -54,7 +54,7 @@ public class InstallCommand {
                         ActionLock.release();
                         return true;
                     }
-                    modifier = "latest";
+                    modifier = "version-latest";
                     version = args[i + 2];
                     i += 2;
                 } else if (next.equals("--vr")) {

@@ -94,4 +94,27 @@ public class FetchProjects {
             return null;
         }
     }
+    public static String projectIDToSlug(String projectID)
+    {
+        try {
+            String url = "https://api.modrinth.com/v2/project/" + projectID;
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .header("User-Agent", "plug-get")
+                    .GET()
+                    .build();
+
+            HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() != 200) return null;
+            if (response.statusCode() == 404) return null;
+
+            return new JSONObject(response.body()).optString("slug");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

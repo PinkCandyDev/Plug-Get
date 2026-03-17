@@ -1,11 +1,13 @@
 package me.pinkcandy.plugGet.db;
 
+import me.pinkcandy.plugGet.model.DependencyInfo;
 import me.pinkcandy.plugGet.model.InstallInfo;
 import me.pinkcandy.plugGet.model.PluginData;
 import me.pinkcandy.plugGet.model.VersionInfo;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DBMapper {
@@ -63,6 +65,8 @@ public class DBMapper {
         String fileName = pluginDataJson.getString("fileName");
         String sha512 = pluginDataJson.getString("sha512");
         int fileSize = pluginDataJson.getInt("fileSize");
+        JSONArray dependencies = pluginDataJson.optJSONArray("dependencies");
+        List<DependencyInfo> dependenciesInfo = new ArrayList<>();
 
         iI = new InstallInfo(slug, installType, null);
         vI = new VersionInfo(versionNumber,
@@ -76,7 +80,9 @@ public class DBMapper {
                 fileName,
                 null,
                 sha512,
-                fileSize
+                fileSize,
+                null
+
         );
 
         plugin = new PluginData(iI, vI);

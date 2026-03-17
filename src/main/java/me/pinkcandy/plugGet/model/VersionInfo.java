@@ -15,8 +15,10 @@ public class VersionInfo {
     private final String downloadUrl;
     private final String sha512;
     private final int fileSize;
+    private final List<DependencyInfo> dependencies;
 
-    public VersionInfo(String versionNumber, String versionId, String branch, String status, String datePublished, List<String> gameVersions, String gameVersionsRange, List<String> loaders, String fileName, String downloadUrl, String sha512, int fileSize) {
+    public VersionInfo(String versionNumber, String versionId, String branch, String status, String datePublished, List<String> gameVersions,
+                       String gameVersionsRange, List<String> loaders, String fileName, String downloadUrl, String sha512, int fileSize, List<DependencyInfo> dependencies) {
         this.versionNumber = versionNumber;
         this.versionId = versionId;
         this.branch = branch;
@@ -29,6 +31,7 @@ public class VersionInfo {
         this.downloadUrl = downloadUrl;
         this.sha512 = sha512;
         this.fileSize = fileSize;
+        this.dependencies = dependencies;
     }
 
     public String getVersionNumber() { return versionNumber; }
@@ -43,4 +46,5 @@ public class VersionInfo {
     public String getDownloadUrl() { return downloadUrl; }
     public String getSha512() { return sha512; }
     public int getFileSize() { return fileSize; }
+    public List<DependencyInfo> getDependencies() { return dependencies;}
 }

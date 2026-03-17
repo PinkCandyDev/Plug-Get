@@ -1,6 +1,7 @@
 package me.pinkcandy.plugGet.api.modrinth.map;
 
 import me.pinkcandy.plugGet.Tools.VersionRange;
+import me.pinkcandy.plugGet.model.DependencyInfo;
 import me.pinkcandy.plugGet.model.VersionInfo;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -52,6 +53,20 @@ public class VersionMapper {
                 }
             }
         }
+        JSONArray dependencies = json.optJSONArray("dependencies");
+        List<DependencyInfo> dependenciesInfo = new ArrayList<>();
+        if (dependencies != null) {
+            for (int i = 0; i < dependencies.length(); i++) {
+                JSONObject dependency = dependencies.getJSONObject(i);
+                String projectId = dependency.optString("project_id");
+                String dpVersionID = dependency.optString("version_id");
+                String dbFileName = dependency.optString("file_name");
+                String dependencyType = dependency.optString("dependency_type");
+                DependencyInfo dependencyInfo = new DependencyInfo(projectId, null, dpVersionID, dbFileName, dependencyType);
+                dependenciesInfo.add(dependencyInfo);
+            }
+        }
+
 
         return new VersionInfo(
                 versionNumber,
@@ -65,7 +80,8 @@ public class VersionMapper {
                 fileName,
                 downloadUrl,
                 sha512,
-                fileSize
+                fileSize,
+                dependenciesInfo
         );
     }
 

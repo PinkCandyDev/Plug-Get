@@ -3,6 +3,7 @@ package me.pinkcandy.plugGet.install;
 import me.pinkcandy.plugGet.commands.ActionLock;
 import me.pinkcandy.plugGet.api.modrinth.fetch.FetchProjects;
 import me.pinkcandy.plugGet.messagesBuilders.BuildInstallInfo;
+import me.pinkcandy.plugGet.model.DependencyInfo;
 import me.pinkcandy.plugGet.model.InstallInfo;
 import me.pinkcandy.plugGet.model.PluginData;
 import me.pinkcandy.plugGet.model.VersionInfo;
@@ -18,7 +19,11 @@ import static me.pinkcandy.plugGet.install.InstallPlugins.installPlugins;
 
 public class InstallationPreparer {
 
+    public static List<PluginData> plugins;
+
     public static void prepareInstall(List<InstallInfo> pluginsToInstall, CommandSender sender) {
+        plugins = null;
+        plugins = new ArrayList<>();
         for (int i = 0; i < pluginsToInstall.size(); i++)
         {
             JSONObject obj = FetchProjects.fetchProject(pluginsToInstall.get(i).getSlug());
@@ -27,36 +32,13 @@ public class InstallationPreparer {
                 ActionLock.release();
                 return;
             }
-        }
-        List<VersionInfo> versionsToInstall = new ArrayList<>();
-        for (int i = 0; i < pluginsToInstall.size(); i++) {
-            VersionInfo versionInfo = GetNewestVersion.getNewestVersionForInstallType(pluginsToInstall.get(i));
-            if (versionInfo == null) {
-                if (pluginsToInstall.get(i).getInstallType().equals("latest"))
+            else {
+                if (preparePluginData(pluginsToInstall.get(i), sender) != true)
                 {
-                    sender.sendMessage("§cNo compatible versions found for " + pluginsToInstall.get(i).getSlug());
                     ActionLock.release();
+                    return;
                 }
-                else if (pluginsToInstall.get(i).getInstallType().equals("version-latest") || pluginsToInstall.get(i).getInstallType().equals("version") || pluginsToInstall.get(i).getInstallType().equals("version-rolling"))
-                {
-                    sender.sendMessage("§cVersion " + pluginsToInstall.get(i).getVersion() + " not found for " + pluginsToInstall.get(i).getSlug());
-                    ActionLock.release();
-                }
-                else {
-                    sender.sendMessage("§cNo " + pluginsToInstall.get(i).getInstallType() + " version found for " + pluginsToInstall.get(i).getSlug());
-                    ActionLock.release();
-                }
-                return;
             }
-            else
-            {
-                versionsToInstall.add(versionInfo);
-            }
-        }
-
-        List<PluginData> plugins = new ArrayList<>();
-        for (int i = 0; i < pluginsToInstall.size(); i++) {
-            plugins.add(new PluginData(pluginsToInstall.get(i), versionsToInstall.get(i)));
         }
 
         List<BaseComponent[]> messages = BuildInstallInfo.buildInstallInfo(plugins);
@@ -74,5 +56,51 @@ public class InstallationPreparer {
             sender.sendMessage("§cInstallation cancelled.");
             ActionLock.release();
         };
+    }
+
+    public static boolean preparePluginData(InstallInfo installInfo, CommandSender sender) {
+        VersionInfo versionInfo = GetNewestVersion.getNewestVersionForInstallType(installInfo);
+        if (versionInfo == null) {
+            if (installInfo.getInstallType().equals("latest")) {
+                sender.sendMessage("§cNo compatible versions found for " + installInfo.getSlug());
+            } else if (installInfo.getInstallType().equals("version-latest") || installInfo.getInstallType().equals("version") || installInfo.getInstallType().equals("version-rolling")) {
+                sender.sendMessage("§cVersion " + installInfo.getVersion() + " not found for " + installInfo.getSlug());
+            } else {
+                sender.sendMessage("§cNo " + installInfo.getInstallType() + " version found for " + installInfo.getSlug());
+            }
+            return false;
+        } else {
+            for (DependencyInfo dependencyInfo : versionInfo.getDependencies()) {
+                if (dependencyInfo.getType().equals("required")) {
+                    String depVersionId = dependencyInfo.getVersionID();
+                    String displayDepVersion = (depVersionId == null || depVersionId.trim().isEmpty()) ? "<unspecified>" : depVersionId;
+                    if (depVersionId != null && !depVersionId.trim().isEmpty()) {
+                        InstallInfo dpInstallInfo = new InstallInfo(FetchProjects.projectIDToSlug
+                                (dependencyInfo.getProjectID()), "version", depVersionId);
+                        VersionInfo dpVersionInfo = GetNewestVersion.getNewestVersionForInstallType(dpInstallInfo);
+                        if (dpVersionInfo != null) {
+                            boolean ok = preparePluginData(dpInstallInfo, sender);
+                            if (!ok) return false;
+                            continue;
+                        }
+                        sender.sendMessage("§cRequired dependency version " + displayDepVersion + " not found for " + dpInstallInfo.getSlug());
+                        return false;
+                    } else {
+                        InstallInfo dpInstallInfo = new InstallInfo(FetchProjects.projectIDToSlug
+                                (dependencyInfo.getProjectID()), "latest", null);
+                        VersionInfo dpVersionInfo = GetNewestVersion.getNewestVersionForInstallType(dpInstallInfo);
+                        if (dpVersionInfo != null) {
+                            boolean ok = preparePluginData(dpInstallInfo, sender);
+                            if (!ok) return false;
+                            continue;
+                        }
+                        sender.sendMessage("§cNo compatible versions found for dependency " + dpInstallInfo.getSlug());
+                        return false;
+                    }
+                }
+            }
+            plugins.add(new PluginData(installInfo, versionInfo));
+            return true;
+        }
     }
 }
