@@ -10,10 +10,14 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.function.Consumer;
+
+import static me.pinkcandy.plugGet.PlugGet.cacheFolder;
 
 public class FetchProjects {
 
@@ -74,6 +78,12 @@ public class FetchProjects {
 
     public static JSONObject fetchProject(String slug) {
         try {
+            Path file = cacheFolder.resolve(slug).resolve("project.json");
+            if (Files.exists(file)) {
+                String content = Files.readString(file);
+                return new JSONObject(content);
+            }
+
             String url = "https://api.modrinth.com/v2/project/" + slug;
 
             HttpRequest request = HttpRequest.newBuilder()
@@ -84,10 +94,16 @@ public class FetchProjects {
 
             HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if (response.statusCode() != 200) return null;
             if (response.statusCode() == 404) return null;
+            if (response.statusCode() != 200) return null;
 
-            return new JSONObject(response.body());
+            String body = response.body();
+            JSONObject json = new JSONObject(body);
+
+            Files.createDirectories(file.getParent());
+            Files.writeString(file, json.toString(2));
+
+            return json;
 
         } catch (Exception e) {
             e.printStackTrace();

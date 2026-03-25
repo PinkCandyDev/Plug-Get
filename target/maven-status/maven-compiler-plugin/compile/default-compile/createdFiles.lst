@@ -10,7 +10,6 @@ me/pinkcandy/plugGet/messagesBuilders/BuildTools.class
 me/pinkcandy/plugGet/delete/DeletePlugin.class
 me/pinkcandy/plugGet/api/modrinth/fetch/FetchVersions.class
 me/pinkcandy/plugGet/model/DependencyInfo.class
-me/pinkcandy/plugGet/version/ResolveDependency.class
 me/pinkcandy/plugGet/version/VersionValidator.class
 me/pinkcandy/plugGet/Tools/TextTools.class
 me/pinkcandy/plugGet/api/modrinth/map/ProjectMapper.class

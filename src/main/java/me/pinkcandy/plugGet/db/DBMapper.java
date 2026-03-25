@@ -36,6 +36,23 @@ public class DBMapper {
             pluginDataJson.put("fileName", versionInfo.getFileName());
             pluginDataJson.put("sha512", versionInfo.getSha512());
             pluginDataJson.put("fileSize", versionInfo.getFileSize());
+
+            if (versionInfo.getDependencies() != null) {
+                JSONArray depsArray = new JSONArray();
+
+                for (DependencyInfo dep : versionInfo.getDependencies()) {
+                    JSONObject depJson = new JSONObject();
+                    depJson.put("projectID", dep.getProjectID());
+                    depJson.put("slug", dep.getSlug());
+                    depJson.put("versionID", dep.getVersionID());
+                    depJson.put("fileName", dep.getFileName());
+                    depJson.put("type", dep.getType());
+
+                    depsArray.put(depJson);
+                }
+
+                pluginDataJson.put("dependencies", depsArray);
+            }
         }
 
         rootJson.put(slug, pluginDataJson);
@@ -48,28 +65,42 @@ public class DBMapper {
             return null;
         }
 
-        PluginData plugin;
-
         String slug = rootJson.keys().next();
         JSONObject pluginDataJson = rootJson.getJSONObject(slug);
 
-        VersionInfo vI;
-        InstallInfo iI;
+        String installType = pluginDataJson.optString("installType", "unknown");
 
-        String installType = pluginDataJson.getString("branch");
+        String versionNumber = pluginDataJson.optString("versionNumber", null);
+        String versionId = pluginDataJson.optString("versionId", null);
+        String branch = pluginDataJson.optString("branch", null);
+        String datePublished = pluginDataJson.optString("datePublished", null);
+        String fileName = pluginDataJson.optString("fileName", null);
+        String sha512 = pluginDataJson.optString("sha512", null);
+        int fileSize = pluginDataJson.optInt("fileSize", 0);
 
-        String versionNumber = pluginDataJson.getString("versionNumber");
-        String versionId = pluginDataJson.getString("versionId");
-        String branch = pluginDataJson.getString("branch");
-        String datePublished = pluginDataJson.getString("datePublished");
-        String fileName = pluginDataJson.getString("fileName");
-        String sha512 = pluginDataJson.getString("sha512");
-        int fileSize = pluginDataJson.getInt("fileSize");
-        JSONArray dependencies = pluginDataJson.optJSONArray("dependencies");
-        List<DependencyInfo> dependenciesInfo = new ArrayList<>();
+        JSONArray dependenciesArray = pluginDataJson.optJSONArray("dependencies");
+        List<DependencyInfo> dependencies = new ArrayList<>();
 
-        iI = new InstallInfo(slug, installType, null);
-        vI = new VersionInfo(versionNumber,
+        if (dependenciesArray != null) {
+            for (int i = 0; i < dependenciesArray.length(); i++) {
+                JSONObject depJson = dependenciesArray.getJSONObject(i);
+
+                DependencyInfo dep = new DependencyInfo(
+                        depJson.optString("projectID", null),
+                        depJson.optString("slug", null),
+                        depJson.optString("versionID", null),
+                        depJson.optString("fileName", null),
+                        depJson.optString("type", null)
+                );
+
+                dependencies.add(dep);
+            }
+        }
+
+        InstallInfo iI = new InstallInfo(slug, installType, null);
+
+        VersionInfo vI = new VersionInfo(
+                versionNumber,
                 versionId,
                 branch,
                 null,
@@ -81,14 +112,9 @@ public class DBMapper {
                 null,
                 sha512,
                 fileSize,
-                null
-
+                dependencies.isEmpty() ? null : dependencies
         );
 
-        plugin = new PluginData(iI, vI);
-
-        return plugin;
-
+        return new PluginData(iI, vI);
     }
-
 }

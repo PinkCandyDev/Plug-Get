@@ -3,10 +3,14 @@ package me.pinkcandy.plugGet.api.modrinth.fetch;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+
+import static me.pinkcandy.plugGet.PlugGet.tmpFolder;
 
 public class FetchVersions {
 
@@ -14,6 +18,13 @@ public class FetchVersions {
 
     public static JSONArray fetchAll(String slug) {
         try {
+            File file = tmpFolder.resolve(slug + "_versions.json").toFile();
+
+            if (file.exists()) {
+                String content = Files.readString(file.toPath());
+                return new JSONArray(content);
+            }
+
             String url = "https://api.modrinth.com/v2/project/" + slug + "/version";
 
             HttpRequest request = HttpRequest.newBuilder()
@@ -26,7 +37,11 @@ public class FetchVersions {
 
             if (response.statusCode() != 200) return null;
 
-            return new JSONArray(response.body());
+            String body = response.body();
+
+            Files.writeString(file.toPath(), body);
+
+            return new JSONArray(body);
 
         } catch (Exception e) {
             e.printStackTrace();

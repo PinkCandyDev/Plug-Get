@@ -19,7 +19,7 @@ import java.util.List;
 public class UpdatePreparer {
     public static boolean execute(CommandSender sender) {
         sender.sendMessage("§8:: §7Checking for updates...");
-        sender.sendMessage("§8:: §3Fetching plugins and versions...");
+        sender.sendMessage("§8:: §7Fetching plugins and versions...");
         List<PluginData> pluginsInDB = DBManager.getInstalledPlugins();
         List<PluginData> installedPlugins = new ArrayList<>();
         List<PluginData> pluginsToUpdate = new ArrayList<>();

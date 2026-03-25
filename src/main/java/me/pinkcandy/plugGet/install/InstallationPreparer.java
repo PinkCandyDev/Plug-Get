@@ -22,8 +22,8 @@ public class InstallationPreparer {
     public static List<PluginData> plugins;
 
     public static void prepareInstall(List<InstallInfo> pluginsToInstall, CommandSender sender) {
-        plugins = null;
         plugins = new ArrayList<>();
+        sender.sendMessage("§8:: §7Fetching plugins and versions...");
         for (int i = 0; i < pluginsToInstall.size(); i++)
         {
             JSONObject obj = FetchProjects.fetchProject(pluginsToInstall.get(i).getSlug());
@@ -40,7 +40,7 @@ public class InstallationPreparer {
                 }
             }
         }
-
+        sender.sendMessage("");
         List<BaseComponent[]> messages = BuildInstallInfo.buildInstallInfo(plugins);
         ActionLock.isConfirming = true;
         for (int i = 0; i < messages.size(); i++)
@@ -70,32 +70,56 @@ public class InstallationPreparer {
             }
             return false;
         } else {
-            for (DependencyInfo dependencyInfo : versionInfo.getDependencies()) {
-                if (dependencyInfo.getType().equals("required")) {
-                    String depVersionId = dependencyInfo.getVersionID();
-                    String displayDepVersion = (depVersionId == null || depVersionId.trim().isEmpty()) ? "<unspecified>" : depVersionId;
-                    if (depVersionId != null && !depVersionId.trim().isEmpty()) {
-                        InstallInfo dpInstallInfo = new InstallInfo(FetchProjects.projectIDToSlug
-                                (dependencyInfo.getProjectID()), "version", depVersionId);
-                        VersionInfo dpVersionInfo = GetNewestVersion.getNewestVersionForInstallType(dpInstallInfo);
-                        if (dpVersionInfo != null) {
-                            boolean ok = preparePluginData(dpInstallInfo, sender);
-                            if (!ok) return false;
-                            continue;
+            if (!versionInfo.getDependencies().isEmpty()) {
+                sender.sendMessage("§8:: §7Resolving Dependencies for " + installInfo.getSlug() + "...");
+
+                for (int i = 0; i < versionInfo.getDependencies().size(); i++) {
+                    DependencyInfo dependencyInfo = versionInfo.getDependencies().get(i);
+                    if (dependencyInfo.getType().equals("required")) {
+                        String depVersionId = dependencyInfo.getVersionID();
+                        String displayDepVersion = (depVersionId == null || depVersionId.trim().isEmpty()) ? "<unspecified>" : depVersionId;
+                        if (depVersionId != null && !depVersionId.trim().isEmpty()) {
+                            String dpSlug = FetchProjects.projectIDToSlug(dependencyInfo.getProjectID());
+                            InstallInfo dpInstallInfo = new InstallInfo(
+                                    dpSlug,
+                                    "version",
+                                    depVersionId
+                            );
+                            VersionInfo dpVersionInfo = GetNewestVersion.getNewestVersionForInstallType(dpInstallInfo);
+                            if (dpVersionInfo != null) {
+                                boolean ok = preparePluginData(dpInstallInfo, sender);
+                                dependencyInfo.setSlug(dpSlug);
+                                if (!ok) return false;
+                                continue;
+                            }
+                            sender.sendMessage("§cRequired dependency version " + displayDepVersion +
+                                    " not found for " + dpInstallInfo.getSlug());
+                            return false;
+                        } else {
+
+                            String dpSlug = FetchProjects.projectIDToSlug(dependencyInfo.getProjectID());
+                            InstallInfo dpInstallInfo = new InstallInfo(
+                                    FetchProjects.projectIDToSlug(dependencyInfo.getProjectID()),
+                                    "latest",
+                                    null
+                            );
+                            VersionInfo dpVersionInfo = GetNewestVersion.getNewestVersionForInstallType(dpInstallInfo);
+                            if (dpVersionInfo != null) {
+                                boolean ok = preparePluginData(dpInstallInfo, sender);
+                                dependencyInfo.setSlug(dpSlug);
+                                if (!ok) return false;
+                                continue;
+                            }
+                            sender.sendMessage("§cNo compatible versions found for dependency " +
+                                    dpInstallInfo.getSlug());
+                            return false;
                         }
-                        sender.sendMessage("§cRequired dependency version " + displayDepVersion + " not found for " + dpInstallInfo.getSlug());
-                        return false;
-                    } else {
-                        InstallInfo dpInstallInfo = new InstallInfo(FetchProjects.projectIDToSlug
-                                (dependencyInfo.getProjectID()), "latest", null);
-                        VersionInfo dpVersionInfo = GetNewestVersion.getNewestVersionForInstallType(dpInstallInfo);
-                        if (dpVersionInfo != null) {
-                            boolean ok = preparePluginData(dpInstallInfo, sender);
-                            if (!ok) return false;
-                            continue;
-                        }
-                        sender.sendMessage("§cNo compatible versions found for dependency " + dpInstallInfo.getSlug());
-                        return false;
+                    } else if (dependencyInfo.getType().equals("optional")) {
+                        sender.sendMessage("§8:: §7Plugin " +
+                                FetchProjects.projectIDToSlug(dependencyInfo.getProjectID()) +
+                                " is a optional dependency for " +
+                                installInfo.getSlug() +
+                                ".\n Would you like to add it? §8[Y/N]");
                     }
                 }
             }
