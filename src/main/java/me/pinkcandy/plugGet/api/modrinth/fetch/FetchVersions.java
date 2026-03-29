@@ -24,7 +24,6 @@ public class FetchVersions {
                 String content = Files.readString(file.toPath());
                 return new JSONArray(content);
             }
-
             String url = "https://api.modrinth.com/v2/project/" + slug + "/version";
 
             HttpRequest request = HttpRequest.newBuilder()

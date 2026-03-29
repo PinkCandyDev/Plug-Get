@@ -53,7 +53,7 @@ public class BuildSearchInfo {
                     builder.append(SetColor.setColor(versionsList.get(i).getBranch())
                                     + versionsList.get(i).getVersionNumber())
                             .event(versionHover(versionsList.get(i)))
-                            .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                    .event(new ClickEvent(ClickEvent.Action. RUN_COMMAND,
                                     "/plugget -S " + projectMeta.getSlug() + " --vl " + versionsList.get(i).getVersionNumber()));
 
 

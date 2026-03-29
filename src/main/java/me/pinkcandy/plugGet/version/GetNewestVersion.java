@@ -1,5 +1,6 @@
 package me.pinkcandy.plugGet.version;
 
+import me.pinkcandy.plugGet.api.modrinth.fetch.FetchHelper;
 import me.pinkcandy.plugGet.api.modrinth.fetch.FetchVersions;
 import me.pinkcandy.plugGet.api.modrinth.map.VersionMapper;
 import me.pinkcandy.plugGet.model.InstallInfo;
@@ -12,7 +13,8 @@ import java.util.List;
 
 public class GetNewestVersion {
     public static List<VersionInfo> getBranchesFromSlug(String slug){
-        JSONArray versions = FetchVersions.fetchAll(slug);
+        String projectId = FetchHelper.slugToProjectID(slug);
+        JSONArray versions = FetchVersions.fetchAll(projectId);
         if (versions == null) {
             return null;
         }
@@ -46,7 +48,8 @@ public class GetNewestVersion {
         VersionInfo versionInfo = null;
 
         if (installInfo.getInstallType().equals("version") || installInfo.getInstallType().equals("version-latest")) {
-            JSONArray versions = FetchVersions.fetchAll(installInfo.getSlug());
+            String projectId = FetchHelper.slugToProjectID(installInfo.getSlug());
+            JSONArray versions = FetchVersions.fetchAll(projectId);
             if (versions==null){return null;}
             List<VersionInfo> validVs = new ArrayList<>();
             for (int i = 0; i < versions.length(); i++) {

@@ -1,18 +1,17 @@
 package me.pinkcandy.plugGet.install;
 
+import me.pinkcandy.plugGet.api.modrinth.fetch.FetchHelper;
 import me.pinkcandy.plugGet.commands.ActionLock;
 import me.pinkcandy.plugGet.api.modrinth.fetch.FetchProjects;
 import me.pinkcandy.plugGet.messagesBuilders.BuildInstallInfo;
-import me.pinkcandy.plugGet.model.DependencyInfo;
-import me.pinkcandy.plugGet.model.InstallInfo;
-import me.pinkcandy.plugGet.model.PluginData;
-import me.pinkcandy.plugGet.model.VersionInfo;
+import me.pinkcandy.plugGet.model.*;
 import me.pinkcandy.plugGet.version.GetNewestVersion;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.command.CommandSender;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static me.pinkcandy.plugGet.install.InstallPlugins.installPlugins;
@@ -26,8 +25,8 @@ public class InstallationPreparer {
         sender.sendMessage("§8:: §7Fetching plugins and versions...");
         for (int i = 0; i < pluginsToInstall.size(); i++)
         {
-            JSONObject obj = FetchProjects.fetchProject(pluginsToInstall.get(i).getSlug());
-            if (obj == null) {
+            ProjectMeta meta = FetchHelper.getProject(pluginsToInstall.get(i).getSlug());
+            if (meta == null) {
                 sender.sendMessage("§cPlugin " + pluginsToInstall.get(i).getSlug() + " not found. Is the slug correct?");
                 ActionLock.release();
                 return;
@@ -40,6 +39,7 @@ public class InstallationPreparer {
                 }
             }
         }
+        Collections.reverse(plugins);
         sender.sendMessage("");
         List<BaseComponent[]> messages = BuildInstallInfo.buildInstallInfo(plugins);
         ActionLock.isConfirming = true;
@@ -79,7 +79,7 @@ public class InstallationPreparer {
                         String depVersionId = dependencyInfo.getVersionID();
                         String displayDepVersion = (depVersionId == null || depVersionId.trim().isEmpty()) ? "<unspecified>" : depVersionId;
                         if (depVersionId != null && !depVersionId.trim().isEmpty()) {
-                            String dpSlug = FetchProjects.projectIDToSlug(dependencyInfo.getProjectID());
+                            String dpSlug = FetchHelper.projectIDToSlug(dependencyInfo.getProjectID());
                             InstallInfo dpInstallInfo = new InstallInfo(
                                     dpSlug,
                                     "version",
@@ -97,9 +97,9 @@ public class InstallationPreparer {
                             return false;
                         } else {
 
-                            String dpSlug = FetchProjects.projectIDToSlug(dependencyInfo.getProjectID());
+                            String dpSlug = FetchHelper.projectIDToSlug(dependencyInfo.getProjectID());
                             InstallInfo dpInstallInfo = new InstallInfo(
-                                    FetchProjects.projectIDToSlug(dependencyInfo.getProjectID()),
+                                    dpSlug,
                                     "latest",
                                     null
                             );
@@ -116,7 +116,7 @@ public class InstallationPreparer {
                         }
                     } else if (dependencyInfo.getType().equals("optional")) {
                         sender.sendMessage("§8:: §7Plugin " +
-                                FetchProjects.projectIDToSlug(dependencyInfo.getProjectID()) +
+                                FetchHelper.projectIDToSlug(dependencyInfo.getProjectID()) +
                                 " is a optional dependency for " +
                                 installInfo.getSlug() +
                                 ".\n Would you like to add it? §8[Y/N]");

@@ -1,5 +1,6 @@
 package me.pinkcandy.plugGet;
 
+import me.pinkcandy.plugGet.api.modrinth.fetch.FetchProjects;
 import me.pinkcandy.plugGet.commands.CommandsHandler;
 import me.pinkcandy.plugGet.commands.Tab;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -19,12 +20,15 @@ public final class PlugGet extends JavaPlugin {
     public static Path dbFile;
     public static Path dbBackupFile;
     public static Path tmpFolder;
-    public static Path cacheFolder;
+    public static Path plugincCacheFolder;
+    public static Path projectCacheFolder;
+
 
     @Override
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
+        ThreadManager.init(instance);
         ConfigManager.load(this);
         dbFolder = PlugGet.instance.getDataFolder().toPath().resolve("db/");
         dbFile = dbFolder.resolve("plugins.json");
@@ -54,9 +58,15 @@ public final class PlugGet extends JavaPlugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        cacheFolder = PlugGet.instance.getDataFolder().toPath().resolve("cache/plugins/");
+        plugincCacheFolder = PlugGet.instance.getDataFolder().toPath().resolve("cache/plugins/");
         try {
-            Files.createDirectories(cacheFolder);
+            Files.createDirectories(plugincCacheFolder);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        projectCacheFolder = PlugGet.instance.getDataFolder().toPath().resolve("cache/project/");
+        try {
+            Files.createDirectories(projectCacheFolder);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -69,6 +79,7 @@ public final class PlugGet extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        ThreadManager.shutdown();
         try {
             if (Files.exists(tmpFolder)) {
                 Files.walk(tmpFolder)

@@ -1,5 +1,6 @@
 package me.pinkcandy.plugGet.commands;
 
+import me.pinkcandy.plugGet.ThreadManager;
 import me.pinkcandy.plugGet.install.InstallationPreparer;
 import me.pinkcandy.plugGet.model.InstallInfo;
 import org.bukkit.command.CommandSender;
@@ -73,7 +74,9 @@ public class InstallCommand {
             pluginsToInstall.add(new InstallInfo(slug, modifier, version));
         }
 
-        InstallationPreparer.prepareInstall(pluginsToInstall, sender);
+        ThreadManager.runAsync(() -> {
+            InstallationPreparer.prepareInstall(pluginsToInstall, sender);
+        });
         return true;
     }
 }

@@ -13,11 +13,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.pinkcandy.plugGet.PlugGet.cacheFolder;
 
 public class ProjectMapper {
 
-    public static ProjectMeta fromJson(JSONObject obj) {
+    public static ProjectMeta fromJsonSearch(JSONObject obj) {
 
         String slug = obj.getString("slug");
         String projectId = obj.getString("project_id");
@@ -29,32 +28,34 @@ public class ProjectMapper {
         loaders = LoaderList.filterLoaders(loaders);
         List<String> versions = jsonArrayToList(obj.optJSONArray("versions"));
         String versionRange = versions.isEmpty() ? "?" : VersionRange.buildRange(obj.getJSONArray("versions"));
-        Path file = cacheFolder.resolve(slug).resolve("project.json");
-        if (!Files.exists(file)) {
-            try
-            {
-                Files.createDirectories(file.getParent());
-                ProjectMeta projectMeta = new ProjectMeta(
-                        slug,
-                        projectId,
-                        author,
-                        downloads,
-                        description,
-                        loaders,
-                        versions,
-                        versionRange
-                );
-                JSONObject json = new JSONObject(projectMeta);
-                Files.writeString(file, json.toString(2));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
 
         return new ProjectMeta(
                 slug,
                 projectId,
                 author,
+                downloads,
+                description,
+                loaders,
+                versions,
+                versionRange
+        );
+    }
+    public static ProjectMeta fromJsonProject(JSONObject obj) {
+
+        String slug = obj.getString("slug");
+        String projectId = obj.getString("id");
+        int downloads = obj.optInt("downloads", 0);
+        String description = obj.optString("description", "No description provided.");
+
+        List<String> loaders = jsonArrayToList(obj.optJSONArray("loaders"));
+        loaders = LoaderList.filterLoaders(loaders);
+        List<String> versions = jsonArrayToList(obj.optJSONArray("game_versions"));
+        String versionRange = versions.isEmpty() ? "?" : VersionRange.buildRange(obj.getJSONArray("game_versions"));
+
+        return new ProjectMeta(
+                slug,
+                projectId,
+                null,
                 downloads,
                 description,
                 loaders,

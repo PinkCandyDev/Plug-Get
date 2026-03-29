@@ -1,5 +1,6 @@
 package me.pinkcandy.plugGet.commands;
 
+import me.pinkcandy.plugGet.ThreadManager;
 import me.pinkcandy.plugGet.Tools.TextTools;
 import me.pinkcandy.plugGet.Update.UpdatePreparer;
 import me.pinkcandy.plugGet.delete.DeletePreparer;
@@ -85,7 +86,9 @@ public class CommandsHandler implements CommandExecutor {
         if ((subCommand.equals("update") || subCommand.equals("-Syu"))){
             if (!ActionLock.isLocked && ActionLock.lockedBy == null) {
                 ActionLock.lock(sender);
-                UpdatePreparer.execute(sender);
+                ThreadManager.runAsync(() -> {
+                    UpdatePreparer.execute(sender);
+                });
             }
             else {
                 sender.sendMessage("§cAnother action is currently in progress. Please wait until it is finished.");

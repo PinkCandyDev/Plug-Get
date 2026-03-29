@@ -1,5 +1,7 @@
 package me.pinkcandy.plugGet.commands;
 
+import me.pinkcandy.plugGet.ThreadManager;
+import me.pinkcandy.plugGet.api.modrinth.fetch.FetchHelper;
 import me.pinkcandy.plugGet.api.modrinth.fetch.FetchProjects;
 import me.pinkcandy.plugGet.api.modrinth.map.ProjectMapper;
 import me.pinkcandy.plugGet.messagesBuilders.BuildSearchInfo;
@@ -21,16 +23,12 @@ public class SearchCommand {
             if (i < args.length - 1) slug.append(" ");
         }
 
-        sender.sendMessage("Results for: " + slug.toString());
-        new FetchProjects().SeatchProjects(slug.toString(), result -> {
-            JSONObject root = new JSONObject(result);
-            JSONArray hits = root.getJSONArray("hits");
-
-            for (int i = hits.length() - 1; i >= 0; i--) {
-                JSONObject obj = hits.getJSONObject(i);
-                ProjectMeta projectMeta = ProjectMapper.fromJson(obj);
-                List<VersionInfo> branches = GetNewestVersion.getBranchesFromSlug(projectMeta.getProjectId());
-                sender.sendMessage(BuildSearchInfo.sendProjectInfo(projectMeta, branches));
+        ThreadManager.runAsync(() -> {
+            sender.sendMessage("Results for: " + slug.toString());
+            List<ProjectMeta> metaList = FetchHelper.searchProjects(slug.toString());
+            for (int i = 0; i < metaList.size(); i++) {
+                List<VersionInfo> branches = GetNewestVersion.getBranchesFromSlug(metaList.get(i).getProjectId());
+                sender.sendMessage(BuildSearchInfo.sendProjectInfo(metaList.get(i), branches));
             }
         });
         return true;
