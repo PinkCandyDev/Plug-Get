@@ -25,8 +25,18 @@ public class DBMapper {
         String slug = installInfo.getSlug();
 
         JSONObject pluginDataJson = new JSONObject();
-
-        pluginDataJson.put("installType", installInfo.getInstallType());
+        String instType = installInfo.getInstallType();
+        switch (instType) {
+            case "version-latest":
+                pluginDataJson.put("installType", "latest");
+                break;
+            case "version-rolling":
+                pluginDataJson.put("installType", "rolling");
+                break;
+            default:
+                pluginDataJson.put("installType", instType);
+                break;
+        }
 
         if (versionInfo != null) {
             pluginDataJson.put("versionNumber", versionInfo.getVersionNumber());

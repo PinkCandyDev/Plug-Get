@@ -46,8 +46,7 @@ public class GetNewestVersion {
     public static VersionInfo getNewestVersionForInstallType(InstallInfo installInfo)
     {
         VersionInfo versionInfo = null;
-
-        if (installInfo.getInstallType().equals("version") || installInfo.getInstallType().equals("version-latest")) {
+        if (installInfo.getInstallType().equals("version") || installInfo.getInstallType().equals("version-latest") || installInfo.getInstallType().equals("version-rolling")) {
             String projectId = FetchHelper.slugToProjectID(installInfo.getSlug());
             JSONArray versions = FetchVersions.fetchAll(projectId);
             if (versions==null){return null;}

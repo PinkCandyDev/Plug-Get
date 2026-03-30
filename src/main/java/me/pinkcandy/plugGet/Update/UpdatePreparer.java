@@ -33,6 +33,7 @@ public class UpdatePreparer {
                 ActionLock.release();
                 continue;
             }
+            sender.sendMessage(installInfo.getSlug() + installInfo.getInstallType() + installInfo.getVersion());
 
             List<VersionInfo> versions = new ArrayList<>();
             VersionInfo newestV = GetNewestVersion.getNewestVersionForInstallType(installInfo);
