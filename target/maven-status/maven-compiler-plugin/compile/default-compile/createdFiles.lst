@@ -1,6 +1,7 @@
 me/pinkcandy/plugGet/model/InstallInfo.class
 me/pinkcandy/plugGet/messagesBuilders/BuildSearchInfo.class
 me/pinkcandy/plugGet/db/CacheMapper.class
+me/pinkcandy/plugGet/version/DependencyResolver.class
 me/pinkcandy/plugGet/model/PluginData.class
 me/pinkcandy/plugGet/messagesBuilders/BuildInstallInfo.class
 me/pinkcandy/plugGet/model/VersionInfo.class
@@ -9,6 +10,7 @@ me/pinkcandy/plugGet/messagesBuilders/BuildTools.class
 me/pinkcandy/plugGet/delete/DeletePlugin.class
 me/pinkcandy/plugGet/api/modrinth/fetch/FetchVersions.class
 me/pinkcandy/plugGet/model/DependencyInfo.class
+me/pinkcandy/plugGet/version/CompareVersions.class
 me/pinkcandy/plugGet/version/VersionValidator.class
 me/pinkcandy/plugGet/Tools/TextTools.class
 me/pinkcandy/plugGet/api/modrinth/map/ProjectMapper.class
@@ -16,7 +18,6 @@ me/pinkcandy/plugGet/commands/Tab.class
 me/pinkcandy/plugGet/Tools/VersionRange.class
 me/pinkcandy/plugGet/commands/HelpCommand.class
 me/pinkcandy/plugGet/api/modrinth/map/VersionMapper.class
-me/pinkcandy/plugGet/Update/InstallUpdates.class
 me/pinkcandy/plugGet/ConfigManager$TabMode.class
 me/pinkcandy/plugGet/PlugGet.class
 me/pinkcandy/plugGet/commands/CommandsHandler.class

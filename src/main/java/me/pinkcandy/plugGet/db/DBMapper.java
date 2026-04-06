@@ -125,6 +125,6 @@ public class DBMapper {
                 dependencies.isEmpty() ? null : dependencies
         );
 
-        return new PluginData(iI, vI);
+        return new PluginData(iI, vI, null);
     }
 }

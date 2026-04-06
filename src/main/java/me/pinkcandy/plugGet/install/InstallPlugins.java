@@ -2,6 +2,7 @@ package me.pinkcandy.plugGet.install;
 
 import me.pinkcandy.plugGet.db.DBManager;
 import me.pinkcandy.plugGet.db.DBMapper;
+import me.pinkcandy.plugGet.delete.DeletePlugin;
 import me.pinkcandy.plugGet.model.PluginData;
 import me.pinkcandy.plugGet.model.VersionInfo;
 import org.bukkit.command.CommandSender;
@@ -39,7 +40,10 @@ public class InstallPlugins {
             String slug = pluginData.getInstallInfo().getSlug();
 
             VersionInfo versionInfo = pluginData.getVersionInfo();
-
+            if (pluginData.getStatus().equals("dif"))
+            {
+                DeletePlugin.removeCurrentVer(pluginData.getInstallInfo().getSlug());
+            }
             continueInstall = installHelper.manageCopy(versionInfo, slug);
 
             if (!continueInstall) {

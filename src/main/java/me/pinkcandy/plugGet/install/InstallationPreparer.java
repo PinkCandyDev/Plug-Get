@@ -5,6 +5,8 @@ import me.pinkcandy.plugGet.commands.ActionLock;
 import me.pinkcandy.plugGet.api.modrinth.fetch.FetchProjects;
 import me.pinkcandy.plugGet.messagesBuilders.BuildInstallInfo;
 import me.pinkcandy.plugGet.model.*;
+import me.pinkcandy.plugGet.version.CompareVersions;
+import me.pinkcandy.plugGet.version.DependencyResolver;
 import me.pinkcandy.plugGet.version.GetNewestVersion;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.command.CommandSender;
@@ -17,34 +19,29 @@ import java.util.List;
 import static me.pinkcandy.plugGet.install.InstallPlugins.installPlugins;
 
 public class InstallationPreparer {
-
     public static List<PluginData> plugins;
 
     public static void prepareInstall(List<InstallInfo> pluginsToInstall, CommandSender sender) {
         plugins = new ArrayList<>();
         sender.sendMessage("§8:: §7Fetching plugins and versions...");
-        for (int i = 0; i < pluginsToInstall.size(); i++)
-        {
+        for (int i = 0; i < pluginsToInstall.size(); i++) {
             ProjectMeta meta = FetchHelper.getProject(pluginsToInstall.get(i).getSlug());
             if (meta == null) {
                 sender.sendMessage("§cPlugin " + pluginsToInstall.get(i).getSlug() + " not found. Is the slug correct?");
                 ActionLock.release();
                 return;
-            }
-            else {
-                if (preparePluginData(pluginsToInstall.get(i), sender) != true)
-                {
+            } else {
+                if (prepareInstall(pluginsToInstall.get(i), sender) != true) {
                     ActionLock.release();
                     return;
                 }
             }
         }
         Collections.reverse(plugins);
-        sender.sendMessage("");
+        sender.sendMessage("test" + plugins.get(0).getStatus(), plugins.get(0).getVersionInfo().getVersionNumber());
         List<BaseComponent[]> messages = BuildInstallInfo.buildInstallInfo(plugins);
         ActionLock.isConfirming = true;
-        for (int i = 0; i < messages.size(); i++)
-        {
+        for (int i = 0; i < messages.size(); i++) {
             sender.spigot().sendMessage(messages.get(i));
         }
         ActionLock.confirm = () -> {
@@ -58,7 +55,7 @@ public class InstallationPreparer {
         };
     }
 
-    public static boolean preparePluginData(InstallInfo installInfo, CommandSender sender) {
+    public static boolean prepareInstall(InstallInfo installInfo, CommandSender sender) {
         VersionInfo versionInfo = GetNewestVersion.getNewestVersionForInstallType(installInfo);
         if (versionInfo == null) {
             if (installInfo.getInstallType().equals("latest")) {
@@ -68,63 +65,16 @@ public class InstallationPreparer {
             } else {
                 sender.sendMessage("§cNo " + installInfo.getInstallType() + " version found for " + installInfo.getSlug());
             }
-            return false;
-        } else {
-            if (!versionInfo.getDependencies().isEmpty()) {
-                sender.sendMessage("§8:: §7Resolving Dependencies for " + installInfo.getSlug() + "...");
-
-                for (int i = 0; i < versionInfo.getDependencies().size(); i++) {
-                    DependencyInfo dependencyInfo = versionInfo.getDependencies().get(i);
-                    if (dependencyInfo.getType().equals("required")) {
-                        String depVersionId = dependencyInfo.getVersionID();
-                        String displayDepVersion = (depVersionId == null || depVersionId.trim().isEmpty()) ? "<unspecified>" : depVersionId;
-                        if (depVersionId != null && !depVersionId.trim().isEmpty()) {
-                            String dpSlug = FetchHelper.projectIDToSlug(dependencyInfo.getProjectID());
-                            InstallInfo dpInstallInfo = new InstallInfo(
-                                    dpSlug,
-                                    "version",
-                                    depVersionId
-                            );
-                            VersionInfo dpVersionInfo = GetNewestVersion.getNewestVersionForInstallType(dpInstallInfo);
-                            if (dpVersionInfo != null) {
-                                boolean ok = preparePluginData(dpInstallInfo, sender);
-                                dependencyInfo.setSlug(dpSlug);
-                                if (!ok) return false;
-                                continue;
-                            }
-                            sender.sendMessage("§cRequired dependency version " + displayDepVersion +
-                                    " not found for " + dpInstallInfo.getSlug());
-                            return false;
-                        } else {
-
-                            String dpSlug = FetchHelper.projectIDToSlug(dependencyInfo.getProjectID());
-                            InstallInfo dpInstallInfo = new InstallInfo(
-                                    dpSlug,
-                                    "latest",
-                                    null
-                            );
-                            VersionInfo dpVersionInfo = GetNewestVersion.getNewestVersionForInstallType(dpInstallInfo);
-                            if (dpVersionInfo != null) {
-                                boolean ok = preparePluginData(dpInstallInfo, sender);
-                                dependencyInfo.setSlug(dpSlug);
-                                if (!ok) return false;
-                                continue;
-                            }
-                            sender.sendMessage("§cNo compatible versions found for dependency " +
-                                    dpInstallInfo.getSlug());
-                            return false;
-                        }
-                    } else if (dependencyInfo.getType().equals("optional")) {
-                        sender.sendMessage("§8:: §7Plugin " +
-                                FetchHelper.projectIDToSlug(dependencyInfo.getProjectID()) +
-                                " is a optional dependency for " +
-                                installInfo.getSlug() +
-                                ".\n Would you like to add it? §8[Y/N]");
-                    }
-                }
-            }
-            plugins.add(new PluginData(installInfo, versionInfo));
             return true;
         }
+        String status = CompareVersions.getStatus(versionInfo, installInfo.getSlug());
+        PluginData pluginData = new PluginData(
+                installInfo,
+                versionInfo,
+                status
+        );
+        DependencyResolver.resolveDependencies(pluginData, sender);
+        plugins.add(pluginData);
+        return true;
     }
 }

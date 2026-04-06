@@ -1,11 +1,13 @@
 package me.pinkcandy.plugGet.Update;
 
-import me.pinkcandy.plugGet.api.modrinth.fetch.FetchProjects;
+import me.pinkcandy.plugGet.api.modrinth.fetch.FetchHelper;
 import me.pinkcandy.plugGet.commands.ActionLock;
 import me.pinkcandy.plugGet.db.DBManager;
+import me.pinkcandy.plugGet.install.InstallPlugins;
 import me.pinkcandy.plugGet.messagesBuilders.BuildUpdateInfo;
 import me.pinkcandy.plugGet.model.InstallInfo;
 import me.pinkcandy.plugGet.model.PluginData;
+import me.pinkcandy.plugGet.model.ProjectMeta;
 import me.pinkcandy.plugGet.model.VersionInfo;
 import me.pinkcandy.plugGet.version.CompareDate;
 import me.pinkcandy.plugGet.version.GetNewestVersion;
@@ -27,8 +29,8 @@ public class UpdatePreparer {
             InstallInfo installInfo = pluginsInDB.get(i).getInstallInfo();
             VersionInfo currentV = pluginsInDB.get(i).getVersionInfo();
             String slug = installInfo.getSlug();
-            JSONObject obj = FetchProjects.fetchProject(slug);
-            if (obj == null) {
+            ProjectMeta meta = FetchHelper.getProject(slug);
+            if (meta == null) {
                 sender.sendMessage("§cInstalled plugin " + slug + " haven't been found on Modrinth. Does it still exist or mabey chainged the name?");
                 ActionLock.release();
                 continue;
@@ -45,8 +47,8 @@ public class UpdatePreparer {
             {
                 continue;
             }
-            pluginsToUpdate.add(new PluginData(pluginsInDB.get(i).getInstallInfo(), newestV));
-            installedPlugins.add(new PluginData(pluginsInDB.get(i).getInstallInfo(), currentV));
+            pluginsToUpdate.add(new PluginData(pluginsInDB.get(i).getInstallInfo(), newestV, null));
+            installedPlugins.add(new PluginData(pluginsInDB.get(i).getInstallInfo(), currentV, null));
         }
         if (!installedPlugins.isEmpty() && !pluginsToUpdate.isEmpty()) {
             List<BaseComponent[]> messages = BuildUpdateInfo.buildUpdateInfo(installedPlugins, pluginsToUpdate);
@@ -60,20 +62,9 @@ public class UpdatePreparer {
             ActionLock.release();
             return true;
         }
+
         ActionLock.confirm= () -> {
-            List<PluginData> pluginsToDelete = new ArrayList<>();
-            List<PluginData> pluginsToInstall = new ArrayList<>();
-            for (int i = 0; i < pluginsToUpdate.size(); i++)
-            {
-                if (ActionLock.numberList.contains(i)) {
-                    continue;
-                }
-                pluginsToDelete.add(installedPlugins.get(i));
-                pluginsToInstall.add(pluginsToUpdate.get(i));
-            }
-
-            InstallUpdates.installUpdates(pluginsToDelete, pluginsToInstall, sender);
-
+            boolean success = InstallPlugins.installPlugins(pluginsToUpdate, sender);
             ActionLock.release();
         };
         ActionLock.deny = () -> {

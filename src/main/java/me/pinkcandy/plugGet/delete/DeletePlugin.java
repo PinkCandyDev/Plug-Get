@@ -22,4 +22,16 @@ public class DeletePlugin {
         return true;
     }
 
+    public static boolean removeCurrentVer(String slug)
+    {
+        PluginData current = DBManager.getPluginData(slug);
+        try {
+            Files.deleteIfExists(PlugGet.instance.getDataFolder().getParentFile().toPath().resolve(current.getVersionInfo().getFileName()));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
 }
