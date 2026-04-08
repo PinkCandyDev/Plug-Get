@@ -9,6 +9,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static me.pinkcandy.plugGet.Tools.TextTools.normalizeVersion;
+
 public class VersionMapper {
 
     public static VersionInfo fromJson(JSONObject json) {
@@ -94,14 +96,5 @@ public class VersionMapper {
         }
 
         return list;
-    }
-
-    private static String normalizeVersion(String v) {
-        if (v == null) return "";
-        int dash = v.indexOf('-');
-        if (dash > 0) {
-            return v.substring(0, dash);
-        }
-        return v;
     }
 }

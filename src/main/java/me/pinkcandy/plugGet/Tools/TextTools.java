@@ -115,4 +115,13 @@ public class TextTools {
         }
         return out;
     }
+
+    public static String normalizeVersion(String v) {
+        if (v == null) return "";
+        int dash = v.indexOf('-');
+        if (dash > 0) {
+            return v.substring(0, dash);
+        }
+        return v;
+    }
 }

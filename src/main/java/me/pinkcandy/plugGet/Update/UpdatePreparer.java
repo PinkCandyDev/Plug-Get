@@ -47,7 +47,7 @@ public class UpdatePreparer {
             {
                 continue;
             }
-            pluginsToUpdate.add(new PluginData(pluginsInDB.get(i).getInstallInfo(), newestV, null));
+            pluginsToUpdate.add(new PluginData(pluginsInDB.get(i).getInstallInfo(), newestV, "dif"));
             installedPlugins.add(new PluginData(pluginsInDB.get(i).getInstallInfo(), currentV, null));
         }
         if (!installedPlugins.isEmpty() && !pluginsToUpdate.isEmpty()) {

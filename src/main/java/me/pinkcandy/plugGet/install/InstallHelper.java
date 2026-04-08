@@ -23,7 +23,7 @@ public class InstallHelper {
 
         public static boolean manageDownload(VersionInfo versionInfo, String slug, int i, int size, CommandSender sender) {
             sender.sendMessage("§8:: §7Downloading: " + versionInfo.getFileName() + " §8(" + (1 + i) + "/" + size + ")");
-            boolean success = FileDownloader.downloadFile(versionInfo.getDownloadUrl(), versionInfo.getFileName(), sender);
+            boolean success = FileDownloader.downloadFile(versionInfo.getDownloadUrl(), versionInfo.getFileName(),versionInfo.getVersionNumber(), slug, sender);
             if (!success) {
                 sender.sendMessage("§cFailed to download " + versionInfo.getFileName() + " for " + slug);
                 return false;

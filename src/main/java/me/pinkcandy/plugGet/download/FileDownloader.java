@@ -16,7 +16,7 @@ import static org.apache.commons.codec.digest.DigestUtils.sha512Hex;
 
 public class FileDownloader {
 
-    public static boolean downloadFile(String urlString, String fileName, CommandSender sender) {
+    public static boolean downloadFile(String urlString, String fileName, String versionNumber, String slug, CommandSender sender) {
         Path targetFile = tmpFolder.resolve(fileName);
 
         try {

@@ -70,7 +70,7 @@ public final class PlugGet extends JavaPlugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        new ServerInfo();
+        new ServerInfo(instance);
         loadDB();
         loadBackupDB();
         this.getCommand("plugget").setExecutor(new CommandsHandler());

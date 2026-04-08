@@ -1,3 +1,10 @@
 
+#This change the tab completion to either "apt" or "pacman" syntax
+tab-mode: "apt"
 
-tab-mode: "apt" #This chainge the tab completion to either "apt" or "pacman" syntax
+#Write here a list of loaders you want plugget to use for checking version compatibility if the auto-detection fails.
+#Write them between brackets. Example: [bukkit, spigot, paper]
+overwrite-loaders:
+#Write hera a version you want plugget to use for checking version compatibility if the auto-detection fails.
+#Example: 1.21.10
+overwrite-version:
