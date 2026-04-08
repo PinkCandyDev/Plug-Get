@@ -12,18 +12,29 @@ public class ServerInfo {
     public static List<String> version = new ArrayList<>();
 
     public ServerInfo(PlugGet plugin) {
-        boolean isSpigot = false, isPaper = false, isFolia = false, isPurpur = false;
+        boolean isFolia = false, isPurpur = false, isPaper = false, isSpigot = false;
 
         try { Class.forName("io.papermc.paper.threadedregions.RegionizedServer"); isFolia = true; } catch (ClassNotFoundException ignored) {}
         try { Class.forName("org.purpurmc.purpur.PurpurConfig"); isPurpur = true; } catch (ClassNotFoundException ignored) {}
         try { Class.forName("com.destroystokyo.paper.PaperConfig"); isPaper = true; } catch (ClassNotFoundException ignored) {}
         try { Class.forName("org.spigotmc.SpigotConfig"); isSpigot = true; } catch (ClassNotFoundException ignored) {}
-
-        loaders.add("bukkit");
-        if (isSpigot || isPaper || isFolia || isPurpur) loaders.add("spigot");
-        if (isPaper || isFolia || isPurpur) loaders.add("paper");
-        if (isFolia) loaders.add("folia");
-        if (isPurpur) loaders.add("purpur");
+        if (isFolia) {
+            loaders.add("folia");
+        } else if (isPurpur) {
+            loaders.add("bukkit");
+            loaders.add("spigot");
+            loaders.add("paper");
+            loaders.add("purpur");
+        } else if (isPaper) {
+            loaders.add("bukkit");
+            loaders.add("spigot");
+            loaders.add("paper");
+        } else if (isSpigot) {
+            loaders.add("bukkit");
+            loaders.add("spigot");
+        } else {
+            loaders.add("bukkit");
+        }
 
         version.add(normalizeVersion(Bukkit.getBukkitVersion()));
 

@@ -21,7 +21,6 @@ import java.util.List;
 public class UpdatePreparer {
     public static boolean execute(CommandSender sender) {
         sender.sendMessage("§8:: §7Checking for updates...");
-        sender.sendMessage("§8:: §7Fetching plugins and versions...");
         List<PluginData> pluginsInDB = DBManager.getInstalledPlugins();
         List<PluginData> installedPlugins = new ArrayList<>();
         List<PluginData> pluginsToUpdate = new ArrayList<>();
@@ -35,7 +34,6 @@ public class UpdatePreparer {
                 ActionLock.release();
                 continue;
             }
-            sender.sendMessage(installInfo.getSlug() + installInfo.getInstallType() + installInfo.getVersion());
 
             List<VersionInfo> versions = new ArrayList<>();
             VersionInfo newestV = GetNewestVersion.getNewestVersionForInstallType(installInfo);

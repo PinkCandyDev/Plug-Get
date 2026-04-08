@@ -11,15 +11,26 @@ import java.nio.file.Path;
 
 import org.bukkit.command.CommandSender;
 
+import static me.pinkcandy.plugGet.PlugGet.plugincCacheFolder;
 import static me.pinkcandy.plugGet.PlugGet.tmpFolder;
 import static org.apache.commons.codec.digest.DigestUtils.sha512Hex;
 
 public class FileDownloader {
 
     public static boolean downloadFile(String urlString, String fileName, String versionNumber, String slug, CommandSender sender) {
+
+
         Path targetFile = tmpFolder.resolve(fileName);
 
         try {
+            Path cache = plugincCacheFolder.resolve(slug + "/" + versionNumber + "/" + fileName);
+
+            if (Files.exists(cache))
+            {
+                Files.copy(cache, tmpFolder.resolve(fileName));
+                return true;
+            }
+
             Files.createDirectories(tmpFolder);
 
             if (Files.exists(targetFile)) {

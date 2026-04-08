@@ -5,11 +5,12 @@ me/pinkcandy/plugGet/version/DependencyResolver.class
 me/pinkcandy/plugGet/model/PluginData.class
 me/pinkcandy/plugGet/messagesBuilders/BuildInstallInfo.class
 me/pinkcandy/plugGet/model/VersionInfo.class
+me/pinkcandy/plugGet/remove/RemovePreparer.class
 me/pinkcandy/plugGet/commands/ActionLock.class
 me/pinkcandy/plugGet/messagesBuilders/BuildTools.class
-me/pinkcandy/plugGet/delete/DeletePlugin.class
 me/pinkcandy/plugGet/api/modrinth/fetch/FetchVersions.class
 me/pinkcandy/plugGet/model/DependencyInfo.class
+me/pinkcandy/plugGet/remove/RemovePlugin.class
 me/pinkcandy/plugGet/version/CompareVersions.class
 me/pinkcandy/plugGet/version/VersionValidator.class
 me/pinkcandy/plugGet/Tools/TextTools.class
@@ -31,7 +32,6 @@ me/pinkcandy/plugGet/ThreadManager.class
 me/pinkcandy/plugGet/version/CompatibilityFilter.class
 me/pinkcandy/plugGet/db/DBMapper.class
 me/pinkcandy/plugGet/db/DBManager.class
-me/pinkcandy/plugGet/delete/DeletePreparer.class
 me/pinkcandy/plugGet/install/InstallHelper.class
 me/pinkcandy/plugGet/messagesBuilders/BuildDeleteInfo.class
 me/pinkcandy/plugGet/install/InstallPlugins.class

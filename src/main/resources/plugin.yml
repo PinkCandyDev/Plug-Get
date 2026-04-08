@@ -3,6 +3,7 @@ version: '1.0'
 main: me.pinkcandy.plugGet.PlugGet
 api-version: '1.21'
 load: STARTUP
+folia-supported: true
 commands:
   plugget:
     usage: /plugget

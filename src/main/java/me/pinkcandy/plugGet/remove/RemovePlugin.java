@@ -1,15 +1,13 @@
-package me.pinkcandy.plugGet.delete;
+package me.pinkcandy.plugGet.remove;
 
 import me.pinkcandy.plugGet.PlugGet;
 import me.pinkcandy.plugGet.db.DBManager;
 import me.pinkcandy.plugGet.model.PluginData;
-import org.bukkit.command.CommandSender;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 
-public class DeletePlugin {
+public class RemovePlugin {
     public static boolean deletePlugin(PluginData pluginData)
     {
         try {

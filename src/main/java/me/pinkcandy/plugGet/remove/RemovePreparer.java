@@ -1,20 +1,18 @@
-package me.pinkcandy.plugGet.delete;
+package me.pinkcandy.plugGet.remove;
 
+import me.pinkcandy.plugGet.PlugGet;
 import me.pinkcandy.plugGet.commands.ActionLock;
 import me.pinkcandy.plugGet.db.DBManager;
 import me.pinkcandy.plugGet.messagesBuilders.BuildDeleteInfo;
-import me.pinkcandy.plugGet.messagesBuilders.BuildInstallInfo;
+import me.pinkcandy.plugGet.model.DependencyInfo;
 import me.pinkcandy.plugGet.model.PluginData;
 import net.md_5.bungee.api.chat.BaseComponent;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static me.pinkcandy.plugGet.install.InstallPlugins.installPlugins;
-
-public class DeletePreparer {
+public class RemovePreparer {
     public static void prepareDelete(List<String> slugs, String type, CommandSender sender)
     {
         List<PluginData> pluginsToDelete = new ArrayList<>();
@@ -24,6 +22,18 @@ public class DeletePreparer {
             if (pluginData == null){
                 sender.sendMessage("§4Plugin " + slugs.get(i) + " is not installed");
                 continue;
+            }
+            if (type.equals("auto"))
+            {
+                for (DependencyInfo dependency : pluginData.getVersionInfo().getDependencies()) {
+                    if (dependency.getSlug() != null)
+                    {
+                        PluginData dependencyPD = DBManager.getPluginData(dependency.getSlug());
+                        if (dependencyPD != null){
+                            pluginsToDelete.add(dependencyPD);
+                        }
+                    }
+                }
             }
             pluginsToDelete.add(pluginData);
         }
@@ -44,7 +54,7 @@ public class DeletePreparer {
             for (int i = 0; i < pluginsToDelete.size(); i++)
             {
                 sender.sendMessage("§8:: §7Removing: " + pluginsToDelete.get(i).getVersionInfo().getFileName());
-                DeletePlugin.deletePlugin(pluginsToDelete.get(i));
+                RemovePlugin.deletePlugin(pluginsToDelete.get(i));
             }
             DBManager.replaceDB();
             ActionLock.release();

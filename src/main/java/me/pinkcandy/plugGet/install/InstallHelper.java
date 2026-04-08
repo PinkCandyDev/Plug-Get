@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+import static me.pinkcandy.plugGet.PlugGet.plugincCacheFolder;
 import static me.pinkcandy.plugGet.db.DBManager.*;
 import static me.pinkcandy.plugGet.db.DBMapper.pluginToJson;
 import static me.pinkcandy.plugGet.PlugGet.tmpFolder;
@@ -50,7 +51,7 @@ public class InstallHelper {
         }
 
         public static boolean manageCopy(VersionInfo versionInfo, String slug) {
-            Path cache = PlugGet.instance.getDataFolder().toPath().resolve("cache/plugins/" + slug + "/" + versionInfo.getVersionNumber() + "/" + versionInfo.getFileName());
+            Path cache = plugincCacheFolder.resolve(slug + "/" + versionInfo.getVersionNumber() + "/" + versionInfo.getFileName());
             try {
                 Files.createDirectories(cache.getParent());
                 Files.copy(tmpFolder.resolve(versionInfo.getFileName()), cache, StandardCopyOption.REPLACE_EXISTING);
