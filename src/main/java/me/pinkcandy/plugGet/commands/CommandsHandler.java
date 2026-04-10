@@ -3,12 +3,11 @@ package me.pinkcandy.plugGet.commands;
 import me.pinkcandy.plugGet.ThreadManager;
 import me.pinkcandy.plugGet.Tools.TextTools;
 import me.pinkcandy.plugGet.Update.UpdatePreparer;
-import me.pinkcandy.plugGet.delete.DeletePreparer;
+import me.pinkcandy.plugGet.remove.RemovePreparer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +64,7 @@ public class CommandsHandler implements CommandExecutor {
                 for (int i = 1; i < args.length; i++) {
                     slugs.add(args[i]);
                 }
-                DeletePreparer.prepareDelete(slugs, "", sender);
+                RemovePreparer.prepareDelete(slugs, "", sender);
             }
             else {
                 sender.sendMessage("§cAnother action is currently in progress. Please wait until it is finished.");
@@ -73,12 +72,18 @@ public class CommandsHandler implements CommandExecutor {
         }
         if (subCommand.equals("-Rs") || subCommand.equals("autoremove"))
         {
-
+            if (!ActionLock.isLocked && ActionLock.lockedBy == null) {
+                ActionLock.lock(sender);
+                List<String> slugs = new ArrayList<>();
+                for (int i = 1; i < args.length; i++) {
+                    slugs.add(args[i]);
+                }
+                RemovePreparer.prepareDelete(slugs, "auto", sender);
+            }
+            else {
+                sender.sendMessage("§cAnother action is currently in progress. Please wait until it is finished.");
+            }
         }
-        if (subCommand.equals("-Rns") || subCommand.equals("purge")) {
-
-        }
-
         if (subCommand.equals("-ss") || subCommand.equals("search") && ActionLock.lockedBy != sender) {
             new SearchCommand().execute(sender, args);
         }
@@ -96,7 +101,7 @@ public class CommandsHandler implements CommandExecutor {
         }
 
         if (subCommand.equals("help") || subCommand.equals("-h")) {
-            HelpCommand.execute(sender);
+            HelpCommand.execute(sender, args);
             return true;
         }
 

@@ -1,29 +1,102 @@
 package me.pinkcandy.plugGet.commands;
 
+import me.pinkcandy.plugGet.ConfigManager;
 import org.bukkit.command.CommandSender;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HelpCommand {
 
-    public static void execute(CommandSender sender) {
-        sender.sendMessage("§2§l=== §aPlugGet Help (apt syntax) §2===");
-        sender.sendMessage("§8:: §f/pg help §7- Displays this help message");
-        sender.sendMessage("§8:: §f/pg search <slug> §7- Searches for a plugin");
-        sender.sendMessage("§8:: §f/pg install <slug> §7- Installs a plugin (by default install as latest");
-        sender.sendMessage("§8:: §f/pg update §7- Updates all plugins");
-        sender.sendMessage("§8:: §f/pg remove <slug> §7- Removes a plugin");
-        sender.sendMessage("§8:: §f/pg autoremove <slug> §7- Removes plugin and its dependencies if not used");
-        sender.sendMessage("§8:: §f/pg purge <slug> §7- Removes plugin its config folder, dependencies");
-        sender.sendMessage("§8:: §f/pg y §7- Confirms an action");
-        sender.sendMessage("§8:: §f/pg n §7- Denies an action");
-        sender.sendMessage("§2§l=== §aInstall arguments §2===");
-        sender.sendMessage("§8:: 7Example command: §f/pg install <slug> <arg(optional)> <slug> <arg(optional)>");
-        sender.sendMessage("§8:: §f--latest §7- Install best version and only upgrade to more stable channels");
-        sender.sendMessage("§8:: §f--rolling §7- Install newest version, can change channel to beta and alpha on update");
-        sender.sendMessage("§8:: §f--beta §7- Install beta version and stay on beta (wont update to release)");
-        sender.sendMessage("§8:: §f--alpha §7- Install beta version and stay on alpha (wont update to release)");
-        sender.sendMessage("§8:: §f--v <version number> §7- Install specific version and doesn't allow updating it");
-        sender.sendMessage("§8:: §f--vl <version number> §7- Install specific version and set install type to latest");
-        sender.sendMessage("§8:: §f--vr <version number> §7- Install specific version and set install type to rolling");
+    public static void execute(CommandSender sender, String[] args) {
+        int page = 1;
+        if (args != null && args.length > 1) {
+            try {
+                page = Integer.parseInt(args[1]);
+            } catch (NumberFormatException ignored) {
+                page = 1;
+            }
+        }
+
+        List<BaseComponent[]> pages = buildPages();
+        if (page < 1) page = 1;
+        if (page > pages.size()) page = pages.size();
+
+        sender.sendMessage(pages.get(page - 1));
+
+        ComponentBuilder nav = new ComponentBuilder();
+        nav.append(" ");
+
+        if (page > 1) {
+            nav.append("§8<-- ")
+                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/pg help " + (page - 1)))
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7Previous page").create()));
+        } else {
+            nav.append("§8<-- ")
+                    .event((HoverEvent) null);
+        }
+
+        nav.append("§8Page " + page + "/" + pages.size());
+
+        if (page < pages.size()) {
+            nav.append(" §8-->")
+                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/pg help " + (page + 1)))
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§7Next page").create()));
+        } else {
+            nav.append(" §8-->")
+                    .event((HoverEvent) null);
+        }
+        sender.sendMessage(nav.create());
+    }
+
+    private static List<BaseComponent[]> buildPages() {
+        List<BaseComponent[]> pages = new ArrayList<>();
+
+        boolean isApt = ConfigManager.getTabMode() == ConfigManager.TabMode.APT;
+
+        ComponentBuilder p1 = new ComponentBuilder();
+        if (isApt) {
+            p1.append("§2§l=== §aPlugGet Help (apt) §2===\n");
+            p1.append("§a/pg help §2<§apage§2> §7- Show help\n");
+            p1.append("§a/pg search §2<§aslug§2> §7- Search for plugin\n");
+            p1.append("§a/pg install §2<§aslug§2> §7- Install plugin\n");
+            p1.append("§a/pg update §7- Update installed plugins\n");
+            p1.append("§a/pg remove §2<§aslug§2> §7- Remove plugin\n");
+            p1.append("§a/pg autoremove §2<§aslug§2> §7- Auto-remove unused deps\n");
+            p1.append("§a/pg purge §2<§aslug§2> §7- Remove plugin & config\n");
+            p1.append("§a/pg y §7- Confirm action\n");
+            p1.append("§a/pg n §7- Deny action");
+        } else {
+            p1.append("§2§l=== §aPlugGet Help (pacman) §2===\n");
+            p1.append("§a-h §7- Show help\n");
+            p1.append("§a-Ss §2<§aslug§2> §7- Search for plugin\n");
+            p1.append("§a-S §2<§apkg§2> §7- Install plugin\n");
+            p1.append("§a-Syu §7- Update installed plugins\n");
+            p1.append("§a-R §2<§apkg§2> §7- Remove plugin\n");
+            p1.append("§a-Rs §2<§apkg§2> §7- Auto-remove unused deps\n");
+            p1.append("§a--purge §2<§apkg§2> §7- Remove plugin & config\n");
+            p1.append("§a-y §7- Confirm action\n");
+            p1.append("§a-n §7- Deny action");
+        }
+        pages.add(p1.create());
+
+        ComponentBuilder p2 = new ComponentBuilder();
+        p2.append("§2§l=== §aInstall arguments §2===\n");
+        p2.append("§7Example: §a/pg install §2<§aslug§2> §2<§aarg(optional)§2>\n");
+        p2.append("§a--latest §7- Prefer stable channels (default)\n");
+        p2.append("§a--rolling §7- Always newest\n");
+        p2.append("§a--beta §7- Stay on beta channel\n");
+        p2.append("§a--alpha §7- Stay on alpha channel\n");
+        p2.append("§a--v §2<§aver§2> §7- Install specific version\n");
+        p2.append("§a--vl §2<§aver§2> §7- Install specific as latest type\n");
+        p2.append("§a--vr §2<§aver§2> §7- Install specific as rolling type");
+        pages.add(p2.create());
+
+        return pages;
     }
 
 }
