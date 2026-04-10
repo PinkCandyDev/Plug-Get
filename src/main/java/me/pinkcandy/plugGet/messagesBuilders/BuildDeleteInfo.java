@@ -26,7 +26,7 @@ public class BuildDeleteInfo {
         String pSpace = TextTools.generateSpaces(maxPLetters + 2);
 
         ComponentBuilder header = new ComponentBuilder();
-        header.append("§2Plugins (" + pluginsToInstall.size() + ")" + pSpace + "§8< §2Version §8| §3Size§8 >");
+        header.append("§2Plugins (§a" + pluginsToInstall.size() + "§2)" + pSpace + "§8< §2Version §8| §3Size§8 >");
         lines.add(header.create());
         lines.add(new ComponentBuilder("").create());
 

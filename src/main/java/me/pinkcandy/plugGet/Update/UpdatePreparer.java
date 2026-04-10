@@ -20,8 +20,8 @@ import java.util.List;
 
 public class UpdatePreparer {
     public static boolean execute(CommandSender sender) {
-        sender.sendMessage("§8:: §7Checking for updates...");
         List<PluginData> pluginsInDB = DBManager.getInstalledPlugins();
+        sender.sendMessage("§8:: §7Fetching updates for §8" + pluginsInDB.size() + " §7plugins...");
         List<PluginData> installedPlugins = new ArrayList<>();
         List<PluginData> pluginsToUpdate = new ArrayList<>();
         for (int i = 0; i < pluginsInDB.size(); i++) {
@@ -56,7 +56,7 @@ public class UpdatePreparer {
             }
         }
         else {
-            sender.sendMessage("§8:: §7All plugins are up to date");
+            sender.sendMessage("§aAll plugins are up to date!");
             ActionLock.release();
             return true;
         }

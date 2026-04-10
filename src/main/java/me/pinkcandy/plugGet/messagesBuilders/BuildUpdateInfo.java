@@ -19,7 +19,7 @@ public class BuildUpdateInfo {
         List<BaseComponent[]> lines = new ArrayList<>();
 
         ComponentBuilder header = new ComponentBuilder();
-        header.append("§2Plugins to update (" + pluginsToUpdate.size() + ")");
+        header.append("§2Plugins to update (§a" + pluginsToUpdate.size() + "§2)");
         lines.add(header.create());
         lines.add(new ComponentBuilder("").create());
         for (int i = 0; i < pluginsToUpdate.size(); i++) {
@@ -50,7 +50,7 @@ public class BuildUpdateInfo {
 
         lines.add(new ComponentBuilder("").create());
         ComponentBuilder footer = new ComponentBuilder();
-        footer.append("§8:: §7Write pg or /plugget 0 1 2... to exclude updates §8[");
+        footer.append("§8:: §7Write §8/pg 0 1 2...§7 to exclude updates or §8[");
         footer.append("§8Y").event(new ClickEvent(
                 ClickEvent.Action.RUN_COMMAND,
                 "/plugget y"

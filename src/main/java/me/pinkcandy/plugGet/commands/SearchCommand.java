@@ -24,8 +24,14 @@ public class SearchCommand {
         }
 
         ThreadManager.runAsync(() -> {
-            sender.sendMessage("Results for: " + slug.toString());
             List<ProjectMeta> metaList = FetchHelper.searchProjects(slug.toString());
+            if (metaList.isEmpty()) {
+                sender.sendMessage("§cNo results found for: §4" + slug);
+                return;
+            }
+            else {
+                sender.sendMessage("§8:: §7Found §8" + metaList.size() + "§7 results");
+            }
             for (int i = 0; i < metaList.size(); i++) {
                 List<VersionInfo> branches = GetNewestVersion.getBranchesFromSlug(metaList.get(i).getProjectId());
                 sender.sendMessage(BuildSearchInfo.sendProjectInfo(metaList.get(i), branches));

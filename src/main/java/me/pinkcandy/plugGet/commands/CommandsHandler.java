@@ -17,7 +17,7 @@ public class CommandsHandler implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         if (args.length == 0) {
-            sender.sendMessage("Usage: /plugget -Ss <plugin-slug> or /plugget search <plugin-slug>");
+            sender.sendMessage("§cNo subcommand provided. Use §7/pg help §cto see available commands.");
             return true;
         }
 
@@ -47,6 +47,7 @@ public class CommandsHandler implements CommandExecutor {
             } else {
                 sender.sendMessage("§cNo action to confirm.");
             }
+            return true;
         }
 
         if (subCommand.equals("n") || subCommand.equals("-n")) {
@@ -55,7 +56,9 @@ public class CommandsHandler implements CommandExecutor {
             } else {
                 sender.sendMessage("§cNo action to deny.");
             }
+            return true;
         }
+
         if (subCommand.equals("-R") || subCommand.equals("remove"))
         {
             if (!ActionLock.isLocked && ActionLock.lockedBy == null) {
@@ -69,7 +72,9 @@ public class CommandsHandler implements CommandExecutor {
             else {
                 sender.sendMessage("§cAnother action is currently in progress. Please wait until it is finished.");
             }
+            return true;
         }
+
         if (subCommand.equals("-Rs") || subCommand.equals("autoremove"))
         {
             if (!ActionLock.isLocked && ActionLock.lockedBy == null) {
@@ -83,9 +88,12 @@ public class CommandsHandler implements CommandExecutor {
             else {
                 sender.sendMessage("§cAnother action is currently in progress. Please wait until it is finished.");
             }
+            return true;
         }
+
         if (subCommand.equals("-ss") || subCommand.equals("search") && ActionLock.lockedBy != sender) {
             new SearchCommand().execute(sender, args);
+            return true;
         }
 
         if ((subCommand.equals("update") || subCommand.equals("-Syu"))){
@@ -98,6 +106,7 @@ public class CommandsHandler implements CommandExecutor {
             else {
                 sender.sendMessage("§cAnother action is currently in progress. Please wait until it is finished.");
             }
+            return true;
         }
 
         if (subCommand.equals("help") || subCommand.equals("-h")) {
@@ -106,7 +115,6 @@ public class CommandsHandler implements CommandExecutor {
         }
 
         if ((subCommand.equals("-s") || subCommand.equals("install"))){
-
             if (!ActionLock.isLocked && ActionLock.lockedBy == null) {
                 ActionLock.lock(sender);
                 InstallCommand.execute(sender, args);
@@ -115,7 +123,10 @@ public class CommandsHandler implements CommandExecutor {
             {
                 sender.sendMessage("§cAnother action is currently in progress. Please wait until it is finished.");
             }
+            return true;
         }
+
+        sender.sendMessage("§cUnknown subcommand. Use §7/pg help §cto see available commands.");
         return true;
     }
 }

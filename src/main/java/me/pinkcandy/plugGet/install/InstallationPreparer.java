@@ -38,7 +38,6 @@ public class InstallationPreparer {
             }
         }
         Collections.reverse(plugins);
-        sender.sendMessage("test" + plugins.get(0).getStatus(), plugins.get(0).getVersionInfo().getVersionNumber());
         List<BaseComponent[]> messages = BuildInstallInfo.buildInstallInfo(plugins);
         ActionLock.isConfirming = true;
         for (int i = 0; i < messages.size(); i++) {
