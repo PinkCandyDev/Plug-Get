@@ -1,5 +1,6 @@
 package me.pinkcandy.plugGet.commands;
 
+import me.pinkcandy.plugGet.ConfigManager;
 import me.pinkcandy.plugGet.ThreadManager;
 import me.pinkcandy.plugGet.api.modrinth.fetch.FetchHelper;
 import me.pinkcandy.plugGet.api.modrinth.fetch.FetchProjects;
@@ -32,9 +33,26 @@ public class SearchCommand {
             else {
                 sender.sendMessage("§8:: §7Found §8" + metaList.size() + "§7 results");
             }
-            for (int i = 0; i < metaList.size(); i++) {
-                List<VersionInfo> branches = GetNewestVersion.getBranchesFromSlug(metaList.get(i).getProjectId());
-                sender.sendMessage(BuildSearchInfo.sendProjectInfo(metaList.get(i), branches));
+            if (!ConfigManager.searchReversedList) {
+                for (int i = metaList.size() - 1; i >= 0; i--) {
+                    if (ConfigManager.searchMode.equals(ConfigManager.SearchMode.FULL)) {
+                        List<VersionInfo> branches = GetNewestVersion.getBranchesFromSlug(metaList.get(i).getProjectId());
+                        sender.sendMessage(BuildSearchInfo.sendProjectInfo(metaList.get(i), branches));
+                    }
+                    else {
+                        sender.sendMessage(BuildSearchInfo.sendProjectInfo(metaList.get(i), null));
+                    }
+                }
+            } else {
+                for (int i = 0; i < metaList.size(); i++) {
+                    if (ConfigManager.searchMode.equals(ConfigManager.SearchMode.FULL)) {
+                        List<VersionInfo> branches = GetNewestVersion.getBranchesFromSlug(metaList.get(i).getProjectId());
+                        sender.sendMessage(BuildSearchInfo.sendProjectInfo(metaList.get(i), branches));
+                    }
+                    else{
+                        sender.sendMessage(BuildSearchInfo.sendProjectInfo(metaList.get(i), null));
+                    }
+                }
             }
         });
         return true;

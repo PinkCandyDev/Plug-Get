@@ -1,5 +1,7 @@
 package me.pinkcandy.plugGet.commands;
 
+import me.pinkcandy.plugGet.ConfigManager;
+import me.pinkcandy.plugGet.PlugGet;
 import me.pinkcandy.plugGet.ThreadManager;
 import me.pinkcandy.plugGet.Tools.TextTools;
 import me.pinkcandy.plugGet.Update.UpdatePreparer;
@@ -21,7 +23,7 @@ public class CommandsHandler implements CommandExecutor {
             return true;
         }
 
-        String subCommand = args[0].toLowerCase();
+        String subCommand = args[0];
 
         if (ActionLock.isConfirming && ActionLock.lockedBy == sender) {
             boolean allNumericArgs = true;
@@ -91,7 +93,7 @@ public class CommandsHandler implements CommandExecutor {
             return true;
         }
 
-        if (subCommand.equals("-ss") || subCommand.equals("search") && ActionLock.lockedBy != sender) {
+        if (subCommand.equals("-Ss") || subCommand.equals("search") && ActionLock.lockedBy != sender) {
             new SearchCommand().execute(sender, args);
             return true;
         }
@@ -114,7 +116,14 @@ public class CommandsHandler implements CommandExecutor {
             return true;
         }
 
-        if ((subCommand.equals("-s") || subCommand.equals("install"))){
+        if (subCommand.equals("reload") || subCommand.equals("-rl"))
+        {
+            ConfigManager.reload(PlugGet.instance);
+            sender.sendMessage("§7Configuration reloaded.");
+            return true;
+        }
+
+        if ((subCommand.equals("-S") || subCommand.equals("install"))){
             if (!ActionLock.isLocked && ActionLock.lockedBy == null) {
                 ActionLock.lock(sender);
                 InstallCommand.execute(sender, args);

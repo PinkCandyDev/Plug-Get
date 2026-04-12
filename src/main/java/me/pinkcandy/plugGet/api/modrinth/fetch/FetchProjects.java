@@ -1,5 +1,6 @@
 package me.pinkcandy.plugGet.api.modrinth.fetch;
 
+import me.pinkcandy.plugGet.ConfigManager;
 import me.pinkcandy.plugGet.ServerInfo;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -38,12 +39,16 @@ public class FetchProjects {
             if (!ServerInfo.version.isEmpty()) {
                 facets.put(new JSONArray().put("versions:" + ServerInfo.version.get(0)));
             }
+            String facetsParam = "";
 
-            String facetsParam = URLEncoder.encode(facets.toString(), StandardCharsets.UTF_8);
+            if (!ConfigManager.showIncompatible)
+            {
+                facetsParam = "&facets=" + URLEncoder.encode(facets.toString(), StandardCharsets.UTF_8);
+            }
 
             String url = "https://api.modrinth.com/v2/search?query=" + query
-                    + "&facets=" + facetsParam
-                    + "&limit=20";
+                    + facetsParam
+                    + "&limit=" + ConfigManager.searchMaxResults;
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(url))

@@ -2,6 +2,8 @@ package me.pinkcandy.plugGet.version;
 
 import me.pinkcandy.plugGet.model.VersionInfo;
 
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -11,8 +13,18 @@ public class CompareDate {
         if (list == null || list.isEmpty()) {
             return null;
         }
-        return list.stream().max(Comparator.comparing(o ->
-                java.time.OffsetDateTime.parse(o.getDatePublished()))).orElse(null);
+
+        return list.stream()
+                .filter(o -> o.getDatePublished() != null)
+                .max(Comparator.comparing(o -> {
+                    try {
+                        return OffsetDateTime.parse(o.getDatePublished());
+                    } catch (DateTimeParseException e) {
+                        throw new IllegalArgumentException(
+                                "Invalid datePublished value: " + o.getDatePublished(), e);
+                    }
+                }))
+                .orElse(null);
     }
 
     public static List<VersionInfo> compareAll(List<VersionInfo> release, List<VersionInfo> beta, List<VersionInfo> alpha) {

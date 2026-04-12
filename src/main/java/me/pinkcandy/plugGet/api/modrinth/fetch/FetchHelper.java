@@ -1,5 +1,6 @@
 package me.pinkcandy.plugGet.api.modrinth.fetch;
 
+import me.pinkcandy.plugGet.ConfigManager;
 import me.pinkcandy.plugGet.api.modrinth.map.ProjectMapper;
 import me.pinkcandy.plugGet.db.CacheMapper;
 import me.pinkcandy.plugGet.model.ProjectMeta;
@@ -46,32 +47,33 @@ public class FetchHelper {
     public static ProjectMeta getProject(String slug) {
         try {
             Path dir = projectCacheFolder;
+            if (ConfigManager.cacheMetadata) {
+                try (Stream<Path> files = Files.list(dir)) {
+                    Optional<Path> match = files
+                            .filter(Files::isRegularFile)
+                            .filter(p -> p.getFileName().toString().startsWith(slug + "_"))
+                            .findFirst();
 
-            try (Stream<Path> files = Files.list(dir)) {
-                Optional<Path> match = files
-                        .filter(Files::isRegularFile)
-                        .filter(p -> p.getFileName().toString().startsWith(slug + "_"))
-                        .findFirst();
+                    if (match.isPresent()) {
+                        Path file = match.get();
+                        String content = Files.readString(file);
+                        JSONObject obj = new JSONObject(content);
 
-                if (match.isPresent()) {
-                    Path file = match.get();
-                    String content = Files.readString(file);
-                    JSONObject obj = new JSONObject(content);
-
-                    return new ProjectMeta(
-                            obj.optString("slug"),
-                            obj.optString("projectId"),
-                            obj.optString("author"),
-                            obj.optInt("downloads"),
-                            obj.optString("description"),
-                            obj.optJSONArray("loaders").toList().stream()
-                                    .map(Object::toString)
-                                    .toList(),
-                            obj.optJSONArray("versions").toList().stream()
-                                    .map(Object::toString)
-                                    .toList(),
-                            obj.optString("versionRange")
-                    );
+                        return new ProjectMeta(
+                                obj.optString("slug"),
+                                obj.optString("projectId"),
+                                obj.optString("author"),
+                                obj.optInt("downloads"),
+                                obj.optString("description"),
+                                obj.optJSONArray("loaders").toList().stream()
+                                        .map(Object::toString)
+                                        .toList(),
+                                obj.optJSONArray("versions").toList().stream()
+                                        .map(Object::toString)
+                                        .toList(),
+                                obj.optString("versionRange")
+                        );
+                    }
                 }
             }
 
@@ -94,20 +96,22 @@ public class FetchHelper {
 
     public static String projectIDToSlug(String projectID){
         try {
-            try (Stream<Path> files = Files.list(projectCacheFolder)) {
-                Optional<Path> match = files
-                        .filter(Files::isRegularFile)
-                        .filter(p -> p.getFileName().toString()
-                                .endsWith("_" + projectID + ".json"))
-                        .findFirst();
+            if (ConfigManager.cacheMetadata) {
+                try (Stream<Path> files = Files.list(projectCacheFolder)) {
+                    Optional<Path> match = files
+                            .filter(Files::isRegularFile)
+                            .filter(p -> p.getFileName().toString()
+                                    .endsWith("_" + projectID + ".json"))
+                            .findFirst();
 
-                if (match.isPresent()) {
-                    Path file = match.get();
-                    String content = Files.readString(file);
-                    JSONObject obj = new JSONObject(content);
-                    String slug = obj.optString("slug");
-                    if (slug!=null && !slug.isEmpty()) {
-                        return slug;
+                    if (match.isPresent()) {
+                        Path file = match.get();
+                        String content = Files.readString(file);
+                        JSONObject obj = new JSONObject(content);
+                        String slug = obj.optString("slug");
+                        if (slug != null && !slug.isEmpty()) {
+                            return slug;
+                        }
                     }
                 }
             }
@@ -130,19 +134,21 @@ public class FetchHelper {
 
     public static String slugToProjectID(String slug){
         try {
-            try (Stream<Path> files = Files.list(projectCacheFolder)) {
-                Optional<Path> match = files
-                        .filter(Files::isRegularFile)
-                        .filter(p -> p.getFileName().toString().startsWith(slug + "_"))
-                        .findFirst();
+            if (ConfigManager.cacheMetadata) {
+                try (Stream<Path> files = Files.list(projectCacheFolder)) {
+                    Optional<Path> match = files
+                            .filter(Files::isRegularFile)
+                            .filter(p -> p.getFileName().toString().startsWith(slug + "_"))
+                            .findFirst();
 
-                if (match.isPresent()) {
-                    Path file = match.get();
-                    String content = Files.readString(file);
-                    JSONObject obj = new JSONObject(content);
-                    String projectID = obj.optString("projectID");
-                    if (projectID!=null && !projectID.isEmpty()) {
-                        return projectID;
+                    if (match.isPresent()) {
+                        Path file = match.get();
+                        String content = Files.readString(file);
+                        JSONObject obj = new JSONObject(content);
+                        String projectID = obj.optString("projectID");
+                        if (projectID != null && !projectID.isEmpty()) {
+                            return projectID;
+                        }
                     }
                 }
             }

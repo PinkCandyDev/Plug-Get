@@ -34,11 +34,11 @@ public class BuildSearchInfo {
                                 "§9Game versions: §f" + projectMeta.getVersionRange() + "\n" + "Click to install prefered version").create()))
                 .event(new ClickEvent(
                         ClickEvent.Action.RUN_COMMAND,
-                        "/plugget -S " + projectMeta.getSlug()))
+                        "/plugget install " + projectMeta.getSlug()))
                 .append("    ").event((HoverEvent) null);
 
         if (versionsList == null || versionsList.stream().allMatch(Objects::isNull)) {
-            builder.append("§8< §cUnknown §8>");
+            builder.append("");
         } else {
             builder.append("§8< ");
 
@@ -55,8 +55,6 @@ public class BuildSearchInfo {
                             .event(versionHover(versionsList.get(i)))
                     .event(new ClickEvent(ClickEvent.Action. RUN_COMMAND,
                                     "/plugget -S " + projectMeta.getSlug() + " --vl " + versionsList.get(i).getVersionNumber()));
-
-
                     first = false;
                 }
             }

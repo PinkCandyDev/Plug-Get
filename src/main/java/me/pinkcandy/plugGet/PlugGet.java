@@ -28,8 +28,7 @@ public final class PlugGet extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
-        ThreadManager.init(instance);
-        ConfigManager.load(this);
+        ConfigManager.reload(instance);
         dbFolder = PlugGet.instance.getDataFolder().toPath().resolve("db/");
         dbFile = dbFolder.resolve("plugins.json");
         dbBackupFile = dbFolder.resolve("plugins_backup.json");

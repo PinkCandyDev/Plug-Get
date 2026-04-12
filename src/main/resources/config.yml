@@ -1,10 +1,26 @@
+tab-mode: "apt" # apt, pacman
 
-#This change the tab completion to either "apt" or "pacman" syntax
-tab-mode: "apt"
+overwrite:
+  force-bukkit-mode: false # Will make ui work with bukkit even if it is not detected
+ # loaders: [bukkit, spigot, paper]
+ # version: 1.21.10
 
-#Write here a list of loaders you want plugget to use for checking version compatibility if the auto-detection fails.
-#Write them between brackets. Example: [bukkit, spigot, paper]
-overwrite-loaders:
-#Write hera a version you want plugget to use for checking version compatibility if the auto-detection fails.
-#Example: 1.21.10
-overwrite-version:
+search:
+  mode: "full" # fast, full
+  max-results: 20
+  reversed-list: true
+  show-incompatible: false
+
+install:
+  default-flag: latest # latest, rolling | not recommended: release, beta, alpha
+  required-dependencies: true
+  optional-dependencies: false
+
+update:
+  check-on-startup: true
+  install-on-shutdown: false
+
+cache:
+  plugins: true
+  metadata: true
+  tmp-versions: true

@@ -1,5 +1,6 @@
 package me.pinkcandy.plugGet.api.modrinth.fetch;
 
+import me.pinkcandy.plugGet.ConfigManager;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -19,10 +20,11 @@ public class FetchVersions {
     public static JSONArray fetchAll(String slug) {
         try {
             File file = tmpFolder.resolve(slug + "_versions.json").toFile();
-
-            if (file.exists()) {
-                String content = Files.readString(file.toPath());
-                return new JSONArray(content);
+            if (ConfigManager.tmpVersions) {
+                if (file.exists()) {
+                    String content = Files.readString(file.toPath());
+                    return new JSONArray(content);
+                }
             }
             String url = "https://api.modrinth.com/v2/project/" + slug + "/version";
 

@@ -1,5 +1,6 @@
 package me.pinkcandy.plugGet.commands;
 
+import me.pinkcandy.plugGet.ConfigManager;
 import me.pinkcandy.plugGet.ThreadManager;
 import me.pinkcandy.plugGet.install.InstallationPreparer;
 import me.pinkcandy.plugGet.model.InstallInfo;
@@ -16,7 +17,7 @@ public class InstallCommand {
             String slug = args[i];
 
             boolean invalidArg = false;
-            String modifier = "latest";
+            String modifier = ConfigManager.installDefaultFlag.toString().toLowerCase();
             String version = null;
 
             if (slug.startsWith("--")) {
@@ -33,8 +34,12 @@ public class InstallCommand {
                     i++;
                 } else if (next.equals("--rolling")) {
                     modifier = "rolling";
+                    i++;
                 }
-                if (next.equals("--beta")) {
+                if (next.equals("--stable")) {
+                    modifier = "stable";
+                    i++;
+                } else if (next.equals("--beta")) {
                     modifier = "beta";
                     i++;
                 } else if (next.equals("--alpha")) {

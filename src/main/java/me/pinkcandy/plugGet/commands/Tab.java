@@ -22,7 +22,7 @@ public class Tab implements TabCompleter {
 
         if (ConfigManager.tabMode == ConfigManager.TabMode.APT) {
             if (args.length == 1) {
-                List<String> sugs = Arrays.asList("search", "install", "update", "remove", "help", "y", "n");
+                List<String> sugs = Arrays.asList("search", "install", "update", "remove", "reload", "help", "y", "n");
                 StringUtil.copyPartialMatches(args[0], sugs, suggestions);
             } else if (args.length == 2) {
 
@@ -40,7 +40,7 @@ public class Tab implements TabCompleter {
 
         } else if (ConfigManager.tabMode == ConfigManager.TabMode.PACMAN) {
             if (args.length == 1) {
-                List<String> sugs = Arrays.asList("-Ss", "-S", "-Syu", "-R", "-h", "-y", "-n");
+                List<String> sugs = Arrays.asList("-Ss", "-S", "-Syu", "-R", "-Rl", "-h", "-y", "-n");
                 StringUtil.copyPartialMatches(args[0], sugs, suggestions);
             } else if (args.length == 2) {
 

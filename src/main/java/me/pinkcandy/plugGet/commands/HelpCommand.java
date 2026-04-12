@@ -56,7 +56,7 @@ public class HelpCommand {
     private static List<BaseComponent[]> buildPages() {
         List<BaseComponent[]> pages = new ArrayList<>();
 
-        boolean isApt = ConfigManager.getTabMode() == ConfigManager.TabMode.APT;
+        boolean isApt = ConfigManager.tabMode == ConfigManager.TabMode.APT;
 
         ComponentBuilder p1 = new ComponentBuilder();
         if (isApt) {

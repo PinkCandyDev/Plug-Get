@@ -38,21 +38,24 @@ public class ServerInfo {
 
         version.add(normalizeVersion(Bukkit.getBukkitVersion()));
 
-        List<String> overwriteLoaders = plugin.getConfig().getStringList("overwrite-loaders");
+        List<String> overwriteLoaders = plugin.getConfig().getStringList("overwrite.loaders");
         if (!overwriteLoaders.isEmpty()) {
-            Bukkit.getLogger().warning("[ServerInfo] Loaders auto-detection overwritten by config: " + overwriteLoaders);
+            Bukkit.getLogger().warning("[Plug-Get] Loaders auto-detection overwritten by config: " + overwriteLoaders);
             loaders.clear();
             loaders.addAll(overwriteLoaders);
         }
+        else {
+            Bukkit.getLogger().info("[Plug-Get] Loaders: " + loaders);
+        }
 
-        String overwriteVersion = plugin.getConfig().getString("overwrite-version");
+        String overwriteVersion = plugin.getConfig().getString("overwrite.version");
         if (overwriteVersion != null && !overwriteVersion.isBlank()) {
-            Bukkit.getLogger().warning("[ServerInfo] Version auto-detection overwritten by config: " + overwriteVersion);
+            Bukkit.getLogger().warning("[Plug-Get] Version auto-detection overwritten by config: " + overwriteVersion);
             version.clear();
             version.add(overwriteVersion);
         }
-
-        Bukkit.getLogger().info("[ServerInfo] Loaders: " + loaders);
-        Bukkit.getLogger().info("[ServerInfo] Version: " + version);
+        else {
+            Bukkit.getLogger().info("[Plug-Get] Version: " + version);
+        }
     }
 }

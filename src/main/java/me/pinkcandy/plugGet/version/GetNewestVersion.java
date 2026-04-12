@@ -1,5 +1,6 @@
 package me.pinkcandy.plugGet.version;
 
+import me.pinkcandy.plugGet.PlugGet;
 import me.pinkcandy.plugGet.api.modrinth.fetch.FetchHelper;
 import me.pinkcandy.plugGet.api.modrinth.fetch.FetchVersions;
 import me.pinkcandy.plugGet.api.modrinth.map.VersionMapper;
@@ -10,6 +11,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class GetNewestVersion {
     public static List<VersionInfo> getBranchesFromSlug(String slug){
@@ -73,26 +76,34 @@ public class GetNewestVersion {
         }
 
         List<VersionInfo> branches = getBranchesFromSlug(installInfo.getSlug());
+        if (branches == null) {
+            PlugGet.instance.getLogger().warning("No versions/branches found for slug: " + installInfo.getSlug());
+            return null;
+        }
+
         if (installInfo.getInstallType().equals("latest")) {
-            if (branches.get(0) != null) {
-                versionInfo = branches.get(0);
-            } else if (branches.get(1) != null) {
-                versionInfo = branches.get(1);
-            } else if (branches.get(2) != null) {
-                versionInfo = branches.get(2);
-            } else {
+            for (VersionInfo v : branches) {
+                if (v != null) {
+                    versionInfo = v;
+                    break;
+                }
+            }
+            if (versionInfo == null) return null;
+        } else if (installInfo.getInstallType().equals("rolling")) {
+            List<VersionInfo> nonNull = branches.stream().filter(Objects::nonNull).collect(Collectors.toList());
+            if (nonNull.isEmpty()) {
+                PlugGet.instance.getLogger().warning("No candidate versions found for rolling selection for slug: " + installInfo.getSlug());
                 return null;
             }
-        } else if (installInfo.getInstallType().equals("rolling")) {
-            versionInfo = CompareDate.compare(branches);
+            versionInfo = CompareDate.compare(nonNull);
         } else if (installInfo.getInstallType().equals("release")) {
-            if (branches.get(0) != null) {
+            if (branches.size() > 0 && branches.get(0) != null) {
                 versionInfo = branches.get(0);
             } else {
                 return null;
             }
         } else if (installInfo.getInstallType().equals("beta")) {
-            if (branches.get(1) != null) {
+            if (branches.size() > 1 && branches.get(1) != null) {
                 versionInfo = branches.get(1);
             }
             else
@@ -100,7 +111,7 @@ public class GetNewestVersion {
                 return null;
             }
         } else if (installInfo.getInstallType().equals("alpha")) {
-            if (branches.get(2) != null) {
+            if (branches.size() > 2 && branches.get(2) != null) {
                 versionInfo = branches.get(2);
             } else {
                 return null;
