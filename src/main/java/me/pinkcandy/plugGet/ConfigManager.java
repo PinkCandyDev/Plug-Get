@@ -11,9 +11,6 @@ public class ConfigManager {
     // [root]
     public static TabMode tabMode;
 
-    // [overwrite]
-    public static boolean forceBukkitMode;
-
     // [search]
     public static SearchMode searchMode;
     public static int searchMaxResults;
@@ -41,9 +38,6 @@ public class ConfigManager {
 
         // [root]
         tabMode = parseEnum(c, "tab-mode", TabMode.class, TabMode.APT, instance);
-
-        // [overwrite]
-        forceBukkitMode = getBool(c, "overwrite.force-bukkit-mode", false, instance);
 
         // [search]
         searchMode = parseEnum(c, "search.mode", SearchMode.class, SearchMode.FULL, instance);

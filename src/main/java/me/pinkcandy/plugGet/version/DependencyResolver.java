@@ -17,7 +17,7 @@ public class DependencyResolver {
             sender.sendMessage("§8:: §7Resolving Dependencies for " + installInfo.getSlug() + "...");
             for (int i = 0; i < versionInfo.getDependencies().size(); i++) {
                 DependencyInfo dependencyInfo = versionInfo.getDependencies().get(i);
-                if (dependencyInfo.getType().equals("required") || ConfigManager.requiredDependencies) {
+                if (dependencyInfo.getType().equals("required") && ConfigManager.requiredDependencies) {
                     String depVersionId = dependencyInfo.getVersionID();
                     String displayDepVersion = (depVersionId == null || depVersionId.trim().isEmpty()) ? "<unspecified>" : depVersionId;
                     if (depVersionId != null && !depVersionId.trim().isEmpty()) {
@@ -32,7 +32,7 @@ public class DependencyResolver {
                             boolean ok = InstallationPreparer.prepareInstall(dpInstallInfo, sender);
                             dependencyInfo.setSlug(dpSlug);
                         }
-                        sender.sendMessage("§cRequired dependency version " + displayDepVersion +
+                        sender.sendMessage("§8:: §cRequired dependency version " + displayDepVersion +
                                 " not found for " + dpInstallInfo.getSlug());
                     } else {
                         String dpSlug = FetchHelper.projectIDToSlug(dependencyInfo.getProjectID());
@@ -47,10 +47,10 @@ public class DependencyResolver {
                             dependencyInfo.setSlug(dpSlug);
                             continue;
                         }
-                        sender.sendMessage("§cNo compatible versions found for dependency " +
+                        sender.sendMessage("§8:: §cNo compatible versions found for dependency " +
                                 dpInstallInfo.getSlug());
                     }
-                } else if (dependencyInfo.getType().equals("optional") || ConfigManager.optionalDependencies) {
+                } else if (dependencyInfo.getType().equals("optional") && ConfigManager.optionalDependencies) {
                     String depVersionId = dependencyInfo.getVersionID();
                     String displayDepVersion = (depVersionId == null || depVersionId.trim().isEmpty()) ? "<unspecified>" : depVersionId;
                     if (depVersionId != null && !depVersionId.trim().isEmpty()) {
@@ -65,7 +65,7 @@ public class DependencyResolver {
                             boolean ok = InstallationPreparer.prepareInstall(dpInstallInfo, sender);
                             dependencyInfo.setSlug(dpSlug);
                         }
-                        sender.sendMessage("§cRequired dependency version " + displayDepVersion +
+                        sender.sendMessage("§8:: §cRequired dependency version " + displayDepVersion +
                                 " not found for " + dpInstallInfo.getSlug());
                     } else {
                         String dpSlug = FetchHelper.projectIDToSlug(dependencyInfo.getProjectID());
@@ -80,7 +80,7 @@ public class DependencyResolver {
                             dependencyInfo.setSlug(dpSlug);
                             continue;
                         }
-                        sender.sendMessage("§cNo compatible versions found for dependency " +
+                        sender.sendMessage("§8:: §cNo compatible versions found for dependency " +
                                 dpInstallInfo.getSlug());
                     }
                 }

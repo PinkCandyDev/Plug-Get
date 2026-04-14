@@ -1,7 +1,6 @@
 tab-mode: "apt" # apt, pacman
 
 overwrite:
-  force-bukkit-mode: false # Will make ui work with bukkit even if it is not detected
  # loaders: [bukkit, spigot, paper]
  # version: 1.21.10
 
@@ -12,8 +11,7 @@ search:
   show-incompatible: false
 
 install:
-  default-flag: latest
-  allow-incompatible: false
+  default-flag: latest # latest, rolling | not recommended: release, beta, alpha
   required-dependencies: true
   optional-dependencies: false
 
@@ -24,3 +22,4 @@ update:
 cache:
   plugins: true
   metadata: true
+  tmp-versions: true

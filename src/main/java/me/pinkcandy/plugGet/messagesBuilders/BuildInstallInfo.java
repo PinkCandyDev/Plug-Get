@@ -39,7 +39,7 @@ public class BuildInstallInfo {
             PluginData pluginData = pluginsToInstall.get(i);
             if (pluginData.getStatus().equals("not"))
             {
-                lines.add(buildInstallInfoLine(pluginData, FetchHelper.getProject(pluginData.getInstallInfo().getSlug()), maxPLetters, pLetters, i));
+                lines.add(buildInstallInfoLine(pluginData, FetchHelper.getProject(pluginData.getInstallInfo().getSlug()), maxPLetters, pLetters, i, "not"));
             }
             else if (pluginData.getStatus().equals("dif"))
             {
@@ -50,6 +50,9 @@ public class BuildInstallInfo {
                                 false,
                                 0 ));
             }
+            else if (pluginData.getStatus().equals("same")) {
+                    lines.add(buildInstallInfoLine(pluginData, FetchHelper.getProject(pluginData.getInstallInfo().getSlug()), maxPLetters, pLetters, i, "same"));
+                }
         }
 
         lines.add(new ComponentBuilder("").create());
@@ -67,8 +70,9 @@ public class BuildInstallInfo {
         lines.add(footer.create());
         return  lines;
     }
-    public static BaseComponent[] buildInstallInfoLine(PluginData pluginData, ProjectMeta projetMeta, int maxPLetters, List<Integer> pLetters, int i)
-    {
+    public static BaseComponent[] buildInstallInfoLine(
+            PluginData pluginData, ProjectMeta projetMeta, int maxPLetters, List<Integer> pLetters, int i, String stat) {
+        
         ComponentBuilder lineBuilder = new ComponentBuilder();
 
         int spacesNeeded = maxPLetters - pLetters.get(i) + 2;
@@ -84,7 +88,12 @@ public class BuildInstallInfo {
                 .event(BuildTools.modrinthClick(projetMeta));
         lineBuilder.append("§a" + installInfo.getSlug())
                 .event(BuildTools.projetHover(projetMeta, false));
-        lineBuilder.append(maxPSpace + "§8< " + versionColor + versionNumber + " §8| §3" + TextTools.formatSize(fileSize) + " §8>");
+
+        if (stat.equals("not")) {
+            lineBuilder.append(maxPSpace + "§8< " + versionColor + versionNumber + " §8| §3" + TextTools.formatSize(fileSize) + " §8>");
+        } else if (stat.equals("same")) {
+            lineBuilder.append(maxPSpace + "§8(Reinstalling)");
+        }
         return lineBuilder.create();
     }
 }

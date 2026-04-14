@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 public class LoaderList {
 
     private static final List<String> VALID_LOADERS =
-            Arrays.asList("paper", "spigot", "bukkit", "folia");
+            Arrays.asList("paper", "spigot", "bukkit", "folia", "purpur");
 
     public static List<String> filterLoaders(List<String> input) {
         if (input == null) return Collections.emptyList();

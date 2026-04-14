@@ -8,6 +8,7 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 import org.bukkit.command.CommandSender;
 
@@ -27,7 +28,7 @@ public class FileDownloader {
 
             if (Files.exists(cache))
             {
-                Files.copy(cache, tmpFolder.resolve(fileName));
+                Files.copy(cache, tmpFolder.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
                 return true;
             }
 

@@ -77,7 +77,6 @@ public class GetNewestVersion {
 
         List<VersionInfo> branches = getBranchesFromSlug(installInfo.getSlug());
         if (branches == null) {
-            PlugGet.instance.getLogger().warning("No versions/branches found for slug: " + installInfo.getSlug());
             return null;
         }
 
@@ -92,7 +91,6 @@ public class GetNewestVersion {
         } else if (installInfo.getInstallType().equals("rolling")) {
             List<VersionInfo> nonNull = branches.stream().filter(Objects::nonNull).collect(Collectors.toList());
             if (nonNull.isEmpty()) {
-                PlugGet.instance.getLogger().warning("No candidate versions found for rolling selection for slug: " + installInfo.getSlug());
                 return null;
             }
             versionInfo = CompareDate.compare(nonNull);
