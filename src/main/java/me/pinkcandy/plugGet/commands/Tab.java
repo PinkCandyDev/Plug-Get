@@ -22,7 +22,7 @@ public class Tab implements TabCompleter {
 
         if (ConfigManager.tabMode == ConfigManager.TabMode.APT) {
             if (args.length == 1) {
-                List<String> sugs = Arrays.asList("search", "install", "update", "remove", "reload", "help", "y", "n");
+                List<String> sugs = Arrays.asList("search", "install", "update", "remove", "reload", "help", "y", "n", "list", "versions");
                 StringUtil.copyPartialMatches(args[0], sugs, suggestions);
             } else if (args.length == 2) {
 
@@ -35,6 +35,10 @@ public class Tab implements TabCompleter {
                 } else if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("-R")) {
                     List<String> sugs = DBManager.getAllInstalledSlugs();
                     StringUtil.copyPartialMatches(args[1], sugs, suggestions);
+                } else if (args[0].equalsIgnoreCase("list") || args[0].equalsIgnoreCase("-Qs")) {
+
+                } else if (args[0].equalsIgnoreCase("versions") || args[0].equalsIgnoreCase("-Vs")) {
+
                 }
             }
 

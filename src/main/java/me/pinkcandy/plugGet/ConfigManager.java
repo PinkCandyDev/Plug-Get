@@ -35,7 +35,6 @@ public class ConfigManager {
         instance.saveDefaultConfig();
         instance.reloadConfig();
         FileConfiguration c = instance.getConfig();
-
         // [root]
         tabMode = parseEnum(c, "tab-mode", TabMode.class, TabMode.APT, instance);
 

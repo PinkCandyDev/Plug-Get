@@ -135,6 +135,17 @@ public class CommandsHandler implements CommandExecutor {
             return true;
         }
 
+        if (subCommand.equals("list") || subCommand.equals("-Qs")) {
+            ThreadManager.runAsync(() -> {
+                new ListCommand().execute(sender);
+            });
+            return true;
+        }
+
+        if (subCommand.equals("versions") || subCommand.equals("-Vs")) {
+            return true;
+        }
+
         sender.sendMessage("§cUnknown subcommand. Use §7/pg help §cto see available commands.");
         return true;
     }
