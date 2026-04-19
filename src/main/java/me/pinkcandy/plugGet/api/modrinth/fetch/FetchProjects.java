@@ -33,16 +33,20 @@ public class FetchProjects {
             JSONArray facets = new JSONArray();
 
             if (!ServerInfo.loaders.isEmpty()) {
-                facets.put(new JSONArray().put("categories:" + ServerInfo.loaders.get(0).toLowerCase()));
+                JSONArray loaderFacet = new JSONArray();
+                for (String l : ServerInfo.loaders) {
+                    loaderFacet.put("categories:" + l.toLowerCase(java.util.Locale.ROOT));
+                }
+                facets.put(loaderFacet);
             }
 
             if (!ServerInfo.version.isEmpty()) {
                 facets.put(new JSONArray().put("versions:" + ServerInfo.version.get(0)));
             }
+
             String facetsParam = "";
 
-            if (!ConfigManager.showIncompatible)
-            {
+            if (!ConfigManager.showIncompatible && facets.length() > 0) {
                 facetsParam = "&facets=" + URLEncoder.encode(facets.toString(), StandardCharsets.UTF_8);
             }
 
