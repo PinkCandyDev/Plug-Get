@@ -23,6 +23,7 @@ me/pinkcandy/plugGet/commands/InstallCommand.class
 me/pinkcandy/plugGet/ConfigManager$SearchMode.class
 me/pinkcandy/plugGet/Update/UpdatePreparer.class
 me/pinkcandy/plugGet/install/InstallationPreparer.class
+me/pinkcandy/plugGet/commands/VersionsCommand.class
 me/pinkcandy/plugGet/version/DependencyResolver.class
 me/pinkcandy/plugGet/messagesBuilders/BuildInstallInfo.class
 me/pinkcandy/plugGet/model/VersionInfo.class
@@ -43,6 +44,7 @@ me/pinkcandy/plugGet/api/modrinth/fetch/FetchHelper.class
 me/pinkcandy/plugGet/ThreadManager.class
 me/pinkcandy/plugGet/db/DBManager.class
 me/pinkcandy/plugGet/install/InstallHelper.class
+me/pinkcandy/plugGet/messagesBuilders/BuildVersionsInfo.class
 me/pinkcandy/plugGet/version/CompareDate.class
 me/pinkcandy/plugGet/messagesBuilders/BuildUpdateInfo.class
 me/pinkcandy/plugGet/Tools/SetColor.class

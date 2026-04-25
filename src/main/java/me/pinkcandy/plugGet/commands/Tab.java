@@ -22,7 +22,7 @@ public class Tab implements TabCompleter {
 
         if (ConfigManager.tabMode == ConfigManager.TabMode.APT) {
             if (args.length == 1) {
-                List<String> sugs = Arrays.asList("search", "install", "update", "remove", "reload", "help", "y", "n", "list", "versions");
+                List<String> sugs = Arrays.asList("search", "install", "update", "remove", "reload", "help", "y", "n", "list", "versions", "release");
                 StringUtil.copyPartialMatches(args[0], sugs, suggestions);
             } else if (args.length == 2) {
 
@@ -44,13 +44,15 @@ public class Tab implements TabCompleter {
 
         } else if (ConfigManager.tabMode == ConfigManager.TabMode.PACMAN) {
             if (args.length == 1) {
-                List<String> sugs = Arrays.asList("-Ss", "-S", "-Syu", "-R", "-Rl", "-h", "-y", "-n");
+                List<String> sugs = Arrays.asList("-Ss", "-S", "-Vs", "-Syu", "-R", "-Rs", "-h", "-y", "-n", "-Alr");
                 StringUtil.copyPartialMatches(args[0], sugs, suggestions);
             } else if (args.length == 2) {
 
                 if (args[0].equalsIgnoreCase("install") || args[0].equalsIgnoreCase("-S")) {
 
                 } else if (args[0].equalsIgnoreCase("search") || args[0].equalsIgnoreCase("-Ss")) {
+
+                } else if (args[0].equalsIgnoreCase("versions") || args[0].equalsIgnoreCase("-Vs")) {
 
                 } else if (args[0].equalsIgnoreCase("update") || args[0].equalsIgnoreCase("-Syu")) {
 

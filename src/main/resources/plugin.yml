@@ -9,11 +9,11 @@ commands:
     usage: /plugget
     aliases: [pg, plug-get]
     permission: plugget.use
-    permission-message: "§c"
+    permission-message: "You do not have permission to use this command."
 
 permissions:
   plugget.use:
-    description: ""
+    description: "Allows the player to use the /plugget command."
     default: op
 
 

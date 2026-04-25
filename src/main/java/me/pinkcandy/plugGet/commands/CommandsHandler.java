@@ -61,6 +61,16 @@ public class CommandsHandler implements CommandExecutor {
             return true;
         }
 
+        if (subCommand.equals("release") || subCommand.equals("-Alr")) {
+            if (!ActionLock.isLocked && ActionLock.lockedBy == null) {
+                sender.sendMessage("§cNo action lock is active.");
+            } else {
+                ActionLock.release();
+                sender.sendMessage("§7Action lock released.");
+            }
+            return true;
+        }
+
         if (subCommand.equals("-R") || subCommand.equals("remove"))
         {
             if (!ActionLock.isLocked && ActionLock.lockedBy == null) {
@@ -93,7 +103,7 @@ public class CommandsHandler implements CommandExecutor {
             return true;
         }
 
-        if (subCommand.equals("-Ss") || subCommand.equals("search") && ActionLock.lockedBy != sender) {
+        if ((subCommand.equals("-Ss") || subCommand.equals("search")) && ActionLock.lockedBy != sender) {
             new SearchCommand().execute(sender, args);
             return true;
         }
@@ -143,6 +153,7 @@ public class CommandsHandler implements CommandExecutor {
         }
 
         if (subCommand.equals("versions") || subCommand.equals("-Vs")) {
+            VersionsCommand.execute(sender, args);
             return true;
         }
 

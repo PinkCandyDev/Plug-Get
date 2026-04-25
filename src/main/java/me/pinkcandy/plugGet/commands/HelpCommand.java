@@ -64,10 +64,11 @@ public class HelpCommand {
             p1.append("§a/pg help §2<§apage§2> §7- Show help\n");
             p1.append("§a/pg search §2<§aslug§2> §7- Search for plugin\n");
             p1.append("§a/pg install §2<§aslug§2> §7- Install plugin\n");
+            p1.append("§a/pg versions §2<§aslug§2> §2[§apage§2] §2[§a--all§2] §7- List plugin versions\n");
             p1.append("§a/pg update §7- Update installed plugins\n");
             p1.append("§a/pg remove §2<§aslug§2> §7- Remove plugin\n");
             p1.append("§a/pg autoremove §2<§aslug§2> §7- Auto-remove unused deps\n");
-            p1.append("§a/pg purge §2<§aslug§2> §7- Remove plugin & config\n");
+            p1.append("§a/pg release §7- Release current action lock\n");
             p1.append("§a/pg y §7- Confirm action\n");
             p1.append("§a/pg n §7- Deny action");
         } else {
@@ -75,10 +76,11 @@ public class HelpCommand {
             p1.append("§a-h §7- Show help\n");
             p1.append("§a-Ss §2<§aslug§2> §7- Search for plugin\n");
             p1.append("§a-S §2<§apkg§2> §7- Install plugin\n");
+            p1.append("§a-Vs §2<§aslug§2> §2[§apage§2] §2[§a--all§2] §7- List plugin versions\n");
             p1.append("§a-Syu §7- Update installed plugins\n");
             p1.append("§a-R §2<§apkg§2> §7- Remove plugin\n");
             p1.append("§a-Rs §2<§apkg§2> §7- Auto-remove unused deps\n");
-            p1.append("§a--purge §2<§apkg§2> §7- Remove plugin & config\n");
+            p1.append("§a-Alr §7- Release current action lock\n");
             p1.append("§a-y §7- Confirm action\n");
             p1.append("§a-n §7- Deny action");
         }
