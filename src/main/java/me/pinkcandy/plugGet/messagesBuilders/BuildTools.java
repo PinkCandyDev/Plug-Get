@@ -3,13 +3,9 @@ package me.pinkcandy.plugGet.messagesBuilders;
 import me.pinkcandy.plugGet.Tools.TextTools;
 import me.pinkcandy.plugGet.model.ProjectMeta;
 import me.pinkcandy.plugGet.model.VersionInfo;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
-import org.w3c.dom.Text;
-
 import static me.pinkcandy.plugGet.Tools.TextTools.capitalize;
 import static me.pinkcandy.plugGet.Tools.TextTools.formatDate;
 

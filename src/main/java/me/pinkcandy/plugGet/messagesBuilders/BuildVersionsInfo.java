@@ -12,7 +12,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 public class BuildVersionsInfo {
 
     public static BaseComponent[] buildHeader(ProjectMeta meta, int totalVersions, int page, int totalPages, boolean showAll) {
-        ComponentBuilder builder = new ComponentBuilder();
+        ComponentBuilder builder = new ComponentBuilder("");
         builder.append("§2modrinth/")
                 .event(BuildTools.modrinthHover(meta))
                 .event(BuildTools.modrinthClick(meta));
@@ -28,7 +28,7 @@ public class BuildVersionsInfo {
     public static BaseComponent[] buildVersionLine(ProjectMeta meta, VersionInfo versionInfo) {
         String branchColor = SetColor.setColor(versionInfo.getBranch());
 
-        ComponentBuilder builder = new ComponentBuilder();
+        ComponentBuilder builder = new ComponentBuilder("");
         builder.append("  §8- ");
         builder.append(branchColor + versionInfo.getVersionNumber())
                 .event(BuildTools.versionHover(versionInfo))
@@ -49,7 +49,7 @@ public class BuildVersionsInfo {
 
     public static BaseComponent[] buildNavigation(String slug, int page, int totalPages, boolean showAll) {
         String flag = showAll ? " --all" : "";
-        ComponentBuilder nav = new ComponentBuilder();
+        ComponentBuilder nav = new ComponentBuilder("");
         nav.append(" ");
 
         if (page > 1) {

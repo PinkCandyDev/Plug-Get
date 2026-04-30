@@ -49,7 +49,7 @@ public class ServerInfo {
         }
 
         String overwriteVersion = plugin.getConfig().getString("overwrite.version");
-        if (overwriteVersion != null && !overwriteVersion.isBlank()) {
+        if (overwriteVersion != null && !overwriteVersion.trim().isEmpty()) {
             Bukkit.getLogger().warning("[Plug-Get] Version auto-detection overwritten by config: " + overwriteVersion);
             version.clear();
             version.add(overwriteVersion);

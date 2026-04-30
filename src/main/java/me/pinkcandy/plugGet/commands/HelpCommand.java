@@ -1,11 +1,9 @@
 package me.pinkcandy.plugGet.commands;
 
 import me.pinkcandy.plugGet.ConfigManager;
+import net.md_5.bungee.api.chat.*;
 import org.bukkit.command.CommandSender;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +24,14 @@ public class HelpCommand {
         if (page < 1) page = 1;
         if (page > pages.size()) page = pages.size();
 
-        sender.sendMessage(pages.get(page - 1));
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            player.spigot().sendMessage(pages.get(page - 1));
+        } else {
+            sender.sendMessage(TextComponent.toLegacyText(pages.get(page - 1)));
+        }
 
-        ComponentBuilder nav = new ComponentBuilder();
+        ComponentBuilder nav = new ComponentBuilder("");
         nav.append(" ");
 
         if (page > 1) {
@@ -50,7 +53,12 @@ public class HelpCommand {
             nav.append(" §8-->")
                     .event((HoverEvent) null);
         }
-        sender.sendMessage(nav.create());
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            player.spigot().sendMessage(nav.create());
+        } else {
+            sender.sendMessage(TextComponent.toLegacyText(nav.create()));
+        }
     }
 
     private static List<BaseComponent[]> buildPages() {
@@ -58,7 +66,7 @@ public class HelpCommand {
 
         boolean isApt = ConfigManager.tabMode == ConfigManager.TabMode.APT;
 
-        ComponentBuilder p1 = new ComponentBuilder();
+        ComponentBuilder p1 = new ComponentBuilder("");
         if (isApt) {
             p1.append("§2§l=== §aPlugGet Help (apt) §2===\n");
             p1.append("§a/pg help §2<§apage§2> §7- Show help\n");
@@ -86,7 +94,7 @@ public class HelpCommand {
         }
         pages.add(p1.create());
 
-        ComponentBuilder p2 = new ComponentBuilder();
+        ComponentBuilder p2 = new ComponentBuilder("");
         p2.append("§2§l=== §aInstall arguments §2===\n");
         p2.append("§7Example: §a/pg install §2<§aslug§2> §2<§aarg(optional)§2>\n");
         p2.append("§a--latest §7- Prefer stable channels (default)\n");

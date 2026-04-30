@@ -18,7 +18,7 @@ import static me.pinkcandy.plugGet.messagesBuilders.BuildTools.versionHover;
 public class BuildSearchInfo {
 
     public static BaseComponent[] sendProjectInfo(ProjectMeta projectMeta, List<VersionInfo> versionsList) {
-        ComponentBuilder builder = new ComponentBuilder();
+        ComponentBuilder builder = new ComponentBuilder("");
 
         builder.append("§2modrinth/")
                 .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT,

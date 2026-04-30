@@ -13,7 +13,7 @@ import me.pinkcandy.plugGet.version.CompareDate;
 import me.pinkcandy.plugGet.version.GetNewestVersion;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.command.CommandSender;
-import org.json.JSONObject;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +52,12 @@ public class UpdatePreparer {
             List<BaseComponent[]> messages = BuildUpdateInfo.buildUpdateInfo(installedPlugins, pluginsToUpdate);
             ActionLock.isConfirming = true;
             for (int i = 0; i < messages.size(); i++) {
-                sender.spigot().sendMessage(messages.get(i));
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    player.spigot().sendMessage(messages.get(i));
+                } else {
+                    sender.sendMessage(BaseComponent.toLegacyText(messages.get(i)));
+                }
             }
         }
         else {

@@ -10,7 +10,9 @@ import me.pinkcandy.plugGet.model.VersionInfo;
 import me.pinkcandy.plugGet.version.CompatibilityFilter;
 import me.pinkcandy.plugGet.version.VersionValidator;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
@@ -78,13 +80,29 @@ public class VersionsCommand {
             int fromIndex = (currentPage - 1) * PAGE_SIZE;
             int toIndex = Math.min(fromIndex + PAGE_SIZE, versions.size());
 
-            sender.sendMessage(BuildVersionsInfo.buildHeader(projectMeta, versions.size(), currentPage, totalPages, finalShowAll));
+
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
+                player.spigot().sendMessage(BuildVersionsInfo.buildHeader(projectMeta, versions.size(), currentPage, totalPages, finalShowAll));
+            } else {
+                sender.sendMessage(TextComponent.toLegacyText(BuildVersionsInfo.buildHeader(projectMeta, versions.size(), currentPage, totalPages, finalShowAll)));
+            }
             for (int i = fromIndex; i < toIndex; i++) {
-                sender.sendMessage(BuildVersionsInfo.buildVersionLine(projectMeta, versions.get(i)));
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    player.spigot().sendMessage(BuildVersionsInfo.buildVersionLine(projectMeta, versions.get(i)));
+                } else {
+                    sender.sendMessage(TextComponent.toLegacyText(BuildVersionsInfo.buildVersionLine(projectMeta, versions.get(i))));
+                }
             }
 
             BaseComponent[] navigation = BuildVersionsInfo.buildNavigation(projectMeta.getSlug(), currentPage, totalPages, finalShowAll);
-            sender.sendMessage(navigation);
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
+                player.spigot().sendMessage(navigation);
+            } else {
+                sender.sendMessage(TextComponent.toLegacyText(navigation));
+            }
         });
 
         return true;

@@ -2,7 +2,6 @@ package me.pinkcandy.plugGet.install;
 
 import me.pinkcandy.plugGet.api.modrinth.fetch.FetchHelper;
 import me.pinkcandy.plugGet.commands.ActionLock;
-import me.pinkcandy.plugGet.api.modrinth.fetch.FetchProjects;
 import me.pinkcandy.plugGet.messagesBuilders.BuildInstallInfo;
 import me.pinkcandy.plugGet.model.*;
 import me.pinkcandy.plugGet.version.CompareVersions;
@@ -10,7 +9,7 @@ import me.pinkcandy.plugGet.version.DependencyResolver;
 import me.pinkcandy.plugGet.version.GetNewestVersion;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.command.CommandSender;
-import org.json.JSONObject;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,7 +40,12 @@ public class InstallationPreparer {
         List<BaseComponent[]> messages = BuildInstallInfo.buildInstallInfo(plugins);
         ActionLock.isConfirming = true;
         for (int i = 0; i < messages.size(); i++) {
-            sender.spigot().sendMessage(messages.get(i));
+            if (sender instanceof Player) {
+                Player player = (Player) sender;
+                player.spigot().sendMessage(messages.get(i));
+            } else {
+                sender.sendMessage(BaseComponent.toLegacyText(messages.get(i)));
+            }
         }
         ActionLock.confirm = () -> {
             boolean completed = installPlugins(plugins, sender);

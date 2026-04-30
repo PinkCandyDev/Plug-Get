@@ -10,15 +10,14 @@ import org.bukkit.command.CommandSender;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.security.MessageDigest;
 
 import static me.pinkcandy.plugGet.PlugGet.plugincCacheFolder;
-import static me.pinkcandy.plugGet.db.DBManager.*;
-import static me.pinkcandy.plugGet.db.DBMapper.pluginToJson;
 import static me.pinkcandy.plugGet.PlugGet.tmpFolder;
-import static org.apache.commons.codec.digest.DigestUtils.sha512Hex;
 
 public class InstallHelper {
 
@@ -36,8 +35,8 @@ public class InstallHelper {
             sender.sendMessage("§8:: §7Verifying: " + versionInfo.getFileName() + " §8(" + (i+1) + "/" + size + ")");
             boolean verified;
             Path targetFile = tmpFolder.resolve(versionInfo.getFileName());
-            try {
-                String fileHash = sha512Hex(Files.newInputStream(targetFile));
+            try (InputStream is = Files.newInputStream(targetFile)) {
+                String fileHash = sha512Hex(is);
                 verified = fileHash.equalsIgnoreCase(versionInfo.getSha512());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -68,5 +67,30 @@ public class InstallHelper {
                 return false;
             }
             return true;
+        }
+
+        public static String sha512Hex(InputStream is) {
+            try {
+                MessageDigest digest = MessageDigest.getInstance("SHA-512");
+
+                byte[] buffer = new byte[8192];
+                int read;
+
+                while ((read = is.read(buffer)) != -1) {
+                    digest.update(buffer, 0, read);
+                }
+
+                byte[] hash = digest.digest();
+
+                StringBuilder hex = new StringBuilder();
+                for (byte b : hash) {
+                    hex.append(String.format("%02x", b));
+                }
+
+                return hex.toString();
+
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to compute SHA-512", e);
+            }
         }
 }

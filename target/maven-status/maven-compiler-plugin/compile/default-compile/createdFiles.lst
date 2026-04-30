@@ -23,6 +23,7 @@ me/pinkcandy/plugGet/commands/InstallCommand.class
 me/pinkcandy/plugGet/ConfigManager$SearchMode.class
 me/pinkcandy/plugGet/Update/UpdatePreparer.class
 me/pinkcandy/plugGet/install/InstallationPreparer.class
+me/pinkcandy/plugGet/api/HttpUtils.class
 me/pinkcandy/plugGet/commands/VersionsCommand.class
 me/pinkcandy/plugGet/version/DependencyResolver.class
 me/pinkcandy/plugGet/messagesBuilders/BuildInstallInfo.class

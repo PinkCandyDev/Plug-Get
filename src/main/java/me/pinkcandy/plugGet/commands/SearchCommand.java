@@ -9,12 +9,12 @@ import me.pinkcandy.plugGet.model.VersionInfo;
 import me.pinkcandy.plugGet.version.GetNewestVersion;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-
 public class SearchCommand {
 
     public boolean execute(CommandSender sender, String[] args) {
@@ -50,11 +50,21 @@ public class SearchCommand {
                 }
 
                 for (CompletableFuture<BaseComponent[]> future : futures) {
-                    sender.sendMessage(future.join());
+                    if (sender instanceof Player) {
+                        Player player = (Player) sender;
+                        player.spigot().sendMessage(future.join());
+                    } else {
+                        sender.sendMessage(BaseComponent.toLegacyText(future.join()));
+                    }
                 }
             } else {
                 for (ProjectMeta meta : orderedProjects) {
-                    sender.sendMessage(BuildSearchInfo.sendProjectInfo(meta, null));
+                    if (sender instanceof Player) {
+                        Player player = (Player) sender;
+                        player.spigot().sendMessage(BuildSearchInfo.sendProjectInfo(meta, null));
+                    } else {
+                        sender.sendMessage(BaseComponent.toLegacyText(BuildSearchInfo.sendProjectInfo(meta, null)));
+                    }
                 }
             }
         });

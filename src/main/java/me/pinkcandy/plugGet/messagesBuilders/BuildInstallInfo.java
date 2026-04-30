@@ -11,8 +11,6 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import me.pinkcandy.plugGet.Tools.TextTools;
-import org.apache.maven.model.Build;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +28,7 @@ public class BuildInstallInfo {
 
         String pSpace = TextTools.generateSpaces(maxPLetters + 2);
 
-        ComponentBuilder header = new ComponentBuilder();
+        ComponentBuilder header = new ComponentBuilder("");
         header.append("§2Plugins (§a" + pluginsToInstall.size() + "§2)" + pSpace + "§8< §2Version §8| §3Size§8 >");
         lines.add(header.create());
         lines.add(new ComponentBuilder("").create());
@@ -56,7 +54,7 @@ public class BuildInstallInfo {
         }
 
         lines.add(new ComponentBuilder("").create());
-        ComponentBuilder footer = new ComponentBuilder();
+        ComponentBuilder footer = new ComponentBuilder("");
         footer.append("§8:: §7Continue installation? §8[");
         footer.append("§8Y").event(new ClickEvent(
                 ClickEvent.Action.RUN_COMMAND,
@@ -73,7 +71,7 @@ public class BuildInstallInfo {
     public static BaseComponent[] buildInstallInfoLine(
             PluginData pluginData, ProjectMeta projetMeta, int maxPLetters, List<Integer> pLetters, int i, String stat) {
         
-        ComponentBuilder lineBuilder = new ComponentBuilder();
+        ComponentBuilder lineBuilder = new ComponentBuilder("");
 
         int spacesNeeded = maxPLetters - pLetters.get(i) + 2;
         String maxPSpace = TextTools.generateSpaces(spacesNeeded);

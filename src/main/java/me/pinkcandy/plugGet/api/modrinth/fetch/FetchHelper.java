@@ -7,11 +7,14 @@ import me.pinkcandy.plugGet.model.ProjectMeta;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static me.pinkcandy.plugGet.PlugGet.projectCacheFolder;
@@ -22,7 +25,7 @@ public class FetchHelper {
             String result = FetchProjects.fetchSearch(slug);
 
             if (result == null) {
-                return List.of();
+                return Collections.emptyList();
             }
 
             List<ProjectMeta> metaList = new ArrayList<>();
@@ -40,7 +43,7 @@ public class FetchHelper {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return List.of();
+            return Collections.emptyList();
         }
     }
 
@@ -56,7 +59,7 @@ public class FetchHelper {
 
                     if (match.isPresent()) {
                         Path file = match.get();
-                        String content = Files.readString(file);
+                        String content = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
                         JSONObject obj = new JSONObject(content);
 
                         return new ProjectMeta(
@@ -67,10 +70,10 @@ public class FetchHelper {
                                 obj.optString("description"),
                                 obj.optJSONArray("loaders").toList().stream()
                                         .map(Object::toString)
-                                        .toList(),
+                                        .collect(Collectors.toList()),
                                 obj.optJSONArray("versions").toList().stream()
                                         .map(Object::toString)
-                                        .toList(),
+                                        .collect(Collectors.toList()),
                                 obj.optString("versionRange")
                         );
                     }
@@ -106,7 +109,7 @@ public class FetchHelper {
 
                     if (match.isPresent()) {
                         Path file = match.get();
-                        String content = Files.readString(file);
+                        String content = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
                         JSONObject obj = new JSONObject(content);
                         String slug = obj.optString("slug");
                         if (slug != null && !slug.isEmpty()) {
@@ -143,7 +146,7 @@ public class FetchHelper {
 
                     if (match.isPresent()) {
                         Path file = match.get();
-                        String content = Files.readString(file);
+                        String content = new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
                         JSONObject obj = new JSONObject(content);
                         String projectID = obj.optString("projectID");
                         if (projectID != null && !projectID.isEmpty()) {

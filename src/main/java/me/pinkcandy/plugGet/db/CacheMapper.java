@@ -5,8 +5,10 @@ import me.pinkcandy.plugGet.model.ProjectMeta;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 import static me.pinkcandy.plugGet.PlugGet.projectCacheFolder;
 
@@ -33,7 +35,12 @@ public class CacheMapper {
                 );
 
                 JSONObject json = new JSONObject(projectMeta);
-                Files.writeString(file, json.toString(2));
+                Files.write(
+                        file,
+                        json.toString(2).getBytes(StandardCharsets.UTF_8),
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.TRUNCATE_EXISTING
+                );
 
             } catch (IOException e) {
                 throw new RuntimeException(e);

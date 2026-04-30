@@ -39,13 +39,21 @@ public final class PlugGet extends JavaPlugin {
                 JSONObject dbJson = new JSONObject();
                 dbJson.put("plugins", new JSONObject());
 
-                Files.writeString(dbFile, dbJson.toString(4), StandardOpenOption.CREATE);
+                Files.write(
+                        dbFile,
+                        dbJson.toString(4).getBytes(java.nio.charset.StandardCharsets.UTF_8),
+                        StandardOpenOption.CREATE
+                );
             }
             if (!Files.exists(dbBackupFile)) {
                 JSONObject dbJson = new JSONObject();
                 dbJson.put("plugins", new JSONObject());
 
-                Files.writeString(dbBackupFile, dbJson.toString(4), StandardOpenOption.CREATE);
+                Files.write(
+                        dbBackupFile,
+                        dbJson.toString(4).getBytes(java.nio.charset.StandardCharsets.UTF_8),
+                        StandardOpenOption.CREATE
+                );
             }
 
         } catch (Exception e) {

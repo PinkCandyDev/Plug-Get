@@ -21,17 +21,22 @@ public class BuildDeleteInfo {
             pLetters.add(TextTools.countLetters(installInfo.getSlug()));
         }
 
-        int maxPLetters = pLetters.stream().max(Integer::compareTo).orElse(0);
+        int maxPLetters = 0;
+        for (Integer letters : pLetters) {
+            if (letters > maxPLetters) {
+                maxPLetters = letters;
+            }
+        }
 
         String pSpace = TextTools.generateSpaces(maxPLetters + 2);
 
-        ComponentBuilder header = new ComponentBuilder();
+        ComponentBuilder header = new ComponentBuilder("");
         header.append("§2Plugins (§a" + pluginsToInstall.size() + "§2)" + pSpace + "§8< §2Version §8| §3Size§8 >");
         lines.add(header.create());
         lines.add(new ComponentBuilder("").create());
 
         for (int i = 0; i < pluginsToInstall.size(); i++) {
-            ComponentBuilder lineBuilder = new ComponentBuilder();
+            ComponentBuilder lineBuilder = new ComponentBuilder("");
 
             int spacesNeeded = maxPLetters - pLetters.get(i) + 2;
             String maxPSpace = TextTools.generateSpaces(spacesNeeded);
@@ -52,7 +57,7 @@ public class BuildDeleteInfo {
         }
 
         lines.add(new ComponentBuilder("").create());
-        ComponentBuilder footer = new ComponentBuilder();
+        ComponentBuilder footer = new ComponentBuilder("");
         footer.append("§8:: §7Continue removal? §8[");
         footer.append("§8Y").event(new ClickEvent(
                 ClickEvent.Action.RUN_COMMAND,

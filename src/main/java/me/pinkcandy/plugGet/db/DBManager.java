@@ -4,6 +4,7 @@ import me.pinkcandy.plugGet.model.PluginData;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +16,18 @@ public class DBManager {
     public static JSONObject db;
     public static JSONObject backupDB;
 
+    private static JSONObject getPlugins(JSONObject root) {
+        JSONObject plugins = root.optJSONObject("plugins");
+        if (plugins == null) {
+            plugins = new JSONObject();
+            root.put("plugins", plugins);
+        }
+        return plugins;
+    }
+
     public static void AddPlugin(JSONObject pluginData) {
-        JSONObject plugins = db.optJSONObject("plugins");
+        JSONObject plugins = getPlugins(db);
+
         for (String slug : pluginData.keySet()) {
             JSONObject pluginObj = pluginData.getJSONObject(slug);
             plugins.put(slug, pluginObj);
@@ -24,18 +35,18 @@ public class DBManager {
     }
 
     public static String getPluginBranch(String slug) {
-        JSONObject plugins = db.optJSONObject("plugins");
+        JSONObject plugins = getPlugins(db);
+
         if (plugins.has(slug)) {
             JSONObject branchObj = plugins.getJSONObject(slug);
             return branchObj.optString("branch", null);
         }
-        else {
-            return null;
-        }
+        return null;
     }
 
-    public static PluginData getPluginData(String slug){
-        JSONObject plugins = db.optJSONObject("plugins");
+    public static PluginData getPluginData(String slug) {
+        JSONObject plugins = getPlugins(db);
+
         if (plugins.has(slug)) {
             JSONObject pluginObj = plugins.getJSONObject(slug);
             JSONObject wrapper = new JSONObject();
@@ -45,18 +56,40 @@ public class DBManager {
         return null;
     }
 
-    public static boolean isPluginInstalled(String slug){
-        JSONObject plugins = db.optJSONObject("plugins");
-        if (plugins.has(slug)) {
-            return true;
+    public static boolean isPluginInstalled(String slug) {
+        JSONObject plugins = getPlugins(db);
+        return plugins.has(slug);
+    }
+
+    public static void deletePlugin(String slug) {
+        JSONObject plugins = getPlugins(db);
+        plugins.remove(slug);
+    }
+
+    public static List<PluginData> getInstalledPlugins() {
+        JSONObject plugins = getPlugins(db);
+        List<PluginData> installed = new ArrayList<>();
+
+        for (String slug : plugins.keySet()) {
+            JSONObject pluginObj = plugins.getJSONObject(slug);
+            JSONObject wrapper = new JSONObject();
+            wrapper.put(slug, pluginObj);
+            installed.add(DBMapper.jsonToPlugin(wrapper));
         }
-        return false;
+
+        return installed;
+    }
+
+    public static List<String> getAllInstalledSlugs() {
+        JSONObject plugins = getPlugins(db);
+        List<String> list = new ArrayList<>(plugins.keySet());
+        return list;
     }
 
     public static void saveDB() {
         try {
             String jsonOutput = db.toString(4);
-            Files.writeString(dbFile, jsonOutput);
+            Files.write(dbFile, jsonOutput.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,7 +98,7 @@ public class DBManager {
     public static void saveBackupDB() {
         try {
             String jsonOutput = backupDB.toString(4);
-            Files.writeString(dbBackupFile, jsonOutput);
+            Files.write(dbBackupFile, jsonOutput.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -74,7 +107,7 @@ public class DBManager {
     public static void loadBackupDB() {
         try {
             if (Files.exists(dbBackupFile)) {
-                String content = Files.readString(dbBackupFile);
+                String content = new String(Files.readAllBytes(dbBackupFile), StandardCharsets.UTF_8);
                 backupDB = new JSONObject(content);
             } else {
                 backupDB = new JSONObject();
@@ -85,10 +118,10 @@ public class DBManager {
         }
     }
 
-    public static void loadDBToBackoupDB(){
+    public static void loadDBToBackoupDB() {
         try {
             if (Files.exists(dbFile)) {
-                String content = Files.readString(dbFile);
+                String content = new String(Files.readAllBytes(dbFile), StandardCharsets.UTF_8);
                 backupDB = new JSONObject(content);
             } else {
                 backupDB = new JSONObject();
@@ -97,13 +130,12 @@ public class DBManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     public static void loadDB() {
         try {
             if (Files.exists(dbFile)) {
-                String content = Files.readString(dbFile);
+                String content = new String(Files.readAllBytes(dbFile), StandardCharsets.UTF_8);
                 db = new JSONObject(content);
             } else {
                 db = new JSONObject();
@@ -114,22 +146,7 @@ public class DBManager {
         }
     }
 
-    public static List<PluginData> getInstalledPlugins() {
-        JSONObject plugins = db.optJSONObject("plugins");
-        List<PluginData> installedPlugins = new ArrayList<>();
-
-        for (String slug : plugins.keySet()) {
-            JSONObject pluginObj = plugins.getJSONObject(slug);
-            JSONObject wrapper = new JSONObject();
-            wrapper.put(slug, pluginObj);
-            installedPlugins.add(DBMapper.jsonToPlugin(wrapper));
-        }
-
-        return installedPlugins;
-    }
-
-    public static boolean replaceDB()
-    {
+    public static boolean replaceDB() {
         try {
             saveDB();
             saveBackupDB();
@@ -139,21 +156,5 @@ public class DBManager {
             return false;
         }
         return true;
-    }
-
-    public static List<String> getAllInstalledSlugs()
-    {
-        JSONObject plugins = db.optJSONObject("plugins");
-        List<String> installedPlugins = new ArrayList<>();
-
-        for (String slug : plugins.keySet()) {
-            installedPlugins.add(slug);
-        }
-        return installedPlugins;
-    }
-
-    public static void deletePlugin(String slug){
-        JSONObject plugins = db.optJSONObject("plugins");
-        plugins.remove(slug);
     }
 }

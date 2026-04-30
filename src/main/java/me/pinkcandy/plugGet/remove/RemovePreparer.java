@@ -1,6 +1,5 @@
 package me.pinkcandy.plugGet.remove;
 
-import me.pinkcandy.plugGet.PlugGet;
 import me.pinkcandy.plugGet.commands.ActionLock;
 import me.pinkcandy.plugGet.db.DBManager;
 import me.pinkcandy.plugGet.messagesBuilders.BuildDeleteInfo;
@@ -8,6 +7,7 @@ import me.pinkcandy.plugGet.model.DependencyInfo;
 import me.pinkcandy.plugGet.model.PluginData;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,12 @@ public class RemovePreparer {
             List<BaseComponent[]> messages = BuildDeleteInfo.buildDeleteInfo(pluginsToDelete);
             ActionLock.isConfirming = true;
             for (int i = 0; i < messages.size(); i++) {
-                sender.spigot().sendMessage(messages.get(i));
+                if (sender instanceof Player) {
+                    Player player = (Player) sender;
+                    player.spigot().sendMessage(messages.get(i));
+                } else {
+                    sender.sendMessage(BaseComponent.toLegacyText(messages.get(i)));
+                }
             }
         }
         else {

@@ -1,16 +1,13 @@
 package me.pinkcandy.plugGet.messagesBuilders;
 
-import me.pinkcandy.plugGet.Tools.SetColor;
 import me.pinkcandy.plugGet.model.PluginData;
 import me.pinkcandy.plugGet.model.ProjectMeta;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import me.pinkcandy.plugGet.Tools.TextTools;
-import org.apache.maven.model.Build;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 
 public class BuildUpdateInfo {
@@ -18,7 +15,7 @@ public class BuildUpdateInfo {
     public static List<BaseComponent[]> buildUpdateInfo(List<PluginData> installedPlugins, List<PluginData> pluginsToUpdate) {
         List<BaseComponent[]> lines = new ArrayList<>();
 
-        ComponentBuilder header = new ComponentBuilder();
+        ComponentBuilder header = new ComponentBuilder("");
         header.append("§2Plugins to update (§a" + pluginsToUpdate.size() + "§2)");
         lines.add(header.create());
         lines.add(new ComponentBuilder("").create());
@@ -30,10 +27,10 @@ public class BuildUpdateInfo {
             if (df >= 0) {
                 sizeDiffrance = "+ " + sizeDiffrance;
             }
-            ComponentBuilder line = new ComponentBuilder();
+            ComponentBuilder line = new ComponentBuilder("");
             line.append("[" + i + "] §2modrinth/§a" + pI.getInstallInfo().getSlug());
             lines.add(line.create());
-            ComponentBuilder vline = new ComponentBuilder();
+            ComponentBuilder vline = new ComponentBuilder("");
             vline.append("     ");
             vline.append(pI.getVersionInfo().getVersionNumber())
                     .event(BuildTools.versionHover(pI.getVersionInfo()))
@@ -49,7 +46,7 @@ public class BuildUpdateInfo {
         }
 
         lines.add(new ComponentBuilder("").create());
-        ComponentBuilder footer = new ComponentBuilder();
+        ComponentBuilder footer = new ComponentBuilder("");
         footer.append("§8:: §7Write §8/pg 0 1 2...§7 to exclude updates or §8[");
         footer.append("§8Y").event(new ClickEvent(
                 ClickEvent.Action.RUN_COMMAND,
@@ -73,7 +70,7 @@ public class BuildUpdateInfo {
         if (df >= 0) {
             sizeDiffrance = "+ " + sizeDiffrance;
         }
-        ComponentBuilder line = new ComponentBuilder();
+        ComponentBuilder line = new ComponentBuilder("");
         if (addIndex) {
             line.append("[" + index + "]");
         }
@@ -83,7 +80,7 @@ public class BuildUpdateInfo {
         line.append("§a" + pI.getInstallInfo().getSlug())
                 .event(BuildTools.projetHover(projetMeta, false));
         info.add(line.create());
-        ComponentBuilder vline = new ComponentBuilder();
+        ComponentBuilder vline = new ComponentBuilder("");
         vline.append("     ");
         vline.append(pI.getVersionInfo().getVersionNumber())
                 .event(BuildTools.versionHover(pI.getVersionInfo()))

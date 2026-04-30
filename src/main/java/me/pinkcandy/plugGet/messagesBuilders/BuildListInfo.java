@@ -16,11 +16,11 @@ public class BuildListInfo {
             installedPlugins.add(plugins.get(i).getVersionInfo().getFileName());
         }
         List<BaseComponent[]> lines = new java.util.ArrayList<>();
-        ComponentBuilder header = new ComponentBuilder();
+        ComponentBuilder header = new ComponentBuilder("");
         header.append("§2Installed plugins (§a" + files.size() + "§2)");
         lines.add(header.create());
         for (int i = 0; i < files.size(); i++) {
-            ComponentBuilder line = new ComponentBuilder();
+            ComponentBuilder line = new ComponentBuilder("");
             if (installedPlugins.contains(files.get(i)))
             {
                 int j = installedPlugins.indexOf(files.get(i));

@@ -10,7 +10,6 @@ import java.util.concurrent.Executors;
 
 public class ThreadManager {
 
-    private static Plugin plugin;
 
     private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(1, r -> {
         Thread t = new Thread(r);
@@ -25,10 +24,6 @@ public class ThreadManager {
         t.setName("plugget-version-fetch-" + t.getId());
         return t;
     });
-
-    public static void init(Plugin pl) {
-        plugin = pl;
-    }
 
     public static void runAsync(Runnable task) {
         EXECUTOR.submit(task);
