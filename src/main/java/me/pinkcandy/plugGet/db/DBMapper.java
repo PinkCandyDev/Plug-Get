@@ -40,6 +40,7 @@ public class DBMapper {
 
         if (versionInfo != null) {
             pluginDataJson.put("versionNumber", versionInfo.getVersionNumber());
+            pluginDataJson.put("source", "modrinth");
             pluginDataJson.put("versionId", versionInfo.getVersionId());
             pluginDataJson.put("branch", versionInfo.getBranch());
             pluginDataJson.put("datePublished", versionInfo.getDatePublished());

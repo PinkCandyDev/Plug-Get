@@ -4,7 +4,7 @@
   <groupId>me.pinkcandy</groupId>
   <artifactId>plug-get</artifactId>
   <name>plug-get</name>
-  <version>1.0</version>
+  <version>0.1.0</version>
   <build>
     <defaultGoal>clean package</defaultGoal>
     <resources>

@@ -16,6 +16,7 @@ me/pinkcandy/plugGet/commands/SearchCommand.class
 me/pinkcandy/plugGet/api/modrinth/fetch/FetchProjects.class
 me/pinkcandy/plugGet/version/CompatibilityFilter.class
 me/pinkcandy/plugGet/db/DBMapper.class
+me/pinkcandy/plugGet/db/RecreateFiles.class
 me/pinkcandy/plugGet/messagesBuilders/BuildDeleteInfo.class
 me/pinkcandy/plugGet/install/InstallPlugins.class
 me/pinkcandy/plugGet/download/FileDownloader.class

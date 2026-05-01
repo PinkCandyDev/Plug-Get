@@ -37,7 +37,7 @@ public class VersionsCommand {
                 } else if (args[i].matches("\\d+")) {
                     page = Integer.parseInt(args[i]);
                 } else {
-                    sender.sendMessage("§cUnknown argument: §4" + args[i]);
+                    sender.sendMessage("§4Wrong argument: " + args[i]);
                     return true;
                 }
             }
@@ -54,7 +54,7 @@ public class VersionsCommand {
             }
             JSONArray versionsJson = FetchVersions.fetchAll(projectMeta.getProjectId());
             if (versionsJson == null) {
-                sender.sendMessage("§cCould not fetch versions for §4" + slug);
+                sender.sendMessage("§cCould not fetch versions for " + slug);
                 return;
             }
 
@@ -68,9 +68,9 @@ public class VersionsCommand {
 
             if (versions.isEmpty()) {
                 if (finalShowAll) {
-                    sender.sendMessage("§cNo versions found for §4" + slug);
+                    sender.sendMessage("§cNo versions found for " + slug);
                 } else {
-                    sender.sendMessage("§cNo compatible versions found for §4" + slug + "§c. Try §7--all");
+                    sender.sendMessage("§cNo compatible versions found for " + slug + ". Try §7--all");
                 }
                 return;
             }

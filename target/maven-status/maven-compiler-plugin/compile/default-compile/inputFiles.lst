@@ -24,6 +24,7 @@
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/db/CacheMapper.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/db/DBManager.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/db/DBMapper.java
+/home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/db/RecreateFiles.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/download/FileDownloader.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/install/InstallHelper.java
 /home/pinkcandy/IdeaProjects/Plug-Get/src/main/java/me/pinkcandy/plugGet/install/InstallPlugins.java

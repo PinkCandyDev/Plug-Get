@@ -16,7 +16,7 @@ public class DBManager {
     public static JSONObject db;
     public static JSONObject backupDB;
 
-    private static JSONObject getPlugins(JSONObject root) {
+    public static JSONObject getPlugins(JSONObject root) {
         JSONObject plugins = root.optJSONObject("plugins");
         if (plugins == null) {
             plugins = new JSONObject();

@@ -3,6 +3,7 @@ package me.pinkcandy.plugGet;
 import me.pinkcandy.plugGet.api.modrinth.fetch.FetchProjects;
 import me.pinkcandy.plugGet.commands.CommandsHandler;
 import me.pinkcandy.plugGet.commands.Tab;
+import me.pinkcandy.plugGet.db.RecreateFiles;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.JSONObject;
 
@@ -29,55 +30,7 @@ public final class PlugGet extends JavaPlugin {
         instance = this;
         saveDefaultConfig();
         ConfigManager.reload(instance);
-        dbFolder = PlugGet.instance.getDataFolder().toPath().resolve("db/");
-        dbFile = dbFolder.resolve("plugins.json");
-        dbBackupFile = dbFolder.resolve("plugins_backup.json");
-        try {
-            Files.createDirectories(dbFolder);
-
-            if (!Files.exists(dbFile)) {
-                JSONObject dbJson = new JSONObject();
-                dbJson.put("plugins", new JSONObject());
-
-                Files.write(
-                        dbFile,
-                        dbJson.toString(4).getBytes(java.nio.charset.StandardCharsets.UTF_8),
-                        StandardOpenOption.CREATE
-                );
-            }
-            if (!Files.exists(dbBackupFile)) {
-                JSONObject dbJson = new JSONObject();
-                dbJson.put("plugins", new JSONObject());
-
-                Files.write(
-                        dbBackupFile,
-                        dbJson.toString(4).getBytes(java.nio.charset.StandardCharsets.UTF_8),
-                        StandardOpenOption.CREATE
-                );
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        tmpFolder = PlugGet.instance.getDataFolder().toPath().resolve("tmp/");
-        try {
-            Files.createDirectories(tmpFolder);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        plugincCacheFolder = PlugGet.instance.getDataFolder().toPath().resolve("cache/plugins/");
-        try {
-            Files.createDirectories(plugincCacheFolder);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        projectCacheFolder = PlugGet.instance.getDataFolder().toPath().resolve("cache/project/");
-        try {
-            Files.createDirectories(projectCacheFolder);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        new ServerInfo(instance);
+        RecreateFiles.recreateFiles();
         loadDB();
         loadBackupDB();
         this.getCommand("plugget").setExecutor(new CommandsHandler());

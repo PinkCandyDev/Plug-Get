@@ -68,7 +68,7 @@ public class InstallationPreparer {
             } else {
                 sender.sendMessage("§cNo " + installInfo.getInstallType() + " version found for " + installInfo.getSlug());
             }
-            return true;
+            return false;
         }
         String status = CompareVersions.getStatus(versionInfo, installInfo.getSlug());
         PluginData pluginData = new PluginData(

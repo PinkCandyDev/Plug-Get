@@ -13,6 +13,10 @@ public class InstallCommand {
 
     public static boolean execute(CommandSender sender, String[] args) {
         List<InstallInfo> pluginsToInstall = new ArrayList<>();
+        if (args.length < 2) {
+            sender.sendMessage("§cNo plugin slug provided. Usage: §7/pg install <slug> [options]");
+            return true;
+        }
         for (int i = 1; i < args.length; i++) {
             String slug = args[i];
 
