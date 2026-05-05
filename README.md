@@ -4,12 +4,12 @@ Plug-Get is a simple Linux like package manager for minecraft plugins. It allows
 
 ## Features
 
-- Search for plugins directly from Modrinth API
-  ![Search Example](https://github.com/PinkCandyDev/Plug-Get/blob/main/search.gif)
 - One-command plugin installation with automatic dependency resolution
   ![Install Example](https://github.com/PinkCandyDev/Plug-Get/blob/main/install.gif)
+- Search for plugins directly from Modrinth API
+  ![Search Example](https://github.com/PinkCandyDev/Plug-Get/blob/main/search.gif)
 - Update all plugins with a single command
-  ![update Example](https://github.com/PinkCandyDev/Plug-Get/blob/main/update~~~~.gif)
+  ![update Example](https://github.com/PinkCandyDev/Plug-Get/blob/main/update.gif)
 - Remove plugins with optional dependency cleanup
 - Version control (latest, rolling, beta, alpha, specific versions)
 - Compatible with folia, paper, spigot
