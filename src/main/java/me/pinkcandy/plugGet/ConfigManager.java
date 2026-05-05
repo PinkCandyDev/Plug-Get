@@ -22,10 +22,6 @@ public class ConfigManager {
     public static boolean requiredDependencies;
     public static boolean optionalDependencies;
 
-    // [update]
-    public static boolean checkOnStartup;
-    public static boolean installOnShutdown;
-
     // [cache]
     public static boolean cachePlugins;
     public static boolean cacheMetadata;
@@ -48,10 +44,6 @@ public class ConfigManager {
         installDefaultFlag = parseEnum(c, "install.default-flag", InstallFlag.class, InstallFlag.LATEST, instance);
         requiredDependencies = getBool(c, "install.required-dependencies", true, instance);
         optionalDependencies = getBool(c, "install.optional-dependencies", false, instance);
-
-        // [update]
-        checkOnStartup = getBool(c, "update.check-on-startup", true, instance);
-        installOnShutdown = getBool(c, "update.install-on-shutdown", false, instance);
 
         // [cache]
         cachePlugins = getBool(c, "cache.plugins", true, instance);
