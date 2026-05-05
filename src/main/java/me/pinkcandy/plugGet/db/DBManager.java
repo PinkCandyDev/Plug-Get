@@ -86,6 +86,17 @@ public class DBManager {
         return list;
     }
 
+    public static int getInstalledPluginsCount() {
+        List<String> slugs = getAllInstalledSlugs();
+        int count = 0;
+        for (String slug : slugs) {
+            if (!"plug-get".equals(slug)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public static void saveDB() {
         try {
             String jsonOutput = db.toString(4);

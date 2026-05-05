@@ -4,6 +4,8 @@ import me.pinkcandy.plugGet.api.modrinth.fetch.FetchProjects;
 import me.pinkcandy.plugGet.commands.CommandsHandler;
 import me.pinkcandy.plugGet.commands.Tab;
 import me.pinkcandy.plugGet.db.RecreateFiles;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.JSONObject;
 
@@ -11,8 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-import static me.pinkcandy.plugGet.db.DBManager.loadBackupDB;
-import static me.pinkcandy.plugGet.db.DBManager.loadDB;
+import static me.pinkcandy.plugGet.db.DBManager.*;
 
 public final class PlugGet extends JavaPlugin {
 
@@ -36,6 +37,12 @@ public final class PlugGet extends JavaPlugin {
         new ServerInfo(instance);
         this.getCommand("plugget").setExecutor(new CommandsHandler());
         getCommand("plugget").setTabCompleter(new Tab());
+        int pluginId = 31129;
+        Metrics metrics = new Metrics(this, pluginId);
+        metrics.addCustomChart(new SingleLineChart("managed_plugins", () -> {
+
+            return getInstalledPluginsCount();
+        }));
     }
 
     @Override

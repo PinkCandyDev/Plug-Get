@@ -10,7 +10,6 @@ public class ServerInfo {
 
     public static List<String> loaders = new ArrayList<>();
     public static List<String> version = new ArrayList<>();
-
     public ServerInfo(PlugGet plugin) {
         boolean isFolia = false, isPurpur = false, isPaper = false, isSpigot = false;
 
@@ -55,7 +54,7 @@ public class ServerInfo {
             version.add(overwriteVersion);
         }
         else {
-            Bukkit.getLogger().info("[Plug-Get] Version: " + version);
+            Bukkit.getLogger().info("[Plug-Get] Version: " + version.get(0));
         }
     }
 }

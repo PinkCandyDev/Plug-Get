@@ -63,8 +63,6 @@ public class RecreateFiles {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        new ServerInfo(instance);
     }
 
     private static JSONObject writeDefaultDB() {
@@ -97,7 +95,7 @@ public class RecreateFiles {
                         "67",
                         "beta",
                         "listed",
-                        "2026-05-01T22:40:27.268664Z",
+                        "2026-05-06T00:05:27.268664Z",
                         null,
                         null,
                         null,

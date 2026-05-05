@@ -118,10 +118,18 @@ public class TextTools {
 
     public static String normalizeVersion(String v) {
         if (v == null) return "";
+
         int dash = v.indexOf('-');
         if (dash > 0) {
-            return v.substring(0, dash);
+            v = v.substring(0, dash);
         }
+
+        // Remove everything after '.build'
+        int build = v.indexOf(".build");
+        if (build > 0) {
+            v = v.substring(0, build);
+        }
+
         return v;
     }
 }
