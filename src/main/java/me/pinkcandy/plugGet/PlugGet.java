@@ -33,6 +33,7 @@ public final class PlugGet extends JavaPlugin {
         RecreateFiles.recreateFiles();
         loadDB();
         loadBackupDB();
+        new ServerInfo(instance);
         this.getCommand("plugget").setExecutor(new CommandsHandler());
         getCommand("plugget").setTabCompleter(new Tab());
     }

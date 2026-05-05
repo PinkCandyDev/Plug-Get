@@ -31,7 +31,6 @@ public class UpdatePreparer {
             ProjectMeta meta = FetchHelper.getProject(slug);
             if (meta == null) {
                 sender.sendMessage("§cInstalled plugin " + slug + " haven't been found on Modrinth. Does it still exist or mabey chainged the name?");
-                ActionLock.release();
                 continue;
             }
 

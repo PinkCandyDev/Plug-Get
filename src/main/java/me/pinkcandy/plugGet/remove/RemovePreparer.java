@@ -25,12 +25,15 @@ public class RemovePreparer {
             }
             if (type.equals("auto"))
             {
-                for (DependencyInfo dependency : pluginData.getVersionInfo().getDependencies()) {
-                    if (dependency.getSlug() != null)
-                    {
-                        PluginData dependencyPD = DBManager.getPluginData(dependency.getSlug());
-                        if (dependencyPD != null){
-                            pluginsToDelete.add(dependencyPD);
+                List<DependencyInfo> dependencies = pluginData.getVersionInfo().getDependencies();
+                if (dependencies != null) {
+                    for (DependencyInfo dependency : dependencies) {
+                        if (dependency.getSlug() != null)
+                        {
+                            PluginData dependencyPD = DBManager.getPluginData(dependency.getSlug());
+                            if (dependencyPD != null){
+                                pluginsToDelete.add(dependencyPD);
+                            }
                         }
                     }
                 }
@@ -62,6 +65,7 @@ public class RemovePreparer {
                 RemovePlugin.deletePlugin(pluginsToDelete.get(i));
             }
             DBManager.replaceDB();
+            sender.sendMessage("§aPlugins removed successfully!");
             ActionLock.release();
         };
         ActionLock.deny = () -> {

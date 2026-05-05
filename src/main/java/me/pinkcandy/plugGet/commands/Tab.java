@@ -21,8 +21,11 @@ public class Tab implements TabCompleter {
         }
 
         if (ConfigManager.tabMode == ConfigManager.TabMode.APT) {
-            if (args.length == 1) {
-                List<String> sugs = Arrays.asList("search", "install", "update", "remove", "reload", "help", "y", "n", "list", "versions", "release");
+            if (args.length >= 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("-R") || args[0].equalsIgnoreCase("autoremove"))) {
+                List<String> sugs = DBManager.getAllInstalledSlugs();
+                StringUtil.copyPartialMatches(args[args.length - 1], sugs, suggestions);
+            } else if (args.length == 1) {
+                List<String> sugs = Arrays.asList("search", "install", "update", "remove","autoremove", "reload", "help", "y", "n", "list", "versions", "release");
                 StringUtil.copyPartialMatches(args[0], sugs, suggestions);
             } else if (args.length == 2) {
 
@@ -32,9 +35,6 @@ public class Tab implements TabCompleter {
 
                 } else if (args[0].equalsIgnoreCase("update") || args[0].equalsIgnoreCase("-Syu")) {
 
-                } else if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("-R")) {
-                    List<String> sugs = DBManager.getAllInstalledSlugs();
-                    StringUtil.copyPartialMatches(args[1], sugs, suggestions);
                 } else if (args[0].equalsIgnoreCase("list") || args[0].equalsIgnoreCase("-Qs")) {
 
                 } else if (args[0].equalsIgnoreCase("versions") || args[0].equalsIgnoreCase("-Vs")) {
@@ -43,7 +43,10 @@ public class Tab implements TabCompleter {
             }
 
         } else if (ConfigManager.tabMode == ConfigManager.TabMode.PACMAN) {
-            if (args.length == 1) {
+            if (args.length >= 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("-R") || args[0].equalsIgnoreCase("-Rs"))) {
+                List<String> sugs = DBManager.getAllInstalledSlugs();
+                StringUtil.copyPartialMatches(args[args.length - 1], sugs, suggestions);
+            } else if (args.length == 1) {
                 List<String> sugs = Arrays.asList("-Ss", "-S", "-Vs", "-Syu", "-R", "-Rs", "-h", "-y", "-n", "-Alr");
                 StringUtil.copyPartialMatches(args[0], sugs, suggestions);
             } else if (args.length == 2) {
@@ -56,9 +59,6 @@ public class Tab implements TabCompleter {
 
                 } else if (args[0].equalsIgnoreCase("update") || args[0].equalsIgnoreCase("-Syu")) {
 
-                } else if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("-R")) {
-                    List<String> sugs = DBManager.getAllInstalledSlugs();
-                    StringUtil.copyPartialMatches(args[1], sugs, suggestions);
                 }
             }
         }
