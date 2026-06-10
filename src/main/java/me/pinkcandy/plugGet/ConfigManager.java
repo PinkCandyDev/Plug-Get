@@ -10,6 +10,7 @@ public class ConfigManager {
 
     // [root]
     public static TabMode tabMode;
+    public static boolean serverConsoleOnly;
 
     // [search]
     public static SearchMode searchMode;
@@ -33,6 +34,7 @@ public class ConfigManager {
         FileConfiguration c = instance.getConfig();
         // [root]
         tabMode = parseEnum(c, "tab-mode", TabMode.class, TabMode.APT, instance);
+        serverConsoleOnly = getBool(c, "server-console-only", false, instance);
 
         // [search]
         searchMode = parseEnum(c, "search.mode", SearchMode.class, SearchMode.FULL, instance);

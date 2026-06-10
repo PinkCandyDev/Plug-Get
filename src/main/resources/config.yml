@@ -1,5 +1,8 @@
 tab-mode: "apt" # apt, pacman
 
+#Set to true if you dont want to allow command usage in-game
+server-console-only: false
+
 overwrite:
  # loaders: [bukkit, spigot, paper]
  # version: 1.21.10

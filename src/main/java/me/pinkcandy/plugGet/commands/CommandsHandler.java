@@ -9,6 +9,7 @@ import me.pinkcandy.plugGet.remove.RemovePreparer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,12 @@ public class CommandsHandler implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
+        if (sender instanceof Player && ConfigManager.serverConsoleOnly)
+        {
+            sender.sendMessage("§cThis command can only be used from the server console.");
+            return true;
+        }
+        
         if (args.length == 0) {
             sender.sendMessage("§cNo subcommand provided. Use §7/pg help §cto see available commands.");
             return true;
