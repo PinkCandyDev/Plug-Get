@@ -21,11 +21,11 @@ public class Tab implements TabCompleter {
         }
 
         if (ConfigManager.tabMode == ConfigManager.TabMode.APT) {
-            if (args.length >= 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("-R") || args[0].equalsIgnoreCase("autoremove"))) {
+            if (args.length >= 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("-R") || args[0].equalsIgnoreCase("autoremove") || args[0].equalsIgnoreCase("include") || args[0].equalsIgnoreCase("-I") || args[0].equalsIgnoreCase("exclude") || args[0].equalsIgnoreCase("-E"))) {
                 List<String> sugs = DBManager.getAllInstalledSlugs();
                 StringUtil.copyPartialMatches(args[args.length - 1], sugs, suggestions);
             } else if (args.length == 1) {
-                List<String> sugs = Arrays.asList("search", "install", "update", "remove","autoremove", "reload", "help", "y", "n", "list", "versions", "release");
+                List<String> sugs = Arrays.asList("search", "install", "update", "remove","autoremove", "reload", "help", "y", "n", "list", "versions", "release", "include", "-I", "exclude", "-E");
                 StringUtil.copyPartialMatches(args[0], sugs, suggestions);
             } else if (args.length == 2) {
 
@@ -43,11 +43,11 @@ public class Tab implements TabCompleter {
             }
 
         } else if (ConfigManager.tabMode == ConfigManager.TabMode.PACMAN) {
-            if (args.length >= 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("-R") || args[0].equalsIgnoreCase("-Rs"))) {
+            if (args.length >= 2 && (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("-R") || args[0].equalsIgnoreCase("-Rs") || args[0].equalsIgnoreCase("include") || args[0].equalsIgnoreCase("-I") || args[0].equalsIgnoreCase("exclude") || args[0].equalsIgnoreCase("-E"))) {
                 List<String> sugs = DBManager.getAllInstalledSlugs();
                 StringUtil.copyPartialMatches(args[args.length - 1], sugs, suggestions);
             } else if (args.length == 1) {
-                List<String> sugs = Arrays.asList("-Ss", "-S", "-Vs", "-Syu", "-R", "-Rs", "-h", "-y", "-n", "-Alr");
+                List<String> sugs = Arrays.asList("-Ss", "-S", "-Vs", "-Syu", "-R", "-Rs", "-h", "-y", "-n", "-Alr", "include", "-I", "exclude", "-E");
                 StringUtil.copyPartialMatches(args[0], sugs, suggestions);
             } else if (args.length == 2) {
 

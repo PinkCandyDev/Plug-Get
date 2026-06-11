@@ -168,4 +168,22 @@ public class DBManager {
         }
         return true;
     }
+
+    public static void excludePlugin(String slug){
+        JSONObject plugins = getPlugins(db);
+
+        if (plugins.has(slug)) {
+            JSONObject pluginObj = plugins.getJSONObject(slug);
+            pluginObj.put("includeInUpdates" , false);
+        }
+    }
+
+    public static void includePlugin(String slug){
+        JSONObject plugins = getPlugins(db);
+
+        if (plugins.has(slug)) {
+            JSONObject pluginObj = plugins.getJSONObject(slug);
+            pluginObj.put("includeInUpdates" , true);
+        }
+    }
 }

@@ -5,6 +5,7 @@ import me.pinkcandy.plugGet.PlugGet;
 import me.pinkcandy.plugGet.ThreadManager;
 import me.pinkcandy.plugGet.Tools.TextTools;
 import me.pinkcandy.plugGet.Update.UpdatePreparer;
+import me.pinkcandy.plugGet.db.DBManager;
 import me.pinkcandy.plugGet.remove.RemovePreparer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,13 +25,14 @@ public class CommandsHandler implements CommandExecutor {
             sender.sendMessage("§cThis command can only be used from the server console.");
             return true;
         }
-        
+
         if (args.length == 0) {
             sender.sendMessage("§cNo subcommand provided. Use §7/pg help §cto see available commands.");
             return true;
         }
 
         String subCommand = args[0];
+        String actionLockBusyMessage = "§cAnother action is currently in progress. Please wait until it is finished.";
 
         if (ActionLock.isConfirming && ActionLock.lockedBy == sender) {
             boolean allNumericArgs = true;
@@ -89,7 +91,7 @@ public class CommandsHandler implements CommandExecutor {
                 RemovePreparer.prepareDelete(slugs, "", sender);
             }
             else {
-                sender.sendMessage("§cAnother action is currently in progress. Please wait until it is finished.");
+                sender.sendMessage(actionLockBusyMessage);
             }
             return true;
         }
@@ -105,7 +107,7 @@ public class CommandsHandler implements CommandExecutor {
                 RemovePreparer.prepareDelete(slugs, "auto", sender);
             }
             else {
-                sender.sendMessage("§cAnother action is currently in progress. Please wait until it is finished.");
+                sender.sendMessage(actionLockBusyMessage);
             }
             return true;
         }
@@ -123,7 +125,7 @@ public class CommandsHandler implements CommandExecutor {
                 });
             }
             else {
-                sender.sendMessage("§cAnother action is currently in progress. Please wait until it is finished.");
+                sender.sendMessage(actionLockBusyMessage);
             }
             return true;
         }
@@ -147,7 +149,7 @@ public class CommandsHandler implements CommandExecutor {
             }
             else
             {
-                sender.sendMessage("§cAnother action is currently in progress. Please wait until it is finished.");
+                sender.sendMessage(actionLockBusyMessage);
             }
             return true;
         }
@@ -161,6 +163,42 @@ public class CommandsHandler implements CommandExecutor {
 
         if (subCommand.equals("versions") || subCommand.equals("-Vs")) {
             VersionsCommand.execute(sender, args);
+            return true;
+        }
+
+        if (subCommand.equals("exclude") || subCommand.equals("-E")) {
+            if (!ActionLock.isLocked && ActionLock.lockedBy == null) {
+                ActionLock.lock(sender);
+                for (int i = 1; i < args.length; i++) {
+                    if (DBManager.isPluginInstalled(args[i])) {
+                        DBManager.excludePlugin(args[i]);
+                    } else {
+                        sender.sendMessage("§cPlugin " + args[i] + " is not installed");
+                        return true;
+                    }
+                }
+                sender.sendMessage("Plugins excluded from updating");
+            } else {
+                sender.sendMessage(actionLockBusyMessage);
+            }
+            return true;
+        }
+
+        if (subCommand.equals("include") || subCommand.equals("-I")) {
+            if (!ActionLock.isLocked && ActionLock.lockedBy == null) {
+                ActionLock.lock(sender);
+                for (int i = 1; i < args.length; i++) {
+                    if (DBManager.isPluginInstalled(args[i])) {
+                        DBManager.includePlugin(args[i]);
+                    } else {
+                        sender.sendMessage("§cPlugin " + args[i] + " is not installed");
+                        return true;
+                    }
+                }
+                sender.sendMessage("Plugins included in updates.");
+            } else {
+                sender.sendMessage(actionLockBusyMessage);
+            }
             return true;
         }
 
