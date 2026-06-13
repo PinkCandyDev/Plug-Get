@@ -8,7 +8,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import java.util.List;
 
 public class BuildListInfo {
-    public static List<BaseComponent[]> buildListInfo(List<PluginData> plugins, List<String> files)
+    public static List<BaseComponent[]> buildListInfo(List<PluginData> plugins, List<String> files, String type)
     {
         List<String> installedPlugins = new java.util.ArrayList<>();
         for (int i = 0; i < plugins.size(); i++)
@@ -17,11 +17,18 @@ public class BuildListInfo {
         }
         List<BaseComponent[]> lines = new java.util.ArrayList<>();
         ComponentBuilder header = new ComponentBuilder("");
-        header.append("§2Installed plugins (§a" + files.size() + "§2)");
+        if (type.equals("all"))
+        {
+            header.append("§2Installed plugins (§a" + files.size() + "§2)");
+        }
+        else if (type.equals("excluded"))
+        {
+            header.append("§2Excluded plugins (§a" + files.size() + "§2)");
+        }
         lines.add(header.create());
         for (int i = 0; i < files.size(); i++) {
             ComponentBuilder line = new ComponentBuilder("");
-            if (installedPlugins.contains(files.get(i)))
+            if (installedPlugins.contains(files.get(i)) || type.equals("excluded"))
             {
                 int j = installedPlugins.indexOf(files.get(i));
                 line.append("§2Modrinth/");

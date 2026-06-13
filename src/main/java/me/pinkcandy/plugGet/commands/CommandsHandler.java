@@ -112,7 +112,7 @@ public class CommandsHandler implements CommandExecutor {
             return true;
         }
 
-        if ((subCommand.equals("-Ss") || subCommand.equals("search")) && ActionLock.lockedBy != sender) {
+        if ((subCommand.equals("-Ss") || subCommand.equals("search"))) {
             new SearchCommand().execute(sender, args);
             return true;
         }
@@ -156,7 +156,7 @@ public class CommandsHandler implements CommandExecutor {
 
         if (subCommand.equals("list") || subCommand.equals("-Qs")) {
             ThreadManager.runAsync(() -> {
-                new ListCommand().execute(sender);
+                ListCommand.execute(sender,args[1]);
             });
             return true;
         }

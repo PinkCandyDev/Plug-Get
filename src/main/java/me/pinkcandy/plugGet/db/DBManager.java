@@ -80,6 +80,22 @@ public class DBManager {
         return installed;
     }
 
+    public static List<PluginData> getExcludedPlugins() {
+        JSONObject plugins = getPlugins(db);
+        List<PluginData> excluded = new ArrayList<>();
+
+        for (String slug : plugins.keySet()) {
+            JSONObject pluginObj = plugins.getJSONObject(slug);
+            JSONObject wrapper = new JSONObject();
+            if (!pluginObj.optBoolean("includeInUpdates", true)) {
+                wrapper.put(slug, pluginObj);
+                excluded.add(DBMapper.jsonToPlugin(wrapper));
+            }
+        }
+
+        return excluded;
+    }
+
     public static List<String> getAllInstalledSlugs() {
         JSONObject plugins = getPlugins(db);
         List<String> list = new ArrayList<>(plugins.keySet());
@@ -176,6 +192,7 @@ public class DBManager {
             JSONObject pluginObj = plugins.getJSONObject(slug);
             pluginObj.put("includeInUpdates" , false);
         }
+        replaceDB();
     }
 
     public static void includePlugin(String slug){
@@ -185,5 +202,6 @@ public class DBManager {
             JSONObject pluginObj = plugins.getJSONObject(slug);
             pluginObj.put("includeInUpdates" , true);
         }
+        replaceDB();
     }
 }
