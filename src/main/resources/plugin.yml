@@ -1,5 +1,5 @@
 name: Plug-Get
-version: '0.1.0'
+version: '0.1.1'
 main: me.pinkcandy.plugGet.PlugGet
 api-version: '1.8'
 load: STARTUP

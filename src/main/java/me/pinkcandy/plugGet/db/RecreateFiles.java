@@ -88,19 +88,19 @@ public class RecreateFiles {
                 new InstallInfo(
                         "plug-get",
                         "latest",
-                        "0.1.0"
+                        "0.1.1"
                 ),
                 new VersionInfo(
-                        "0.1.0",
+                        "0.1.1",
                         "67",
                         "beta",
                         "listed",
-                        "2026-05-06T00:05:27.268664Z",
+                        "2026-06-14T16:05:27.268664Z",
                         null,
                         null,
                         null,
                         jarPath.getFileName().toString(),
-                        "https://api.modrinth.com/v2/project/plugh-get/version/0.1.0",
+                        "https://api.modrinth.com/v2/project/plugh-get/version/0.1.1",
                         fileHash,
                         fileSize,
                         null
