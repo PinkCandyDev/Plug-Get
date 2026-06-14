@@ -73,6 +73,7 @@ public class HelpCommand {
             p1.append("§a/pg search §2<§aslug§2> §7- Search for plugin\n");
             p1.append("§a/pg install §2<§aslug§2> §7- Install plugin\n");
             p1.append("§a/pg versions §2<§aslug§2> §2[§apage§2] §2[§a--all§2] §7- List plugin versions\n");
+            p1.append("§a/pg list §2<§aall§2|excluded§2> §7- List installed plugins\n");
             p1.append("§a/pg update §7- Update installed plugins\n");
             p1.append("§a/pg remove §2<§aslug§2> §7- Remove plugin\n");
             p1.append("§a/pg autoremove §2<§aslug§2> §7- Auto-remove unused deps\n");
@@ -85,6 +86,7 @@ public class HelpCommand {
             p1.append("§a-Ss §2<§aslug§2> §7- Search for plugin\n");
             p1.append("§a-S §2<§apkg§2> §7- Install plugin\n");
             p1.append("§a-Vs §2<§aslug§2> §2[§apage§2] §2[§a--all§2] §7- List plugin versions\n");
+            p1.append("§a-Qs §2<§aall§2|excluded§2> §7- List installed plugins\n");
             p1.append("§a-Syu §7- Update installed plugins\n");
             p1.append("§a-R §2<§apkg§2> §7- Remove plugin\n");
             p1.append("§a-Rs §2<§apkg§2> §7- Auto-remove unused deps\n");
