@@ -18,17 +18,18 @@ Plug-Get is a simple Linux like package manager for minecraft plugins. It allows
 
 ### All Commands
 List of commands curently avalible
-| Command | Short | Description |
-|---------|-------|-------------|
-| `/pg help` | `/pg -h` | Show help menu |
-| `/pg search <slug>` | `/pg -Ss <slug>` | Search for plugins |
-| `/pg install <slug>` | `/pg -S <slug>` | Install a plugin |
-| `/pg update` | `/pg -Syu` | Update all installed plugins |
-| `/pg list` | `/pg -Qs` | List all installed plugins |
-| `/pg versions <slug>` | `/pg -Vs <slug>` | Show versions of chosen plugin |
-| `/pg remove <slug>` | `/pg -R <slug>` | Remove a plugin |
-| `/pg autoremove <slug>` | `/pg -Rs <slug>` | Remove a plugin with its dependencies|
-| `/pg reload` | `/pg -rl` | `Reload configuration file|
+
+| Command                    | Short                     | Description                           |
+|----------------------------|---------------------------|---------------------------------------|
+| `/pg help`                 | `/pg -h`                  | Show help menu                        |
+| `/pg search <slug>`        | `/pg -Ss <slug>`          | Search for plugins                    |
+| `/pg install <slug>`       | `/pg -S <slug>`           | Install a plugin                      |
+| `/pg update`               | `/pg -Syu`                | Update all installed plugins          |
+| `/pg list <all\|excluded>` | `/pg -Qs <all\|excluded>` | List all installed or excluded plugins |
+| `/pg versions <slug>`      | `/pg -Vs <slug>`          | Show versions of chosen plugin        |
+| `/pg remove <slug>`        | `/pg -R <slug>`           | Remove a plugin                       |
+| `/pg autoremove <slug>`    | `/pg -Rs <slug>`          | Remove a plugin with its dependencies |
+| `/pg reload`               | `/pg -rl`                 | Reload configuration file             |
 
 ### Confirmation Commands
 
