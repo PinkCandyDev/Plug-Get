@@ -61,6 +61,15 @@ public class DBManager {
         return plugins.has(slug);
     }
 
+    public static boolean isPluginExcluded(String slug) {
+        JSONObject plugins = getPlugins(db);
+        if (plugins.has(slug)) {
+            JSONObject pluginObj = plugins.getJSONObject(slug);
+            return !pluginObj.optBoolean("includeInUpdates", true);
+        }
+        return false;
+    }
+
     public static void deletePlugin(String slug) {
         JSONObject plugins = getPlugins(db);
         plugins.remove(slug);

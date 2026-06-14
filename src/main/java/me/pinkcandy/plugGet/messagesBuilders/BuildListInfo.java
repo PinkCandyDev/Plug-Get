@@ -23,12 +23,21 @@ public class BuildListInfo {
         }
         else if (type.equals("excluded"))
         {
-            header.append("§2Excluded plugins (§a" + files.size() + "§2)");
+            header.append("§2Excluded plugins (§a" + plugins.size() + "§2)");
         }
         lines.add(header.create());
-        for (int i = 0; i < files.size(); i++) {
+
+        int iterationCount = type.equals("excluded") ? plugins.size() : files.size();
+        for (int i = 0; i < iterationCount; i++) {
             ComponentBuilder line = new ComponentBuilder("");
-            if (installedPlugins.contains(files.get(i)) || type.equals("excluded"))
+            if (type.equals("excluded")) {
+                line.append("§2Modrinth/");
+                line.append("§a" + plugins.get(i).getInstallInfo().getSlug()).event(BuildTools.versionHover(plugins.get(i).getVersionInfo()));
+                String color = SetColor.setColor(plugins.get(i).getVersionInfo().getBranch());
+                line.append("  " + color + plugins.get(i).getVersionInfo().getVersionNumber()).event(BuildTools.versionHover(plugins.get(i).getVersionInfo()));
+                lines.add(line.create());
+            }
+            else if (installedPlugins.contains(files.get(i)))
             {
                 int j = installedPlugins.indexOf(files.get(i));
                 line.append("§2Modrinth/");

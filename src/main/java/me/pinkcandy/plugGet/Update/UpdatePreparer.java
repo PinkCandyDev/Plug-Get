@@ -24,8 +24,14 @@ public class UpdatePreparer {
         sender.sendMessage("§8:: §7Fetching updates for §8" + pluginsInDB.size() + " §7plugins...");
         List<PluginData> installedPlugins = new ArrayList<>();
         List<PluginData> pluginsToUpdate = new ArrayList<>();
+        int excludedTotalCount = 0;
+        int excludedToUpdateCount = 0;
         for (int i = 0; i < pluginsInDB.size(); i++) {
             InstallInfo installInfo = pluginsInDB.get(i).getInstallInfo();
+            boolean excluded = DBManager.isPluginExcluded(installInfo.getSlug());
+            if (excluded) {
+                excludedTotalCount++;
+            }
             VersionInfo currentV = pluginsInDB.get(i).getVersionInfo();
             String slug = installInfo.getSlug();
             ProjectMeta meta = FetchHelper.getProject(slug);
@@ -44,11 +50,15 @@ public class UpdatePreparer {
             {
                 continue;
             }
+            if (DBManager.isPluginExcluded(installInfo.getSlug())) {
+                excludedToUpdateCount++;
+                continue;
+            }
             pluginsToUpdate.add(new PluginData(pluginsInDB.get(i).getInstallInfo(), newestV, "dif"));
             installedPlugins.add(new PluginData(pluginsInDB.get(i).getInstallInfo(), currentV, null));
         }
         if (!installedPlugins.isEmpty() && !pluginsToUpdate.isEmpty()) {
-            List<BaseComponent[]> messages = BuildUpdateInfo.buildUpdateInfo(installedPlugins, pluginsToUpdate);
+            List<BaseComponent[]> messages = BuildUpdateInfo.buildUpdateInfo(installedPlugins, pluginsToUpdate, excludedTotalCount, excludedToUpdateCount);
             ActionLock.isConfirming = true;
             for (int i = 0; i < messages.size(); i++) {
                 if (sender instanceof Player) {

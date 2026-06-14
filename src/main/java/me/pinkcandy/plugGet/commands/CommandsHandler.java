@@ -178,6 +178,7 @@ public class CommandsHandler implements CommandExecutor {
                     }
                 }
                 sender.sendMessage("Plugins excluded from updating");
+                ActionLock.release();
             } else {
                 sender.sendMessage(actionLockBusyMessage);
             }
@@ -196,6 +197,7 @@ public class CommandsHandler implements CommandExecutor {
                     }
                 }
                 sender.sendMessage("Plugins included in updates.");
+                ActionLock.release();
             } else {
                 sender.sendMessage(actionLockBusyMessage);
             }

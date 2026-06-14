@@ -1,5 +1,6 @@
 package me.pinkcandy.plugGet.messagesBuilders;
 
+import me.pinkcandy.plugGet.db.DBManager;
 import me.pinkcandy.plugGet.model.PluginData;
 import me.pinkcandy.plugGet.model.ProjectMeta;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -12,11 +13,11 @@ import java.util.List;
 
 public class BuildUpdateInfo {
 
-    public static List<BaseComponent[]> buildUpdateInfo(List<PluginData> installedPlugins, List<PluginData> pluginsToUpdate) {
+    public static List<BaseComponent[]> buildUpdateInfo(List<PluginData> installedPlugins, List<PluginData> pluginsToUpdate, int totalExcluded, int toUpdateExcluded) {
         List<BaseComponent[]> lines = new ArrayList<>();
 
         ComponentBuilder header = new ComponentBuilder("");
-        header.append("§2Plugins to update (§a" + pluginsToUpdate.size() + "§2)");
+        header.append("§2Plugins to update (§a" + pluginsToUpdate.size() + "§2/§a" + DBManager.getInstalledPluginsCount() + "§2) §2<§a" + toUpdateExcluded + "§2/§a" + totalExcluded + "§2 Excluded>");
         lines.add(header.create());
         lines.add(new ComponentBuilder("").create());
         for (int i = 0; i < pluginsToUpdate.size(); i++) {
